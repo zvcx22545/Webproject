@@ -1,0 +1,190 @@
+@font-face {
+
+  font-family: inter;
+  src: url(/index/font/Inter-ExtraBold.ttf);
+  font-family: ka;
+  src: url(/index/font/Kavoon-Regular.ttf);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: cal(60%+0.8vmin);
+}
+
+.background-logo {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.background-logo::before {
+  background-image: url(https://visithague.com/wp-content/uploads/2020/05/digital4_review-4Travel.jpg);
+  background-repeat: no-repeat;
+  content: "";
+  background-size: 70% 100%;
+  /* width: 1980px; */
+  background-position: left;
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+}
+
+h1.web,
+h1.content {
+  font-family:ka; 
+  /* text-shadow: 0 0.5px 10px rgba(20, 19, 19, 0.938); */
+  position: relative;
+  font-weight: bolder;
+  font-size: 4rem;
+  
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ffff00,
+    #ff00f3,
+    #0033ff,
+    #ff00c4,
+    #ff0000
+  );
+  background-size: 200%;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: solid 2px;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: animate 10s linear infinite;
+  animation: typing 4s steps(18), 
+  cursor .8s step-end infinite alternate;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes cursor {
+  0% {
+		background-position: 0%;
+  }
+  
+	100% {
+		background-position: 200%;
+	}
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+}
+.header {
+  color: #000;
+  font-family: Ka;
+  font-style: normal;
+  line-height: normal;
+  text-transform: uppercase;
+  margin-left: 5rem;
+  margin-top: 0.625rem;
+  isolation: isolate;
+}
+
+.form-signin {
+  max-width: 20.625rem;
+  isolation: isolate;
+  /* padding: 1rem; */
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+h1.h3 {
+  font-family: inter;
+  color: #000;
+  font-style: normal;
+  line-height: normal;
+  margin-bottom: auto;
+  font-weight: bold !important;
+  font-size: 3.75rem;
+  margin-right: 35%;
+}
+.btn-s {
+  background-color: #c2e8e5;
+  font-family: inter;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.please-sign-in {
+  margin-right: 5.625rem;
+}
+
+.form-signin {
+  background-color: #ffffff;
+  margin-left: 20rem;
+  border-radius: 1rem;
+  background-repeat: repeat-x;
+  max-width: auto;
+  isolation: isolate;
+  margin-top: 3rem;
+}
+
+.ComM {
+  margin-top: 35px;
+}
+
+.logins {
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 1280px) {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .background-logo::before {
+    background-repeat: no-repeat;
+    content: "";
+    background-size: 65% 100%;
+    /* width: 1980px; */
+    background-position: left;
+    position: absolute;
+    inset: 0;
+    opacity: 0.6;
+  }
+
+  h1.h3 {
+    font-family: inter;
+    color: #000;
+    font-style: normal;
+    line-height: normal;
+    margin-bottom: auto;
+    font-weight: bold !important;
+    font-size: clamp(28px, 4vw, 56px);
+    margin-right: 35%;
+  }
+  .grid {
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+  }
+  h1.web,
+  h1.content {
+    font-size: clamp(28px, 4vw, 56px);
+    text-align: left;
+    position: relative;
+  }
+  .background-logo {
+    flex-direction: column;
+  }
+}

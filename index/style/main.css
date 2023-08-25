@@ -1,0 +1,136 @@
+@font-face {
+
+    font-family: inter;
+    src: url(/index/font/Inter-ExtraBold.ttf);
+    font-family: ka;
+    src: url(/index/font/Kavoon-Regular.ttf);
+}
+*{
+    margin: 0;
+    padding:0;
+    box-sizing: border-box;
+}
+.logo
+{
+    font-family: ka;
+    color: #0B7542;
+    font-size: 50px;
+    margin-top: 30px;
+    margin-left: 20px;
+    align-items: center;
+    text-decoration: solid;
+    font-weight: bold;
+}
+.navbar {
+    background-color: #C2E8E5;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    margin-top: 40px;
+    font-size: 30px;
+
+   
+  }
+  
+  .navbar li {
+    margin: 0 25px;   
+    list-style: none;
+    padding: 10px 50px; 
+    margin-right: 0;
+    margin-left: 0;
+    
+  }
+  
+  .navbar a {
+    color: rgb(0, 0, 0);
+    text-decoration: none; 
+    cursor: pointer; 
+ 
+  }
+  a{
+    text-decoration: none;
+  }
+  
+  .navbar li:hover {
+    background-color: darkseagreen;
+  }
+  .search-container {
+    display: flex;
+    align-items: center;
+
+  }
+  
+  #searchInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px 0 0 10px;
+  }
+  
+  #searchButton {
+    background-color: #71f3f3;
+    color: rgb(20, 11, 11);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+  }
+  
+  #searchButton:hover {
+    background-color: darkseagreen;
+  }
+  
+@media screen  and (max-width: 700px) {
+    .logo{
+        flex-direction: column;
+    }
+    .navbar{
+        flex-direction: column;
+        height: auto;
+        position: relative;
+
+    }
+    .navbar li:hover {
+        background-color: darkseagreen;
+    }
+    
+}
+.btn{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+.btn--p{
+    background-color: #C2E8E5;
+    color: rgb(0, 0, 0);
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    margin-top: 40px;
+    width: 200px;
+    height: 60px;
+    color: #000;
+    font-family: Inter;
+}
+.btn--pro{
+    background-color: #C2E8E5;
+    color: rgb(0, 0, 0);
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 200px;
+    height: 60px;
+    color: #000;
+    font-family: Inter;
+    font-style: normal;
+}
+.btn--pro:hover
+{
+    background-color: darkseagreen;
+    }
+.btn--p:hover
+{
+    background-color: darkseagreen;
+}

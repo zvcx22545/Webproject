@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Media Sharing</title>
+</head>
+<body>
+  <div class="container text-center mt-5">
+    <button id="openModalButton" class="btn btn-primary" data-toggle="modal" data-target="#postModal">
+      Post
+    </button>
+  </div>
+
+  <!-- Modal Popup for Posting -->
+  <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="postModalLabel">Create Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="file" id="mediaFile" accept="image/*, video/*" class="form-control mb-3">
+          <div class="embed-responsive embed-responsive-16by9 mb-3" id="videoContainer">
+            <!-- Video container will be filled here -->
+          </div>
+          <textarea id="textInput" class="form-control mb-3" placeholder="Enter your text"></textarea>
+          <select id="categoryDropdown" class="form-control">
+            <option value="" disabled selected>Select a category</option>
+            <option value="clothing">Clothing</option>
+            <option value="travel">Travel</option>
+            <option value="food">Food</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="postButton" class="btn btn-primary">Post</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

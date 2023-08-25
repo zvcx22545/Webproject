@@ -1,0 +1,15 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  #mediaContainer img,
+  #mediaContainer iframe {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  #textContainer {
+    margin-top: 20px;
+  }
+  
