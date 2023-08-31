@@ -1,10 +1,3 @@
-@font-face {
-
-  font-family: inter;
-  src: url(/index/font/Inter-ExtraBold.ttf);
-  font-family: ka;
-  src: url(/index/font/Kavoon-Regular.ttf);
-}
 * {
   margin: 0;
   padding: 0;
@@ -40,7 +33,7 @@ html {
 
 h1.web,
 h1.content {
-  font-family:ka; 
+  font-family: 'Kavoon', cursive;
   /* text-shadow: 0 0.5px 10px rgba(20, 19, 19, 0.938); */
   position: relative;
   font-weight: bolder;
@@ -63,9 +56,9 @@ h1.content {
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: animate 10s linear infinite;
+  animation: animate 4s linear infinite;
   animation: typing 4s steps(18), 
-  cursor .8s step-end infinite alternate;
+  cursor .4s step-end infinite alternate;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
@@ -73,6 +66,9 @@ h1.content {
 @keyframes cursor {
   0% {
 		background-position: 0%;
+  }
+  50% {
+		background-position: 100%;
   }
   
 	100% {
@@ -87,7 +83,6 @@ h1.content {
 }
 .header {
   color: #000;
-  font-family: Ka;
   font-style: normal;
   line-height: normal;
   text-transform: uppercase;
@@ -183,6 +178,8 @@ h1.h3 {
     font-size: clamp(28px, 4vw, 56px);
     text-align: left;
     position: relative;
+      font-family: 'Kavoon', cursive;
+
   }
   .background-logo {
     flex-direction: column;

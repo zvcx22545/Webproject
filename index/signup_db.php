@@ -3,42 +3,30 @@
     session_start();
     require_once 'config/db.php';
 
-    if(isset($_POST['signup']))
-    {
         $email = $_POST['email'];
         $password = $_POST['password'];
         $c_password = $_POST['c_password'];
         $address = $_POST['address'];
         $telephone = $_POST['telephone'];
         $urole = 'user';
-
-        if(empty($email && strpos($email, "@ku.th") !== false)){
-            $_SESSION['error']  = 'กรุณากรอกอีเมล@ku.th';
-            header("location: register.php");
-        }else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['error'] = 'รูปแบบอีเมลไม่ถูกต้อง';
-            header("location:register.php");
-        }else if (empty($password)){
-            $_SESSION['error'] = 'กรุณากรอกรหัสผ่าน';
-            header('location:register.php');
-        }else if (strlen($_POST['password']) > 20 || strlen($_POST['password']) < 5) {
-            $_SESSION['error'] = 'รหัสผ่านต้องมีความยาวระหว่าง 5 ถึง 20 ตัวอักษร';
-            header('location:register.php');
-        }else if (empty($c_password)){
-            $_SESSION['error'] = 'กรุณายืนยันรหัสผ่าน';
-            header('location:register.php');
-    }else if ($password != $c_password) {
-        $_SESSION['error'] = 'กรุณากรอกรหัสผ่านให้ตรงกัน';
-        header("location: register.php");
-        }else if (empty($address)){
-            $_SESSION['error'] = 'กรุณากรอกที่อยู่';
-            header('location:register.php');
-        }else if (empty($telephone)){
-            $_SESSION['error'] = 'กรุณากรอกเบอร์โทร';
-            header('location:register.php');
-        }else if (strlen($_POST['telephone']) > 10 || strlen($_POST['telephone']) < 0) {
-            $_SESSION['error'] = 'กรุณาใส่เบอร์โทร';
-            header('location:register.php');
+        if (empty($email) || (strpos($email, "@ku.th") === false)) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณากรอกอีเมล@ku.th"));
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณากรอกอีเมล@ku.th"));
+        } else if (!$password) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณากรอกรหัสผ่าน"));
+        } else if (strlen($password) > 20 || strlen($password) < 5) {
+            echo json_encode(array("status" => "error", "msg" => "รหัสผ่านต้องมีความยาวระหว่าง 5 ถึง 20 ตัวอักษร"));
+        } else if (!$c_password) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณายืนยันรหัสผ่าน"));
+        } else if ($password != $c_password) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณากรอกรหัสผ่านให้ตรงกัน"));
+        } else if (!$address) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณากรอกที่อยู่"));
+        } else if (!$telephone) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณากรอกเบอร์โทร"));
+        } else if (strlen($telephone) < 10) {
+            echo json_encode(array("status" => "error", "msg" => "กรุณาใส่เบอร์โทร"));
         } else {
             try{
                 $check_email = $conn->prepare("SELECT email FROM users WHERE email = :email");
@@ -47,30 +35,20 @@
                 $row = $check_email->fetch(PDO::FETCH_ASSOC);
     
                 if ($row['email'] == $email) {
-                    $_SESSION['warning'] = "มีอีเมลนี้อยู่ในระบบแล้ว <a href='login.php'>คลิ๊กที่นี่</a> เพื่อเข้าสู่ระบบ";
-                    header("location: register.php");
-                }else if (!isset($_SESSION['error'])){
+                    echo json_encode(array("status" => "error", "msg" => "มีอีเมลนี้ในระบบแล้วโปรดเข้าสู่ระบบ"));
+                } else if (!isset($_SESSION['error'])) {
                     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                     $stmt = $conn->prepare("INSERT INTO users(email, password,address,telephone,urole) 
-                            VALUES(:email, :password, :address, :telephone, :urole)");
-                    $stmt->bindParam(":email",$email);
-                    $stmt->bindParam(":password",$passwordHash);  
-                    $stmt->bindParam(":address",$address);
-                    $stmt->bindParam(":telephone",$telephone);
-                    $stmt->bindParam(":urole",$urole);
+                                    VALUES(:email, :password, :address, :telephone, :urole)");
+                    $stmt->bindParam(":email", $email);
+                    $stmt->bindParam(":password", $passwordHash);
+                    $stmt->bindParam(":address", $address);
+                    $stmt->bindParam(":telephone", $telephone);
+                    $stmt->bindParam(":urole", $urole);
                     $stmt->execute();
-                    $_SESSION['success'] = "Register is successful! <a herf='/index/login.php' class='alert-link'>คลิกที่นี่</a>เพื่อเข้าสู่ระบบ";
-                    header("location:register.php");
-                } else{
-                    $_SESSION['error'] = "มีบางอย่างผิดพลาด";
-                    header("location:register.php");
+                    echo json_encode(array("status" => "success", "msg" => "สมัครสมาชิก"));
                 }
-    
-            }catch(PDOException $e) {
-                echo $e->getMessage();
+            } catch (PDOException $e) {
+                echo json_encode(array("status" => "error", "msg" => "Something went wrong, please try again!"));
             }
         }
-    }
-    ?>
-            
-        

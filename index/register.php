@@ -1,7 +1,5 @@
 <?php
 session_start();
-require_once 'config/db.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +24,7 @@ require_once 'config/db.php';
     <main class="form-sign-in w-100 m-auto">
       <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
       <hr>
-      <form action="signup_db.php" method="post">
+      <form action="signup_db.php" id="registerForm" method="POST">
         <?php if (isset($_SESSION['error'])) { ?>
           <div class="alert alert-danger" role="alert">
             <?php
@@ -73,16 +71,19 @@ require_once 'config/db.php';
           <label for="telephone">Telephone Number</label>
         </div>
 
-        <button class="btn-s w-100 py-2" type="submit" name="signup">Sign Up</button>
+        <button class="btn-s w-100 py-2" type="submit" name="register">Sign Up</button>
         <p class="mt-5 mb-3 text-body-secondary">If you have an account then please <a href="./login.php">Sign in</a></p>
 
-        <script src="register.js"></script>
       </form>
     </main>
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./javascript/register.js"></script>
+  
 </body>
 
 </html>

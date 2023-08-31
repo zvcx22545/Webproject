@@ -1,5 +1,5 @@
-document.getElementById("loginForm").addEventListener("submit", function(event) {
-  event.preventDefault(); // Prevent the form from submitting normally
+document.getElementById("loginForm").addEventListener("submit", function(e){
+  e.preventDefault(); // Prevent the form from submitting normally
   
   // Get the values from the form
   const email = document.getElementById("email").value;
@@ -12,5 +12,5 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     alert("Login successful!");
   } else {
     alert("Not @ku.th email");
-  }
+  };
 });
