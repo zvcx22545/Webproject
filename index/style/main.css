@@ -1,15 +1,22 @@
 @font-face {
-
-    font-family: inter;
-    src: url(/index/font/Inter-ExtraBold.ttf);
-    font-family: ka;
-    src: url(/index/font/Kavoon-Regular.ttf);
 }
 *{
     margin: 0;
     padding:0;
     box-sizing: border-box;
 }
+.modal{
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+}
+
 .logo
 {
     font-family: ka;
@@ -130,7 +137,6 @@
 {
     background-color: darkseagreen;
     }
-.btn--p:hover
-{
-    background-color: darkseagreen;
+.btn--p:hover{
+  background-color: darkseagreen;
 }
