@@ -10,9 +10,11 @@ body {
     rgba(148, 187, 233, 1) 100%
   );
 }
-h1.welc {
+.welc {
   text-align: center;
   font-size: 3rem;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
 }
 .navbar {
   display: flex;

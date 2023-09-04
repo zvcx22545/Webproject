@@ -1,25 +1,13 @@
-@font-face {
-}
+
 *{
     margin: 0;
     padding:0;
     box-sizing: border-box;
 }
-.modal{
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  background-color: #ffffff;
-}
 
 .logo
 {
-    font-family: ka;
+    font-family: 'Kavoon', cursive;
     color: #0B7542;
     font-size: 50px;
     margin-top: 30px;
@@ -28,7 +16,7 @@
     text-decoration: solid;
     font-weight: bold;
 }
-.navbar {
+.navbar{
     background-color: #C2E8E5;
     background-repeat: no-repeat;
     background-size: cover;
@@ -88,6 +76,7 @@
     background-color: darkseagreen;
   }
   
+  
 @media screen  and (max-width: 700px) {
     .logo{
         flex-direction: column;
@@ -135,8 +124,8 @@
 }
 .btn--pro:hover
 {
-    background-color: darkseagreen;
-    }
+  background-color: darkseagreen;
+}
 .btn--p:hover{
   background-color: darkseagreen;
 }

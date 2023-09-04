@@ -10,32 +10,18 @@ $(document).ready(function () {
             url: formUrl,
             type: reqMethod,
             data: formData,
-            success: function(data) { 
-                try {
-                    let result = JSON.parse(data); // แปลงเป็น JSON ก่อนใช้
-                    if (result.status == "success") {
-                        console.log("Success", result)
-                        Swal.fire({
-                            title: 'สำเร็จ!',
-                            text: result.msg,
-                            icon: result.status,
-                            confirmButtonText: 'OK'
-                        }).then(function() {
-                            window.location.reload();
-                        });
-                    } else {
-                        console.log("Error", result)
-                        Swal.fire({
-                            title: 'ล้มเหลว!',
-                            text: result.msg,
-                            icon: result.status,
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                } catch (error) {
-                    console.error("Error parsing JSON:", error);
+            success: function (data) {
+                let result = JSON.parse(data);
+                if (result.status == "success") {
+                    console.log("Success", result)
+                    Swal.fire("สำเร็จ!", result.msg, result.status).then(function () {
+                        window.location.reload();
+                    });
+                } else {
+                    console.log("Error", result)
+                    Swal.fire("ล้มเหลว!", result.msg, result.status);
                 }
             }
-        });
-    });
-});
+        })
+    })
+})

@@ -26,7 +26,7 @@ session_start();
         <h1 class="web">travel </h1>
         <h1 class="content">to Knowledge </h1>
       </div>
-      <main class="form-signin w-400 ">
+      <main class="form-signin w-500 ">
         <h1 class="h3 mb-3"> Sign In</h1>
         <p class="please-sign-in">please sign in to continue</p>
         <hr>
@@ -69,7 +69,7 @@ session_start();
    </script>
    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="login.js"></script>
+  <script src="./javascript/login.js"></script>
 
 
 </body>
