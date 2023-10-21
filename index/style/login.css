@@ -5,27 +5,27 @@
 }
 
 html {
-  font-size: cal(60%+0.8vmin);
+  font-size: calc(60% + 0.8vmin);
 }
 
 .background-logo {
-  height: 100vh;
+  width: 100%;
   position: relative;
   overflow: hidden;
   margin: 0 auto;
 }
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2.5fr 1fr; /* เราจะมี 2 columns ที่มีความกว้างเท่ากัน */
+  gap: 1rem; /* ระยะห่างระหว่าง column */
+  min-height: 100vh;
 }
-
 .background-logo::before {
   background-image: url(https://visithague.com/wp-content/uploads/2020/05/digital4_review-4Travel.jpg);
   background-repeat: no-repeat;
   content: "";
-  background-size: 70% 100%;
-  /* width: 1980px; */
-  background-position: left;
+  background-size: cover;
+  background-position: center;
   position: absolute;
   inset: 0;
   opacity: 0.6;
@@ -33,12 +33,10 @@ html {
 
 h1.web,
 h1.content {
-  font-family: 'Kavoon', cursive;
+  font-family: "Kavoon", cursive;
   /* text-shadow: 0 0.5px 10px rgba(20, 19, 19, 0.938); */
-  position: relative;
   font-weight: bolder;
   font-size: 4rem;
-  
   width: 100%;
   background: linear-gradient(
     90deg,
@@ -57,23 +55,20 @@ h1.content {
   -webkit-background-clip: text;
   background-clip: text;
   animation: animate 4s linear infinite;
-  animation: typing 3s steps(22), 
-  cursor .8s step-end infinite alternate;
+  animation: typing 3s steps(22) infinite alternate,
+    cursor 0.4s step-end infinite alternate;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
 
 @keyframes cursor {
-  0% {
-		background-position: 0%;
+  0%,
+  100% {
+    border-color: transparent;
   }
   50% {
-		background-position: 100%;
+    border-color: white; /* หรือสีอื่น ๆ ที่คุณต้องการ */
   }
-  
-	100% {
-		background-position: 200%;
-	}
 }
 
 @keyframes typing {
@@ -92,9 +87,8 @@ h1.content {
 }
 
 .form-signin {
-  max-width: 20.625rem;
-  isolation: isolate;
-  /* padding: 1rem; */
+  max-width: 400px; /* Or whatever your design requires */
+  margin: auto;
 }
 
 .form-signin .form-floating:focus-within {
@@ -123,12 +117,9 @@ h1.h3 {
 
 .form-signin {
   background-color: #ffffff;
-  margin-left: 28rem;
   border-radius: 1rem;
-  background-repeat: repeat-x;
-  max-width: auto;
+  max-width: 25rem;
   isolation: isolate;
-  margin-top: 3rem;
 }
 
 .ComM {
@@ -139,48 +130,95 @@ h1.h3 {
   margin-top: 30px;
 }
 
-@media screen and (max-width: 1280px) {
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  .background-logo::before {
-    background-repeat: no-repeat;
-    content: "";
-    background-size: 65% 100%;
-    /* width: 1980px; */
-    background-position: left;
-    position: absolute;
-    inset: 0;
-    opacity: 0.6;
+@media screen and (max-width: 1024px) {
+  h1.web,
+  h1.content {
+    font-size: 3.5rem;
   }
 
   h1.h3 {
-    font-family: inter;
-    color: #000;
-    font-style: normal;
-    line-height: normal;
-    margin-bottom: auto;
-    font-weight: bold !important;
-    font-size: clamp(28px, 4vw, 56px);
-    margin-right: 35%;
+    font-size: 3rem;
   }
-  .grid {
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-  }
-  h1.web,
-  h1.content {
-    font-size: clamp(28px, 4vw, 56px);
-    text-align: left;
-    position: relative;
-      font-family: 'Kavoon', cursive;
 
-  }
-  .background-logo {
-    flex-direction: column;
+  .header {
+    margin-left: 3rem;
   }
 }
+
+@media screen and (max-width: 1280px) {
+  .form-signin {
+    margin: 1rem;
+  }
+
+  h1.web,
+  h1.content {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  h1.h3 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .grid {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .header {
+    text-align: center;
+    margin: 1rem 0;
+    margin-left: 0; /* Reset margin */
+  }
+
+  .form-signin {
+    width: 90%;
+    margin: 1rem 5%; /* Center the form */
+    padding: 1rem;
+  }
+
+  .please-sign-in {
+    margin-right: 0; /* Reset margin */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+
+
+  .btn-s {
+    font-size: 1rem;
+  }
+  .background-logo::before {
+    background: none;
+    background-size: calc(2rem);
+  }
+  .header {
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  h1.web,
+  h1.content {
+    font-size: 1.8rem;
+    color: green;
+    animation: none;
+    -webkit-text-fill-color: initial;
+    background: none;
+    border-right: none;
+  }
+  .form-signin{
+    align-items: center;
+    margin: 0 auto;
+    top: auto;
+    box-shadow: 0px 2px 5px rgb(100, 96, 96);
+    padding: 1rem;
+    margin-bottom: 8rem;
+  }
+}
+
+/* (และคุณสามารถเพิ่มหรือปรับแต่งสไตล์เพิ่มเติมได้ที่นี่) */

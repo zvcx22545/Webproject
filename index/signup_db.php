@@ -2,16 +2,25 @@
 session_start();
 require_once 'config/db.php';
 
+
 $email = isset($_POST['email']) ? $_POST['email'] : '';
 $password = isset($_POST['password']) ? $_POST['password'] : '';
 $c_password = isset($_POST['c_password']) ? $_POST['c_password'] : '';
-$address = isset($_POST['address']) ? $_POST['address'] : '';
-$telephone = isset($_POST['telephone']) ? $_POST['telephone'] : '';
+$first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
+$last_name = isset($_POST['last_name']) ? $_POST['last_name'] : '';
+$url_address = strtolower($first_name) . "." . strtolower($last_name);
+$userCreator = new create_user();
+$userid = $userCreator->create_userid();
 $urole = 'user';
 
 $response = array();
-
-if (empty($email) || strpos($email, "@ku.th") === false) {
+ if (!$first_name) {
+    $response['status'] = "error";
+    $response['msg'] = "กรุณากรอกชื่อ";
+} else if (!$last_name) {
+    $response['status'] = "error";
+    $response['msg'] = "กรุณากรอกนามสกุล";
+}else if (empty($email) || strpos($email, "@ku.th") === false) {
     $response['status'] = "error";
     $response['msg'] = "กรุณากรอกอีเมล@ku.th";
 } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -29,16 +38,7 @@ if (empty($email) || strpos($email, "@ku.th") === false) {
 } else if ($password != $c_password) {
     $response['status'] = "error";
     $response['msg'] = "กรุณากรอกรหัสผ่านให้ตรงกัน";
-} else if (!$address) {
-    $response['status'] = "error";
-    $response['msg'] = "กรุณากรอกที่อยู่";
-} else if (!$telephone) {
-    $response['status'] = "error";
-    $response['msg'] = "กรุณากรอกเบอร์โทร";
-} else if (strlen($telephone) < 10) {
-    $response['status'] = "error";
-    $response['msg'] = "กรุณาใส่เบอร์โทร";
-} else {
+}  else {
     try {
         $check_email = $conn->prepare("SELECT email FROM users WHERE email = :email");
         $check_email->bindParam(":email", $email);
@@ -49,12 +49,14 @@ if (empty($email) || strpos($email, "@ku.th") === false) {
             $response['msg'] = "มีอีเมลนี้ในระบบแล้วโปรดเข้าสู่ระบบ";
         } else {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO users(email, password,address,telephone,urole) 
-                            VALUES(:email, :password, :address, :telephone, :urole)");
+            $stmt = $conn->prepare("INSERT INTO users(email, password,first_name,last_name,urole,userid,url_address) 
+                            VALUES(:email, :password, :first_name, :last_name, :urole,:userid,:url_address)");
             $stmt->bindParam(":email", $email);
             $stmt->bindParam(":password", $passwordHash);
-            $stmt->bindParam(":address", $address);
-            $stmt->bindParam(":telephone", $telephone);
+            $stmt->bindParam(":first_name", $first_name);
+            $stmt->bindParam(":last_name", $last_name);
+            $stmt->bindParam(":userid", $userid);
+            $stmt->bindParam(":url_address", $url_address);
             $stmt->bindParam(":urole", $urole);
             $stmt->execute();
 
@@ -68,5 +70,22 @@ if (empty($email) || strpos($email, "@ku.th") === false) {
     }
 }
 
+
 echo json_encode($response);
-?>
+class create_user{
+    public function create_userid()
+     {
+         $length = rand(4,19);
+         $number = "";
+         for ($i = 0; $i < $length; $i++){
+             $new_rand = rand(0,9);
+             $number = $number . $new_rand;
+         }
+ 
+         return $number;
+     }
+     
+ }
+ 
+
+ ?>

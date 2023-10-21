@@ -1,0 +1,155 @@
+
+
+
+
+
+:root {
+    --primary-color: #fff;  /* Background สว่าง */
+    --secondary-color: #000106;  /* Text สีเข้ม */
+  }
+  
+  .dark-theme {
+    --primary-color: #000106;  /* Background สีเข้ม */
+    --secondary-color: #fff;  /* Text สว่าง */
+    --three-color: #352F44;
+  }
+  
+  .light-theme {
+    --primary-color: #ffffff;  /* Background สว่าง */
+    --secondary-color: #000106;  /* Text สีเข้ม */
+    --three-color: #fffffff8;
+  }
+/* .container-post {
+    flex:1;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+} */
+
+.post{
+    width: 44rem;
+    background:var(--three-color);
+    border-radius:10px;
+    padding:10px;
+    margin:0.9rem;
+    box-shadow: 0px 2px 5px rgb(100, 96, 96);
+   
+}
+
+.post .post-top{
+    display:flex;
+    align-items: center;
+    padding:10px;
+}
+
+.post .post-top .dp{
+    width:40px;
+    height:40px;
+    border-radius: 50%;
+    overflow:hidden;
+}
+
+.post .post-top .dp > img{
+    width:100%;
+    cursor:pointer;
+}
+
+.post .post-top .post-info{
+    margin-left:10px;    
+    font-weight: bold;
+}
+
+.post .post-top .post-info .name{
+    cursor:pointer;
+    font-size:16px;
+}
+
+.post .post-top .post-info .time{
+    font-size:12px;
+    cursor:pointer;
+}
+
+.post .post-top i{
+    margin-left:auto;
+    cursor: pointer;
+}
+
+.post .post-top > input{
+    height:40px;
+    padding:5px 10px;
+    border-radius:25px;
+    outline:none;
+    border:none;
+    flex:1;
+    background:#eee;
+    margin-left:10px;
+}
+
+.post .post-content{
+    font-size:16px;
+    font-weight:normal;
+    padding:10px;
+}
+
+.post .post-content > img{
+    width:100%;
+    margin:5px 0px;
+}
+
+.post .post-bottom{
+    box-shadow: 1px solid #ddd;
+    display:flex;
+    justify-content: space-between;
+    padding:5px 5px 0px 5px;
+    color: var(--secondary-color);
+}
+
+.post .post-bottom .action{
+    padding:10px;
+    border-radius:10px;
+    transition: .3s ease-in;
+    cursor: pointer;
+}
+
+.post .post-bottom .action:hover{
+    background:#a09f9fd7;
+    /* color: #000106; */
+}
+
+.post.create .post-bottom > .action{
+    color:var(--secondary-color);
+}
+.post-btn{
+    cursor: pointer;
+
+}
+.post-info{
+    color: var(--secondary-color);
+}
+
+.post-content{
+    color: var(--secondary-color);
+}
+/* สำหรับหน้าจอที่มีความกว้างไม่เกิน 600px */
+@media only screen and (max-width: 600px) {
+    .post {
+        width: 100%;
+        padding: 5px;
+    }
+}
+
+/* สำหรับหน้าจอที่มีความกว้างระหว่าง 601px ถึง 900px */
+@media only screen and (min-width: 601px) and (max-width: 900px) {
+    .post {
+        width: 80%;
+        padding: 8px;
+    }
+}
+
+/* สำหรับหน้าจอที่มีความกว้างเกิน 900px (ค่าเดิม) */
+@media only screen and (max-width: 990px) {
+    .post {
+        width: auto;
+        padding: 10px;
+    }
+}

@@ -2,6 +2,7 @@
 
     session_start();
     require_once 'config/db.php';
+    
 
     if(isset($_POST['signin']))
     {
@@ -10,6 +11,7 @@
 
         
         if(empty($email && strpos($email, "@ku.th") !== false)){
+
             $_SESSION['error']  = 'กรุณากรอกอีเมล@ku.th';
             header("location: login.php");
         }else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

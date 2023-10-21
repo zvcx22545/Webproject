@@ -1,136 +1,42 @@
-@font-face {
+:root {
+  --primary-color: #fff;  /* Background สว่าง */
+  --secondary-color: #000106;  /* Text สีเข้ม */
+}
 
-    font-family: inter;
-    src: url(/index/font/Inter-ExtraBold.ttf);
-    font-family: ka;
-    src: url(/index/font/Kavoon-Regular.ttf);
+.dark-theme {
+  --primary-color: #000106;  /* Background สีเข้ม */
+  --secondary-color: #fff;  /* Text สว่าง */
+  --three-color: #352F44;
 }
-*{
-    margin: 0;
-    padding:0;
-    box-sizing: border-box;
+
+.light-theme {
+  --primary-color: #ffffff;  /* Background สว่าง */
+  --secondary-color: #000106;  /* Text สีเข้ม */
+  --three-color: #fffffff8;
 }
-.logo
+.background-profile
 {
-    font-family: ka;
-    color: #0B7542;
-    font-size: 50px;
-    margin-top: 30px;
-    margin-left: 20px;
-    align-items: center;
-    text-decoration: solid;
-    font-weight: bold;
+  width: 50rem;
+  margin: auto;
+  min-height: 400px;
+  /* background-color: var(--three-color); */
 }
-.navbar {
-    background-color: #C2E8E5;
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: flex;
-    justify-content: space-between;
-    height: 60px;
-    margin-top: 40px;
-    font-size: 30px;
+.bg-top{
+  color:var(--secondary-color);
+  background-color: var(--primary-color);
+}
+#profile_pic{
+  width: 150px;
+  margin-top: -10rem;
+  border-radius: 50%;
+  border: solid 2px white;
 
-   
-  }
-  
-  .navbar li {
-    margin: 0 25px;   
-    list-style: none;
-    padding: 10px 50px; 
-    margin-right: 0;
-    margin-left: 0;
-    
-  }
-  
-  .navbar a {
-    color: rgb(0, 0, 0);
-    text-decoration: none; 
-    cursor: pointer; 
- 
-  }
-  a{
-    text-decoration: none;
-  }
-  
-  .navbar li:hover {
-    background-color: darkseagreen;
-  }
-  .search-container {
-    display: flex;
-    align-items: center;
-
-  }
-  
-  #searchInput {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 10px 0 0 10px;
-  }
-  
-  #searchButton {
-    background-color: #71f3f3;
-    color: rgb(20, 11, 11);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 0 10px 10px 0;
-    cursor: pointer;
-  }
-  
-  #searchButton:hover {
-    background-color: darkseagreen;
-  }
-  
-@media screen  and (max-width: 700px) {
-    .logo{
-        flex-direction: column;
-    }
-    .navbar{
-        flex-direction: column;
-        height: auto;
-        position: relative;
-
-    }
-    .navbar li:hover {
-        background-color: darkseagreen;
-    }
-    
 }
-.btn{
-    display: flex;
-    flex-direction: column;
-    text-align: center;
+#menu_buttons{
+  width: 100px;
+  display: inline-block;
+  margin: 2px;
 }
-.btn--p{
-    background-color: #C2E8E5;
-    color: rgb(0, 0, 0);
-    border: none;
-    font-size: 25px;
-    cursor: pointer;
-    margin-top: 40px;
-    width: 200px;
-    height: 60px;
-    color: #000;
-    font-family: Inter;
-}
-.btn--pro{
-    background-color: #C2E8E5;
-    color: rgb(0, 0, 0);
-    border: none;
-    font-size: 25px;
-    cursor: pointer;
-    margin-top: 20px;
-    width: 200px;
-    height: 60px;
-    color: #000;
-    font-family: Inter;
-    font-style: normal;
-}
-.btn--pro:hover
-{
-    background-color: darkseagreen;
-    }
-.btn--p:hover
-{
-    background-color: darkseagreen;
+.Name-profile{
+  font-size: 1.25rem;
 }

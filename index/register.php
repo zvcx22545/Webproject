@@ -52,7 +52,15 @@ session_start();
             ?>
                 </div>
                 <?php } ?>
-
+                <div class="form-floating my-2">
+                    <input type="adress" name="first_name" class="form-control" id="floatingaddress" placeholder="first_name">
+                    <label for="floatingaddress">First name</label>
+                </div>
+                <div class="form-floating my-2">
+                    <input type="telephone" name="last_name" class="form-control" id="telephone"
+                        placeholder="last_name">
+                    <label for="telephone">Last Name</label>
+                </div>
                 <div class="form-floating my-2">
                     <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
                         name="email" aria-describedby="email">
@@ -68,15 +76,7 @@ session_start();
                         name="c_password">
                     <label for="ConfirmPassword">Confirm Password</label>
                 </div>
-                <div class="form-floating my-2">
-                    <input type="adress" name="address" class="form-control" id="floatingaddress" placeholder="address">
-                    <label for="floatingaddress">Address</label>
-                </div>
-                <div class="form-floating my-2">
-                    <input type="telephone" name="telephone" class="form-control" id="telephone"
-                        placeholder="Telephone Number">
-                    <label for="telephone">Telephone Number</label>
-                </div>
+                
 
                 <button class="btn-s w-100 py-2" type="submit" name="register">Sign Up</button>
                 <p class="mt-5 mb-3 text-body-secondary">If you have an account then please <a href="./login.php">Sign
