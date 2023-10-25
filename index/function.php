@@ -13,7 +13,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
       <img src="https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg" type="images" alt="">
     </div>
     <div class="post-info">
-  <p class="name font-weight-bolder mt-3"><?php echo $row['first_name'] . " " . $row['last_name'] ?></p>
+  <p class="name font-weight-bolder mt-3"><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></p>
   <span class="time">
     <?php
     setlocale(LC_TIME, 'th_TH.utf8'); // ตั้งค่าให้เป็นภาษาไทยและใช้พื้นที่ที่ถูกต้อง

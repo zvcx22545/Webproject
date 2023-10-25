@@ -1,54 +1,49 @@
-
-*{
-    margin: 0;
-    padding:0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.backgrounds{
+.backgrounds {
   background-color: var(--primary-color);
 }
-ul li{
+ul li {
   padding-left: 3rem;
 }
-.icon{
+.icon {
   font-size: 1.5rem;
   cursor: pointer;
-
 }
-.shadows{
+.shadows {
   box-shadow: 0px 2px 5px rgb(100, 96, 96);
-
-
 }
 
 :root {
-  --primary-color: #fff;  /* Background สว่าง */
-  --secondary-color: #000106;  /* Text สีเข้ม */
- 
+  --primary-color: #fff; /* Background สว่าง */
+  --secondary-color: #000106; /* Text สีเข้ม */
 }
 
 .dark-theme {
-  --primary-color: #000106;  /* Background สีเข้ม */
-  --secondary-color: #fff;  /* Text สว่าง */
-  --three-color: #352F44;
-  --four-color:#817f7f;;
+  --primary-color: #000106; /* Background สีเข้ม */
+  --secondary-color: #fff; /* Text สว่าง */
+  --three-color: #352f44;
+  --four-color: #817f7f;
 }
 
 .light-theme {
-  --primary-color: #eee;  /* Background สว่าง */
-  --secondary-color: #000106;  /* Text สีเข้ม */
+  --primary-color: #eee; /* Background สว่าง */
+  --secondary-color: #000106; /* Text สีเข้ม */
   --three-color: #fffffff8;
-  --four-color:#817f7f;;
+  --four-color: #817f7f;
 }
 
-.navbars li a{
+.navbars li a {
   width: 5rem;
   text-align: center;
   font-size: 1.25rem;
   color: white;
   height: 3.4rem;
 }
-.navbar-toggler{
+.navbar-toggler {
   margin-left: 2rem;
   align-items: center;
   width: 5rem;
@@ -57,52 +52,51 @@ ul li{
   color: white;
   height: 3.4rem;
 }
-.navbar-toggler:hover{
+.navbar-toggler:hover {
   background-color: #eee;
   border-radius: 5px;
   color: rgb(87, 157, 214);
-
 }
-.navbar-toggler.active{
+.navbar-toggler.active {
   color: rgb(87, 157, 214);
   position: relative;
 }
-.navbar-toggler.active::after{
-  content: '';
+.navbar-toggler.active::after {
+  content: "";
   width: 100%;
   height: 3px;
   position: absolute;
   bottom: 0;
   left: 0;
-  background:rgb(83, 142, 230);
+  background: rgb(83, 142, 230);
 }
-.fa-bars{
-  color:#fff;
+.fa-bars {
+  color: #fff;
   font-size: 1.4rem;
   margin-bottom: 7px;
-text-align: center;
+  text-align: center;
 }
 
-.navbars li a:hover{
+.navbars li a:hover {
   /* color: rgb(83, 142, 230); */
   background-color: #eee;
   border-radius: 5px;
 
   /* box-shadow: 0px 3px 5px rgb(83, 142, 230); */
 }
-.navbars li a.active{
+.navbars li a.active {
   color: rgb(87, 157, 214);
   position: relative;
   /* box-shadow: 0px 3px 5px rgb(83, 142, 230); */
 }
-.navbars li a.active::after{
-  content: '';
+.navbars li a.active::after {
+  content: "";
   width: 100%;
   height: 3px;
   position: absolute;
   bottom: 0;
   left: 0;
-  background:rgb(83, 142, 230); 
+  background: rgb(83, 142, 230);
   /* box-shadow: 0px 3px 5px rgb(83, 142, 230); */
 }
 
@@ -110,16 +104,15 @@ text-align: center;
   color: rgb(83, 142, 230);
   box-shadow: 0px 3px 5px rgb(83, 142, 230);
 } */
-.logo
-{
-    font-family: 'Kavoon', cursive;
-    font-size: 1.5rem;
-    color: #0B7542;
-    align-items: center;
-    text-align: center;
-    text-decoration: solid;
-    font-weight: bold;
-    margin-right: auto;
+.logo {
+  font-family: "Kavoon", cursive;
+  font-size: 1.5rem;
+  color: #0b7542;
+  align-items: center;
+  text-align: center;
+  text-decoration: solid;
+  font-weight: bold;
+  margin-right: auto;
 }
 .post-content img {
   max-width: 100%;
@@ -130,38 +123,37 @@ text-align: center;
   display: grid;
   grid-template-columns: 1fr 3fr;
   gap: 1rem;
-  
 }
-.container .left-panel{
+.container .left-panel {
   position: sticky;
-  top:70px;
-  width:250px;
-  height:calc(100vh - 70px);
+  top: 70px;
+  width: 250px;
+  height: calc(100vh - 70px);
 }
 
 .left-panel {
   color: var(--secondary-color);
   position: fixed;
   top: 70px;
-
   width: 250px;
   height: calc(100vh - 70px);
-  background-color:var(--three-color);
+  background-color: var(--three-color);
   padding: 20px;
   box-shadow: 0px 2px 5px rgb(100, 96, 96);
   border-radius: 10px;
   z-index: 1;
+  margin-top: 4.375rem;
 }
 
-.dp{
-  width:40px;
-  height:40px;
+.dp {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  overflow:hidden;
+  overflow: hidden;
 }
-.dp > img{
-  width:100%;
-  cursor:pointer; 
+.dp > img {
+  width: 100%;
+  cursor: pointer;
 }
 
 .left-panel ul {
@@ -180,7 +172,7 @@ text-align: center;
 
 .left-panel ul li:hover {
   /* background: #ddd; */
- background-color: var(--four-color);
+  background-color: var(--four-color);
 }
 
 .left-panel ul li > p {
@@ -217,6 +209,6 @@ text-align: center;
   color: #333;
   font-size: 12px;
 }
-#navbarSupportedContent{
+#navbarSupportedContent {
   flex-grow: 0;
 }
