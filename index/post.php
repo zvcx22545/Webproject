@@ -3,17 +3,28 @@
     require_once 'user.php';
     class Post{
         private $error = "";
-        public function create_post($user_id,$data){
+        public function create_post($user_id,$data, $files){
             global $conn;
-            if(!empty($data['post']))
-        {
+            if(!empty($data['post']) || !empty($files['file']['name']))
+        {   
+
+            $myimage = "";
+            $has_image = 0;
+            if(!empty($files['file']['name'])){
+                // $image_class = new Image();
+                $myimage = "";
+                $has_image = 1;
+            }
+
             $post = addslashes($data['post']);
             $postid = $this->create_postid();
 
-            $query = $conn->prepare("INSERT INTO posts(user_id,postid,post) VALUES(:user_id,:postid,:post)");
+            $query = $conn->prepare("INSERT INTO posts(user_id,postid,post,image,has_image) VALUES(:user_id,:postid,:post,:image,:has_image)");
             $query->bindParam(":user_id",$user_id);
             $query->bindParam(":postid",$postid);
             $query->bindParam(":post",$post);
+            $query->bindParam(":image",$myimage);
+            $query->bindParam(":has_image",$has_image);
             $query->execute();
 
            

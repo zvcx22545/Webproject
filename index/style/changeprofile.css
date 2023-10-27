@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+    .container-upload{
+        margin-top: 70px;
+        width: 50rem;
+        min-height: 400px;
+        flex: 2.5;
+        padding: 20px;
+        padding-right: 0px;
+
+    }
+    .uploadprofile{
+        border: solid thin #aaa;
+        padding: 10px;
+        background-color: white;
+        display: flex;
+    }
+    #post_button{
+        width: 80px;
+        height: auto;
+        float: right;
+        border: none;
+        padding: 4px;
+        font-size: 14px;
+        box-shadow: 0px 1px 2px 1px;
+    }

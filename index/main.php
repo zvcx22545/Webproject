@@ -31,7 +31,7 @@ if (!isset($_SESSION['user_login'])) {
 </head>
 
 <body class="backgrounds">
-    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top">
+    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows ">
         <?php
     if (isset($_SESSION['user_login'])) {
       // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
@@ -60,7 +60,7 @@ if (!isset($_SESSION['user_login'])) {
     //posting start here
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
       $post = new Post();
-      $result = $post->create_post($user_id, $_POST); // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
+      $result = $post->create_post($user_id, $_POST,$_FILES); // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
       if ($result == "") {
         header("location:main.php");
         exit();
@@ -132,8 +132,7 @@ if (!isset($_SESSION['user_login'])) {
                 <li>
                     <div class="dp">
 
-                        <img src="https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg"
-                            alt="Profile Image">
+                    <img src="./images/posts/cat-551554_1920.jpg" id="profile_pic">
 
                     </div>
                     <a href="./Profilepage.php" class="nav-link ms-2">
@@ -237,7 +236,7 @@ if (!isset($_SESSION['user_login'])) {
                                     <form method="post" enctype="multipart/form-data">
                                         <div class="my-3">
 
-                                            <input class="form-control" name="post_img" type="file"
+                                            <input class="form-control" name="file" type="file"
                                                 id="select_post_img">
                                         </div>
                                         <div class="mb-3">
@@ -269,7 +268,7 @@ if (!isset($_SESSION['user_login'])) {
           </div> -->
                     <div class="action mx-auto">
                         <i class="fa fa-image"></i>
-                        <span>Photo/Video</span>
+                        <span>Photo</span>
                     </div>
                     <!-- <div class="action">
             <i class="fa fa-smile"></i>
