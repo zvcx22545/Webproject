@@ -26,7 +26,7 @@
   background-color: var(--primary-color);
 }
 #profile_pic{
-  width: 150px;
+  width: 10rem;
   margin-top: -10rem;
   border-radius: 50%;
   border: solid 2px white;

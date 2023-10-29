@@ -14,21 +14,28 @@ $(document).ready(function () {
             contentType: false,
             success: function (result) {
                 if (result.status == "success") {
-                    console.log("Success", result)
                     Swal.fire({
                         title: "สำเร็จ!",
                         text: result.msg,
                         icon: result.status,
-                        timer: 3000,  // ตั้งค่าเวลา 3 วินาที
-                        showConfirmButton: false  // ไม่แสดงปุ่มยืนยัน
+                        timer: 2000,
+                        showConfirmButton: false
                     }).then(function () {
-                        window.location.reload();
+                        window.location.href ='http://localhost/Webproject/index/Profilepage.php';
                     });
                 } else {
                     console.log("Error", result)
                     Swal.fire("Failed to upload!", result.msg, "error");
                 }
+            },
+            error: function (error) {
+                console.error("Error:", error); 
+                Swal.fire("An error occurred!", "Please try again later.", "error");
             }
-        })
-    })
-})
+        });
+    });
+});
+
+
+
+

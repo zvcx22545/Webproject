@@ -74,8 +74,17 @@ if (!isset($_SESSION['user_login'])) {
   <!-- Cover area -->
   <div class="background-profile">
     <div class="bg-top text-center">
-      <img src="https://cdn.pixabay.com/photo/2017/09/20/04/46/salt-moutain-2767408_1280.jpg" style="width: 100%;">
-      <a href="./change_profile_image.php"><img src="./images/posts/cat-551554_1920.jpg" id="profile_pic"></a>
+     
+    <img src="https://cdn.pixabay.com/photo/2017/09/20/04/46/salt-moutain-2767408_1280.jpg" style="width: 100%;">
+    <?php 
+          $image = "";
+          if(file_exists($row['profile_image'])){
+            $image = $row['profile_image'];
+          }
+
+      ?>
+      
+      <a href="./change_profile_image.php"><img src="<?php echo $image ?>" id="profile_pic"></a>
       <br>
       <div class="Name-profile"> <?php echo $row['first_name']." ".$row['last_name'] ?></div>
       <br>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once 'config/db.php';
 include 'post.php';
 require_once 'user.php';
@@ -31,7 +32,7 @@ if (!isset($_SESSION['user_login'])) {
 </head>
 
 <body class="backgrounds">
-    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows ">
+    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top ">
         <?php
     if (isset($_SESSION['user_login'])) {
       // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
