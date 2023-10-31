@@ -2,6 +2,7 @@
 session_start();
 require_once 'config/db.php';
 require_once 'user.php';
+require_once 'image.php';
 
 $response = [];
 
@@ -29,22 +30,36 @@ if (!$row) {
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-        $filename = "uploads/" . $_FILES["file"]["name"];
-        move_uploaded_file($_FILES["file"]["tmp_name"], $filename);
+        $allowed_types = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
+        if (in_array($_FILES['file']['type'], $allowed_types)) {
+            $allowed_size = (1024 * 1024) * 3;
+            if ($_FILES['file']['size'] < $allowed_size) {
+                $filename = "uploads/" . $_FILES["file"]["name"];
+                move_uploaded_file($_FILES["file"]["tmp_name"], $filename);
+                $image = new Image();
+                $image->crop_image($filename,$filename,800,800);
 
-        if (file_exists($filename)) {
-            $user_id = $row['userid'];
-            $sql = "UPDATE users SET profile_image = :filename WHERE userid = :user_id LIMIT 1";
-            $query = $conn->prepare($sql);
-            $query->bindParam(":filename", $filename, PDO::PARAM_STR);
-            $query->bindParam(":user_id", $user_id, PDO::PARAM_INT);
-            $query->execute();
+                if (file_exists($filename)) {
+                    $user_id = $row['userid'];
+                    $sql = "UPDATE users SET profile_image = :filename WHERE userid = :user_id LIMIT 1";
+                    $query = $conn->prepare($sql);
+                    $query->bindParam(":filename", $filename, PDO::PARAM_STR);
+                    $query->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+                    $query->execute();
 
-            $response['status'] = "success";
-            $response['msg'] = "เปลี่ยนรูปภาพสำเร็จแล้ว!";
+                    $response['status'] = "success";
+                    $response['msg'] = "เปลี่ยนรูปภาพสำเร็จแล้ว!";
+                } else {
+                    $response['status'] = "error";
+                    $response['msg'] = "File upload failed!";
+                }
+            } else {
+                $response['status'] = "error";
+                $response['msg'] = "ขนาดไฟล์ไม่เกิน 3mb หรือ ต่ำกว่า!";
+            }
         } else {
             $response['status'] = "error";
-            $response['msg'] = "File upload failed!";
+            $response['msg'] = "กรุณาอัพโหลดไฟล์ Jpeg Svg Png Webp เท่านั้น!";
         }
     } else {
         $response['status'] = "error";
@@ -114,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <!-- ส่วนของการอัปโหลด -->
     <div class="container-upload">
-        <img src="" style="display: none;" id="profile_img" class=" rounded border">
+        <img src="" style="display: none;" id="profile_img" class=" rounded border text-center">
         <form action="" method="Post" enctype="multipart/form-data" id="change_profile_form">
             <input type="file" id="fileUpload" name="file" style="display: none;">
             <div class="upload-profile">

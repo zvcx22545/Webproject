@@ -1,16 +1,20 @@
 <!-- post area -->
 <?php
 require_once ("config/db.php");
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
-$stmt->bindParam(':user_id', $user_id);
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <div class="post">
+<?php 
+          $image = "";
+          if(file_exists($row['profile_image'])){
+            $image = $row['profile_image'];
+          }
+
+      ?>
+      
   <div class="post-top">
     <div class="dp">
-      <img src="https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg" type="images" alt="">
+      <img src="<?php echo $image ?>" type="images" alt="">
     </div>
     <div class="post-info">
   <p class="name font-weight-bolder mt-3"><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></p>

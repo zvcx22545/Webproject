@@ -24,6 +24,7 @@
 .bg-top{
   color:var(--secondary-color);
   background-color: var(--primary-color);
+
 }
 #profile_pic{
   width: 10rem;
@@ -40,4 +41,12 @@
 .Name-profile{
   font-size: 1.25rem;
   font-weight: 700;
+}
+.change-profile{
+  & .btn{
+    color: var(--secondary-color);
+  }
+  & a{
+    font-weight: 700;
+  }
 }
