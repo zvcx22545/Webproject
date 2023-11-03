@@ -1,18 +1,12 @@
 <?php
-session_start();
-require_once 'config/db.php';
-require_once 'user.php';
-require_once 'image.php';
+require_once "autoload.php";
 
 $response = [];
 
 if (!isset($_SESSION['user_login'])) {
-    $response['status'] = "error";
-    $response['msg'] = 'กรุณาเข้าสู่ระบบ!!';
-    echo json_encode($response);
-    exit();
+    $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
+    header('location:login.php');
 }
-
 // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
 $user_session_id = $_SESSION['user_login'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
@@ -20,35 +14,73 @@ $stmt->bindParam(':user_session_id', $user_session_id);
 $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$row) {
-    // Handle the case where user data is not found
-    $response['status'] = "error";
-    $response['msg'] = 'ไม่พบข้อมูลผู้ใช้!';
-    echo json_encode($response);
+if ($row) {
+    $user_id = $row['userid']; // ตอนนี้เราได้รับ userid ของผู้ใช้จากตาราง users
+} else {
+    // ถ้าไม่พบข้อมูลผู้ใช้ในฐานข้อมูล ให้ทำการล็อกเอาท์และเปลี่ยนเส้นทาง
+    $_SESSION['error'] = 'ผู้ใช้ไม่ถูกต้อง';
+    header('location: logout.php'); // หรือให้เปลี่ยนเส้นทางไปที่หน้าอื่นที่เหมาะสม
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-        $allowed_types = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
+        $allowed_types = ["image/jpeg", "image/png", "image/webp"];
         if (in_array($_FILES['file']['type'], $allowed_types)) {
             $allowed_size = (1024 * 1024) * 3;
             if ($_FILES['file']['size'] < $allowed_size) {
-                $filename = "uploads/" . $_FILES["file"]["name"];
-                move_uploaded_file($_FILES["file"]["tmp_name"], $filename);
+                //everything is fine
+                $folder = "uploads/" . $row['userid'] . "/";
+
+                //create folder
+                if (!file_exists($folder)) {
+                    mkdir($folder, 0777, true);
+                }
                 $image = new Image();
-                $image->crop_image($filename,$filename,800,800);
+                $filename = $folder . $image->generate_filename(15) . ".jpg";
+                move_uploaded_file($_FILES["file"]["tmp_name"], $filename);
+                $change = "profile";
+
+                // check for mode
+
+                if (isset($_GET['change'])) {
+                    $change = $_GET['change'];
+                }
+
+                if ($change == "cover") {
+                    if (file_exists($row['cover_image'])) {
+                        unlink($row['cover_image']);
+                    }
+                    $image->resize_image($filename, $filename, 1500, 1500);
+                } else {
+                    if (file_exists($row['profile_image'])) {
+                        unlink($row['profile_image']);
+                    }
+                    $image->crop_image($filename, $filename, 1500, 1500);
+                }
 
                 if (file_exists($filename)) {
                     $user_id = $row['userid'];
-                    $sql = "UPDATE users SET profile_image = :filename WHERE userid = :user_id LIMIT 1";
+                    if ($change == "cover") {
+                        $sql = "UPDATE users SET cover_image = :filename WHERE userid = :user_id LIMIT 1";
+                        $_POST['is_cover_image'] = 1;
+                    } else {
+                        $sql = "UPDATE users SET profile_image = :filename WHERE userid = :user_id LIMIT 1";
+                        $_POST['is_profile_image'] = 1;
+                    }
+
                     $query = $conn->prepare($sql);
                     $query->bindParam(":filename", $filename, PDO::PARAM_STR);
                     $query->bindParam(":user_id", $user_id, PDO::PARAM_INT);
                     $query->execute();
-
+                    $post = new Post();
+                    $_POST['is_profile_image'] = 1;
+                    $post->create_post($user_id, $_POST, $filename);
                     $response['status'] = "success";
                     $response['msg'] = "เปลี่ยนรูปภาพสำเร็จแล้ว!";
+
+                    //create a post
+
                 } else {
                     $response['status'] = "error";
                     $response['msg'] = "File upload failed!";
@@ -59,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             }
         } else {
             $response['status'] = "error";
-            $response['msg'] = "กรุณาอัพโหลดไฟล์ Jpeg Svg Png Webp เท่านั้น!";
+            $response['msg'] = "กรุณาอัพโหลดไฟล์ Jpeg  Png Webp เท่านั้น!";
         }
     } else {
         $response['status'] = "error";
@@ -71,37 +103,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     exit();
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel to Knowledge</title>
-    <link rel="stylesheet" href="./style/main.css">
-    <link rel="stylesheet" href="./style/post.css">
-    <link rel="stylesheet" href="./style/changeprofile.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-</head>
-
+<?php
+    include "header.php";
+?>
 <body class="backgrounds">
     <header class="pt-1 px-4 w-100 navbar-expand-xxl bg-dark shadows fixed-top ">
-        <?php
-
-        ?>
-
-
-
 
         <div class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start justify-content-start ">
-            <div class="logo text-left col-12 col-lg-auto">Travel to Knowledge</div>
+            <div class="logo text-left col-12 col-lg-auto"><a href="./main.php" class="nav-link">Travel to Knowledge</a></div>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 navbars">
                 <li><a href="./main.php" class="nav-link px-2"><i class="fa fa-home"></i></a></li>
@@ -129,8 +138,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <!-- ส่วนของการอัปโหลด -->
     <div class="container-upload">
-        <img src="" style="display: none;" id="profile_img" class=" rounded border text-center">
-        <form action="" method="Post" enctype="multipart/form-data" id="change_profile_form">
+        <div class="text-center d-flex justify-content-center align-content-center">
+            <img src="" style="display: none;" id="profile_img" class=" rounded border">
+        </div>
+        <form action="" method="Post" enctype="multipart/form-data" id="change_profile_form" class="text-center mt-2 d-flex justify-content-center align-content-center">
             <input type="file" id="fileUpload" name="file" style="display: none;">
             <div class="upload-profile">
                 <div class="uploadprofile">
@@ -141,6 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         </svg>
                     </label>
                     <input class="btn btn-outline-dark ms-auto" type="submit" id="post_button" value="Change">
+
                 </div>
             </div>
         </form>

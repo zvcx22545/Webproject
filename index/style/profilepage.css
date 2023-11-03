@@ -19,6 +19,7 @@
   width: 50rem;
   margin: auto;
   min-height: 400px;
+  margin-top: 55px;
   /* background-color: var(--three-color); */
 }
 .bg-top{
