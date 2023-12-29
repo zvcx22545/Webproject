@@ -1,6 +1,5 @@
 <?php
 
-
 require_once 'autoload.php';
 
 if (!isset($_SESSION['user_login'])) {
@@ -9,25 +8,9 @@ if (!isset($_SESSION['user_login'])) {
     header('location:login.php');
 }
 
-
+include "header.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel to Knowledge</title>
-    <link rel="stylesheet" href="./style/main.css">
-    <link rel="stylesheet" href="./style/post.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-</head>
 
 <body class="backgrounds">
     <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top ">
@@ -71,7 +54,7 @@ if (!isset($_SESSION['user_login'])) {
 
         // collect posts
         $post = new Post();
-        $posts = $post->get_posts($user_id);  // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
+        $posts = $post->getAllPosts();  // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
         $image_class = new Image();
 
         ?>
@@ -85,7 +68,7 @@ if (!isset($_SESSION['user_login'])) {
                 <li><a href="./main.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'main.php' ? 'active' : ''; ?>"><i class="fa fa-home"></i></a></li>
                 <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
                 <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
-                <li><a href="./shirt.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
+                <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -155,7 +138,7 @@ if (!isset($_SESSION['user_login'])) {
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title me-3">คุณอยากโพสต์อะไร</h5>
-                                    <select id="categoryDropdown" class="form-select option-container text-center rounded-pill mt-1 w-50">
+                                    <select id="categoryDropdown" class="form-select option-container text-center rounded-pill mt-1 w-50 " name="category">
                                         <option value="" disabled selected>หมวดหมู่</option>
                                         <option value="clothing">Clothing</option>
                                         <option value="travel">Travel</option>

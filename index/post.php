@@ -12,6 +12,7 @@ class Post
             $has_image = 0;
             $is_cover_image = 0;
             $is_profile_image = 0;
+            $category = isset($data['category']) ? $data['category'] : '';
             if (isset($data['is_profile_image']) || isset($data['is_cover_image'])) {
 
                 $myimage = $files;
@@ -52,7 +53,7 @@ class Post
             }
             $postid = $this->create_postid();
 
-            $query = $conn->prepare("INSERT INTO posts(user_id,postid,post,image,has_image,is_cover_image,is_profile_image) VALUES(:user_id,:postid,:post,:image,:has_image,:is_cover_image,:is_profile_image)");
+            $query = $conn->prepare("INSERT INTO posts(user_id,postid,post,image,has_image,is_cover_image,is_profile_image,category) VALUES(:user_id,:postid,:post,:image,:has_image,:is_cover_image,:is_profile_image,:category)");
             $query->bindParam(":user_id", $user_id);
             $query->bindParam(":postid", $postid);
             $query->bindParam(":post", $post);
@@ -60,6 +61,7 @@ class Post
             $query->bindParam(":has_image", $has_image);
             $query->bindParam(":is_cover_image", $is_cover_image);
             $query->bindParam(":is_profile_image", $is_profile_image);
+            $query->bindParam(":category", $category);
             $query->execute();
         } else {
             $this->error .= 'Please enter something to post! <br>';
@@ -81,6 +83,70 @@ class Post
             return false;
         }
     }
+    public function get_one_post($postid)
+    {
+        global $conn;
+        if(!is_numeric($postid)) {
+            return false;
+        }
+        $query = $conn->prepare("SELECT * FROM posts WHERE postid = :postid  LIMIT 1");
+        $query->bindParam(":postid", $postid);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result)
+        {
+            return $result["0"];
+        }else{
+            return false;
+        }
+    }
+    public function delete_post($postid,)
+    {
+        global $conn;
+        if(!is_numeric($postid)) {
+            return false;
+        }
+        $query = $conn->prepare("DELETE FROM posts WHERE postid = :postid  LIMIT 1");
+        $query->bindParam(":postid", $postid,PDO::PARAM_INT);
+        $query->execute();
+
+            
+        
+    }
+    public function i_own_post($postid,$user_login)
+    {
+        global $conn;
+        if(!is_numeric($postid)) {
+            return false;
+        }
+        $query = $conn->prepare("SELECT * FROM posts WHERE postid = :postid  LIMIT 1");
+        $query->bindParam(":postid", $postid,PDO::PARAM_INT);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        if(is_array($result))
+        {
+            if($result['user_id'] == $user_login)
+            {
+                return true;
+            }
+        }
+        return false;
+
+            
+        
+    }
+    public function getAllPosts()
+{
+    global $conn;
+    
+    $query = $conn->prepare("SELECT * FROM posts ORDER BY date DESC");
+    $query->execute();
+    $result = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts
+    
+    return $result; // Return the array of posts
+}
+
     private function create_postid()
     {
         $length = rand(4, 19);

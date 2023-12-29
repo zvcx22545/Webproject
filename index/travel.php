@@ -1,9 +1,6 @@
 <?php
-session_start();
 
-require_once 'config/db.php';
-include 'post.php';
-require_once 'user.php';
+require_once 'autoload.php';
 
 if (!isset($_SESSION['user_login'])) {
     $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
@@ -11,25 +8,9 @@ if (!isset($_SESSION['user_login'])) {
     header('location:login.php');
 }
 
-
+include "header.php";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel to Knowledge</title>
-    <link rel="stylesheet" href="./style/main.css">
-    <link rel="stylesheet" href="./style/post.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <!-- <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-</head>
 
 <body class="backgrounds">
     <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top ">
@@ -73,7 +54,8 @@ if (!isset($_SESSION['user_login'])) {
 
         // collect posts
         $post = new Post();
-        $posts = $post->get_posts($user_id);  // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
+        $posts = $post->getAllPosts();  // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
+        $image_class = new Image();
 
         ?>
 
@@ -86,7 +68,7 @@ if (!isset($_SESSION['user_login'])) {
                 <li><a href="./main.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'main.php' ? 'active' : ''; ?>"><i class="fa fa-home"></i></a></li>
                 <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
                 <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
-                <li><a href="./shirt.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
+                <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -118,15 +100,13 @@ if (!isset($_SESSION['user_login'])) {
                 <li>
                     <div class="dp">
                         <?php
-                        $image = "";
+                        $corner_image = "images/istockphoto-1337144146-612x612.jpg";
                         if (file_exists($row['profile_image'])) {
-                            $image = $row['profile_image'];
+                            $image_class = new Image();
+                            $corner_image = $image_class->get_thumb_profile($row['profile_image']);
                         }
-
                         ?>
-
-
-                        <img src="<?php echo $image ?>" id="profile_pic">
+                        <img src="<?php echo $corner_image ?>" id="profile_pic">
 
                     </div>
                     <a href="./Profilepage.php" class="nav-link ms-2">
@@ -134,7 +114,7 @@ if (!isset($_SESSION['user_login'])) {
                     </a>
 
                 </li>
-                
+
         </div>
 
         <div class="container-post">
@@ -142,7 +122,7 @@ if (!isset($_SESSION['user_login'])) {
             <div class="post create" style="margin-top:70px;">
                 <div class="post-top">
                     <div class="dp">
-                        <img src="<?php echo $image ?>" type="images" alt="">
+                        <img src="<?php echo $corner_image ?>" type="images" alt="">
                     </div>
 
                     <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal" data-bs-target="#postModal" readonly style="cursor: pointer;" />
@@ -158,7 +138,7 @@ if (!isset($_SESSION['user_login'])) {
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title me-3">คุณอยากโพสต์อะไร</h5>
-                                    <select id="categoryDropdown" class="form-control option-container text-center rounded-pill mt-1 w-50">
+                                    <select id="categoryDropdown" class="form-select option-container text-center rounded-pill mt-1 w-50 " name="category">
                                         <option value="" disabled selected>หมวดหมู่</option>
                                         <option value="clothing">Clothing</option>
                                         <option value="travel">Travel</option>
@@ -175,7 +155,7 @@ if (!isset($_SESSION['user_login'])) {
                                         <div class="my-3">
 
                                             <input class="form-control" name="file" type="file" id="select_post_img" style="display: none;">
-                                            <label for="select_post_img" class = "d-flex justify-content-center">
+                                            <label for="select_post_img" class="d-flex justify-content-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cloud-arrow-up text-center mx-auto" viewBox="0 0 16 16">
                                                     <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2z" />
                                                     <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z" />
