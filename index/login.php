@@ -59,6 +59,10 @@ session_start();
           <input type="password" id="password" class="form-control " name="password" id="floatingPassword" placeholder="Password" required>
           <label for="floatingPassword">Password</label>
         </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" name="remember" <?php if (isset($_COOKIE['user_login'])) { ?> checked <?php } ?> class="form-check-input" id="remember">
+          <label class="form-check-label" for="remember">Remember Me</label>
+        </div>
 
         <button name="signin" class="btn-s w-100 py-2" type="submit">Sign in</button>
         <p class="mt-5 mb-3 text-body-secondary">Don't have an account Please? <a href="./register.php">sing

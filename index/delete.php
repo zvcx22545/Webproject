@@ -79,7 +79,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         }
     </style>
 <body class="backgrounds">
-    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows ">
+    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top">
         <?php
         if (isset($_SESSION['user_login'])) {
             // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ

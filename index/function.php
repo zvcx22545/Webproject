@@ -92,8 +92,8 @@ if (isset($_SESSION['user_login'])) {
     <br><br>
     <?php
     if (file_exists($ROW['image'])) {
-      $post_image = $image_class->get_thumb_post($ROW['image']);
-      echo "<img src='$post_image' style='width:85%;'/>";
+      $post_image = $ROW['image'];
+      echo "<img src='$post_image' style='width:100%;'/>";
     }
     ?>
   </div>
@@ -113,8 +113,7 @@ if (isset($_SESSION['user_login'])) {
     if($post->i_own_post($ROW['postid'],$user_id))
     {
       echo "
-        <a href='delete.php?id=$ROW[postid]'><i class='bi bi-trash-fill btn btn-outline-danger mx-2'>Delete</i></a>
-        <a href='edit.php'><i class='bi bi-pen-fill btn btn-outline-info'>Edit</i></a>";
+        <a href='delete.php?id=$ROW[postid]'><i class='bi bi-trash-fill btn btn-outline-danger mx-2'>Delete</i></a>";
       
     }
       ?>

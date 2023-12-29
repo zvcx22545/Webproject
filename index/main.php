@@ -9,12 +9,15 @@ if (!isset($_SESSION['user_login'])) {
 }
 
 include "header.php";
+
+
 ?>
 
 
 <body class="backgrounds">
     <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top ">
         <?php
+
         if (isset($_SESSION['user_login'])) {
             // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
             $user_session_id = $_SESSION['user_login'];
@@ -76,9 +79,9 @@ include "header.php";
 
             <div class="collapse navbar-collapse w-auto " id="navbarSupportedContent">
 
-                <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search">
-                    <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light me-2" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search"action="search.php" method="POST">
+                    <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search"name="search" id="search" autocomplete="off" required>
+                    <button class="btn btn-outline-light me-2" type="submit" name="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                         </svg></button>
                 </form>
@@ -138,6 +141,12 @@ include "header.php";
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title me-3">คุณอยากโพสต์อะไร</h5>
+
+
+                                    <button type="button" class="btn-close mr-lg-2" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                                </div>
+                                <form method="post" enctype="multipart/form-data">
                                     <select id="categoryDropdown" class="form-select option-container text-center rounded-pill mt-1 w-50 " name="category">
                                         <option value="" disabled selected>หมวดหมู่</option>
                                         <option value="clothing">Clothing</option>
@@ -145,13 +154,9 @@ include "header.php";
                                         <option value="food">Food</option>
                                     </select>
 
-                                    <button type="button" class="btn-close mr-lg-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="modal-body">
+                                        <img src="" style="display: none;" id="post_img" class="w-100 rounded border">
 
-                                </div>
-
-                                <div class="modal-body">
-                                    <img src="" style="display: none;" id="post_img" class="w-100 rounded border">
-                                    <form method="post" enctype="multipart/form-data">
                                         <div class="my-3">
 
                                             <input class="form-control" name="file" type="file" id="select_post_img" style="display: none;">
@@ -170,52 +175,54 @@ include "header.php";
 
                                         <button name="post_button" type="submit" class="btn btn-primary" id="post_button" value="Post">Post</button>
 
-                                    </form>
-                                </div>
-
+                                </form>
                             </div>
+
                         </div>
                     </div>
-                    <script src="./javascript/custom.js?v=<?= time() ?>"></script>
-
-
                 </div>
+                <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
-                <div class="post-bottom">
-                    <!-- <div class="action">
+
+            </div>
+
+            <div class="post-bottom">
+                <!-- <div class="action">
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-                    <div class="action mx-auto">
-                        <i class="fa fa-image"></i>
-                        <span>Photo</span>
-                    </div>
-                    <!-- <div class="action">
+                <div class="action mx-auto">
+                    <i class="fa fa-image"></i>
+                    <span>Photo</span>
+                </div>
+                <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
           </div> -->
-                </div>
             </div>
-            <!-- post area -->
-            <?php
-            if ($posts) {
-
-                foreach ($posts as $ROW) {
-                    $user = new User();
-                    $ROW_USER = $user->getUsers($ROW['user_id']);
-                    include 'function.php';
-                }
-            }
-
-            # code...
-
-            ?>
-
         </div>
+        <!-- post area -->
+        <?php
+
+        if ($posts) {
+
+
+            foreach ($posts as $ROW) {
+                $user = new User();
+                $ROW_USER = $user->getUsers($ROW['user_id']);
+                include 'function.php';
+            }
+        }
+
+        # code...
+
+        ?>
+
+    </div>
     </div>
 
 
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src=https://code.jquery.com/jquery-3.7.1.min.js></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>

@@ -68,7 +68,7 @@ include "header.php";
                 <li><a href="./main.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'main.php' ? 'active' : ''; ?>"><i class="fa fa-home"></i></a></li>
                 <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
                 <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
-                <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
+                <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'clothing.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -205,10 +205,10 @@ include "header.php";
            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
            
            // แสดงโพสต์
-           foreach ($posts as $post) {
+           foreach ($posts as $ROW) {
                // โค้ดสำหรับแสดงโพสต์ตามโครงสร้าง HTML ของคุณ
                $user = new User();
-               $ROW_USER = $user->getUsers($post['user_id']);
+               $ROW_USER = $user->getUsers($ROW['user_id']);
                include 'function.php';
            }
            
