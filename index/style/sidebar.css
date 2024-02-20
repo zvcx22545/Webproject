@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
+.container {
+    display: flex;
+    height: 100vh;
+}
+/* ส่วนซ้าย */
+
+.left {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    width: 250px;
+    height: 100%;
+    text-align: center;
+    padding: 0 1.7rem;
+    box-shadow: 0.5px 0px 5px #6f6d6d;
+}
+.logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    margin-top: 30px;
+    height: 154px;
+    width: 154px;
+    background-image: url('https://envi2.ku.ac.th//assets/images/component/logo/ku_color_big.png');
+    background-repeat: no-repeat;
+    background-size: 100px 100px;
+}
+.menu{
+    height: 100%;
+    position: relative;
+    list-style: none;
+    padding: 5px 0 5px 0;
+}
+button{
+    padding: 8px;
+    width: 100%;
+    text-align: left;
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+}
+
+button>a{
+    text-decoration: none;
+    color: inherit;
+}
+.logout {
+    position: absolute;
+    bottom: 0;
+    width: auto;
+    text-align: center;
+    margin-bottom: 40px;
+    margin-left: -50px;
+    padding-right: 10px;
+    color: black;
+    background-color: white;
+}
+.logout a {
+    text-decoration: none;
+    color: inherit;
+}
+nav {
+    color: white;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 10px;
+    justify-content: space-between;
+    display: flex;
+    height: 55px;
+    /* margin-top: 10px; */
+    vertical-align: middle;
+    background-color:  #0C3695;
+}
+/* ส่วนขวา */
+.right {
+    width: calc(100% - 250px); /* แบ่งเป็นสองส่วนเท่าๆ กัน */
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+i{
+    height: 18px;
+    width: 18px;
+    margin-right: 18px;
+    padding-left: 5px;
+}
+.search-icon {
+    position: fixed;
+    top: 2.5rem; /* ขยับจากด้านบนลงมา 4.5rem */
+    right: 1rem;
+    display: flex;
+    transition: 0.5s;
+    width: 120px;
+    height: 20px;
+    padding: 12px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    border: 1px solid var(--MBN---Blue, #28b7e1);
+    background: var(--Primary-White, #fff);
+    color: var(--MBN---Blue, #28b7e1);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+  }
+  .icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .search-icon .input
+  {
+      position: relative;
+      width: 300px;
+      height: 20px;
+      left: 9px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  .search-icon .input input
+  {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      font-size: 16px;
+  }
+  .input input::placeholder
+  {
+      color: var(--MBN---Blue, #28b7e1);
+  }
+  .search-icon:hover{
+    width: 300px;
+  }
+  .none-active{
+    color: black;
+    background-color: white;
+ }

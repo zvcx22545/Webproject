@@ -57,7 +57,7 @@
                             }
                             if($row['urole'] == 'admin'){
                                 $_SESSION['admin_login'] = $row['id'];
-                                header("location:http://localhost/Webproject/index/admin-dashboard/admin-dashboard/");
+                                header("location:admin.php");
                             }else{
                                 $_SESSION['user_login'] = $row['id'];
                                 header("location:main.php");

@@ -5,6 +5,8 @@ if (!isset($_SESSION['admin_login'])) {
   $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
   header('location:login.php');
 }
+
+
 ?>
 
 
@@ -16,14 +18,17 @@ if (!isset($_SESSION['admin_login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin page</title>
     <link rel="stylesheet" href="./style/admin.css">
+    <link rel="stylesheet" href="./style/sidebar.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 
 </head>
 
-<body>
+<body class="hold-transition sidebar-mini">
     <div class="container">
         <?php
           if(isset($_SESSION['admin_login'])) {
@@ -35,21 +40,72 @@ if (!isset($_SESSION['admin_login'])) {
 
           }
 ?>
-        <h1 class="welc">Welcome Admin</h1>
-        <nav>
-            <ul class="navbar">
-                <li><a href="#" id="home"><i class="fa-solid fa-house"></i></a></li>
-                <li><a href="#" id="approvalpost">Approval Post</a></li>
-                <li><a href="#" id="approvalplace">Approval Place</a></li>
-                <li><a href="./logout.php" id="logout">Log Out</a></li>
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="Search">
-                    <button id="searchButton">Search</button>
+     
+        <div class="container">
+        <div class="left">
+                <!-- ส่วนทางซ้าย -->
+                <h1 class="logo"></h1>
+                    <div class="main">
+                        <br>
+                        <ul class="menu">
+                             <a href=""><button class="active" id="teamButton"  onclick="changePage('team')"><i class="bi bi-people"></i>ข้อมูลรายชื่อทีม</button></a>
+                        </ul>
+                        <ul class="menu">
+                             <a href=""><button class="none-active" id="competitionButton" onclick="changePage('competition')"><i class="bi bi-boxes"></i>การแข่งขัน</button></a>
+                        </ul>
+                        <ul class="menu">
+                        </ul>
+                            <button class="logout" type="button"><a href="./logout.php"><p><i class="bi bi-arrow-bar-right"></i>Log out</p></a>
+                            </button>
                 </div>
-            </ul>
-        </nav>
+            </div>
+        <div class="right">
+            <!-- ส่วนทางขวา -->
+            <nav> <h1 id="pageTitle"></h1><h1><i class="bi bi-bell-fill" style="color:#fff;cursor: pointer;"></i></h1></nav>
+             
+            <div class="admin-data">
+            <div class="top-data">
+                <div class="listMenu">
+                    <h4>ทั้งหมด : </h4>
+                </div>>
+         </div>
+             <div class="tableMember">
+                <table>
+                    <tr>
+                      <th class="col0">No.</th>
+                      <th class="col1">ชื่อทีม</th>
+                      <th class="col4">สนามการแข่งขัน</th>
+                      <th class="col2">การชำระเงิน</th>
+                      <th class="col2">จำนวนผู้สมัคร</th>
+                      <th>รายละเอียด</th>
+                      <th class="col2">สถานะ</th>
+                    </tr>
+                    <tr>
+                      <td>1</td>
+                      <td>tester</td>
+                      <td>สนาม CM Trafford Arena</td>
+                      <td>1,000.00</td>
+                      <td>4</td>
+                      <td><button id="myBtn">ดูรายละเอียด</button></td>
+                      <td id="status">รอดำเนินการ</td>
+                    </tr>
+                    
+                  </table>
+
+             </div>
+        </div>
     </div>
 
-</body>
+
+    </div>
+        </body>
+<!-- SCRIPTS -->
+<script src="./javascript/no-table.js"></script>
+<script src="./javascript/details.js"></script>
+<script src="./javascript/search.js"></script>
+<script src="./javascript/preview.js"></script>
+<script src="./javascript/admin-page.js"></script>
+
+
 
 </html>

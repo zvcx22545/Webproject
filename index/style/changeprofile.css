@@ -5,6 +5,9 @@
 }
 
 .container-upload {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
   margin-top: 70px;
   width: 50rem;
   min-height: 400px;
@@ -35,11 +38,14 @@
   transition: background-color 0.3s;
 }
 .upload-profile {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #f2f2f2;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px;
+
   transition: background-color 0.3s;
 }
 .upload-profile:hover {
