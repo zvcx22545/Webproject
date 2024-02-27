@@ -21,7 +21,8 @@ $(document).ready(function () {
                         timer: 2000,
                         showConfirmButton: false
                     }).then(function () {
-                        window.location.href ='http://localhost/Webproject/index/Profilepage.php';
+                        // Update the redirect URL to remove the '/index/' directory
+                        window.location.href = 'http://localhost/Webproject/Profilepage.php';
                     });
                 } else {
                     console.log("Error", result)
@@ -35,7 +36,3 @@ $(document).ready(function () {
         });
     });
 });
-
-
-
-

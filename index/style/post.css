@@ -136,6 +136,11 @@
 .post-content{
     color: var(--secondary-color);
 }
+
+.edit-btn
+{
+    height: 38px;
+}
 /* สำหรับหน้าจอที่มีความกว้างไม่เกิน 600px */
 @media only screen and (max-width: 600px) {
     .post {

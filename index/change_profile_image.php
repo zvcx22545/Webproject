@@ -78,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $post->create_post($user_id, $_POST, $filename);
                     $response['status'] = "success";
                     $response['msg'] = "เปลี่ยนรูปภาพสำเร็จแล้ว!";
-
                     //create a post
 
                 } else {

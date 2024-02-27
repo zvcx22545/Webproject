@@ -158,4 +158,59 @@ class Post
 
         return $number;
     }
+
+    public function edit_post($data, $files)
+    {
+        global $conn;
+        if (!empty($data['post']) || !empty($files['file']['name'])) {
+            $myimage = "";
+            $has_image = 0;
+            
+            // Check if a new image file is uploaded
+            if (!empty($files['file']['name'])) {
+                // Handle image upload
+                $folder = "uploads/" . $user_id . "/";
+                // Create folder if not exists
+                if (!file_exists($folder)) {
+                    mkdir($folder, 0777, true);
+                    file_put_contents($folder. "index.php", "");
+                }
+                $image_class = new Image();
+                $myimage = $folder . $image_class->generate_filename(15) . ".jpg";
+                move_uploaded_file($_FILES["file"]["tmp_name"], $myimage);
+                $image_class->resize_image($myimage, $myimage, 1500, 1500);
+                $has_image = 1;
+            }
+    
+            $post = "";
+            if (isset($data['post'])) {
+                $post = addslashes($data['post']);
+            }
+            $postid = addslashes($data['postid']);
+    
+            // Update post query
+            if ($has_image) {
+                $query = $conn->prepare("UPDATE posts SET post = :post, image = :myimage WHERE postid = :postid LIMIT 1");
+                $query->bindParam(":myimage", $myimage);
+                
+            } else {
+                $query = $conn->prepare("UPDATE posts SET post = :post WHERE postid = :postid LIMIT 1");
+            }
+    
+            // Bind parameters
+            $query->bindParam(":postid", $postid);
+            $query->bindParam(":post", $post);
+    
+            // Execute query
+            $query->execute();
+            header("Location: Profilepage.php");
+        exit; // Stop the script
+        } else {
+            $this->error .= 'Please enter something to post! <br>';
+        }
+        return $this->error;
+    }
+    
 }
+
+   
