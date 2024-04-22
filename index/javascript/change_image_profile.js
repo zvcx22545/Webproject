@@ -22,7 +22,7 @@ $(document).ready(function () {
                         showConfirmButton: false
                     }).then(function () {
                         // Update the redirect URL to remove the '/index/' directory
-                        window.location.href = 'http://localhost/Webproject/Profilepage.php';
+                        window.location.href = '/Webproject/index/Profilepage.php';
                     });
                 } else {
                     console.log("Error", result)
