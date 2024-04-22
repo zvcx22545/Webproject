@@ -136,8 +136,14 @@ if (isset($_SESSION['user_login'])) {
       $post = new Post();
       if ($post->i_own_post($ROW['postid'], $user_id)) {
         echo "
-        <a href='delete.php?id=$ROW[postid]'><i class='bi bi-trash-fill btn btn-outline-danger mx-2'>Delete</i></a>
-        <a href='edit.php?id=$ROW[postid]' style='text-decoration: none;'><i class='fa-solid fa-pen-to-square btn btn-outline-info mx-2 edit-btn'>Edit</i></a> 
+        <a href='delete.php?id=$ROW[postid]'class='btn-post btn btn-outline-danger mx-2 d-flex edit-btn'>
+        <div  style='font-size: 16px;'>Delete</div>
+        <i class='bi bi-trash-fill  '></i>
+        </a>
+        <a href='edit.php?id=$ROW[postid]'class='btn-post d-flex btn btn-outline-info mx-2 edit-btn' style='text-decoration: none;'>
+        <i class='fa-solid fa-pen-to-square '></i>
+        <div  style='font-size: 16px;'>Edit</div>
+        </a> 
         ";
       
       }

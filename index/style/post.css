@@ -140,6 +140,21 @@
 .edit-btn
 {
     height: 38px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.btn-post>i
+{
+    font-size: 16px;
+}
+
+.btn-post
+{
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
 }
 /* สำหรับหน้าจอที่มีความกว้างไม่เกิน 600px */
 @media only screen and (max-width: 600px) {
