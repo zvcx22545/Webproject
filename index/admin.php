@@ -48,10 +48,10 @@ if (!isset($_SESSION['admin_login'])) {
                     <div class="main">
                         <br>
                         <ul class="menu">
-                             <a href=""><button class="active" id="teamButton"  onclick="changePage('team')"><i class="bi bi-people"></i>ข้อมูลรายชื่อทีม</button></a>
+                             <a href=""><button class="active" id="teamButton"  onclick="changePage('team')"><i class="bi bi-people"></i>อนุมัติสถานที่</button></a>
                         </ul>
                         <ul class="menu">
-                             <a href=""><button class="none-active" id="competitionButton" onclick="changePage('competition')"><i class="bi bi-boxes"></i>การแข่งขัน</button></a>
+                             <a href=""><button class="none-active" id="competitionButton" onclick="changePage('competition')"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                         </ul>
                         <ul class="menu">
                         </ul>
