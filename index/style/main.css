@@ -228,7 +228,11 @@ button
 button .icon
 {
   width: 22px;
-  height: 22px;
+  height: 22px;  
+}
+.btn.location
+{
+  color: var(--secondary-color);
 }
 
 button .icons

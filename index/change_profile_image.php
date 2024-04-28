@@ -77,7 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $_POST['is_profile_image'] = 1;
                     $post->create_post($user_id, $_POST, $filename);
                     $response['status'] = "success";
-                    $response['msg'] = "เปลี่ยนรูปภาพสำเร็จแล้ว!";
+                      $response['msg'] = "เปลี่ยนรูปภาพสำเร็จแล้ว!";
+                      echo json_encode($response);
+                      exit();
  
                     //create a post
 
@@ -169,8 +171,47 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
     </script>
     <script src="./javascript/view_profile.js?= time() ?>"></script>
-    <script src="./javascript/change_image_profile.js"></script>
     <script src="./javascript/main.js"></script>
 </body>
+<script>
+    $(document).ready(function () {
+    $("#change_profile_form").submit(function (e) {
+        e.preventDefault();
 
+        let formUrl = $(this).attr("action");
+        let reqMethod = $(this).attr("method");
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: formUrl,
+            type: reqMethod,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (result.status == "success") {
+                    Swal.fire({
+                        title: "สำเร็จ!",
+                        text: result.msg,
+                        icon: result.status,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(function () {
+                        // Update the redirect URL to remove the '/index/' directory
+                        window.location.href = '/Webproject/index/Profilepage.php';
+                    });
+                } else {
+                    console.log("Error", result)
+                    Swal.fire("Failed to upload!", result.msg, "error");
+                }
+            },
+            error: function (error) {
+                console.error("Error:", error); 
+                Swal.fire("An error occurred!", "Please try again later.", "error");
+            }
+        });
+    });
+});
+
+</script>
 </html>

@@ -5,3 +5,4 @@ require_once 'post.php';
 require_once 'user.php';
 require_once 'image.php';
 require_once "category.php";
+require_once 'Addlocation.php';
