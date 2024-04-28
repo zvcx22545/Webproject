@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/db.php';
+require_once 'autoload.php';
 if (!isset($_SESSION['admin_login'])) {
   $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
   header('location:login.php');

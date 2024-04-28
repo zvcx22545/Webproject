@@ -144,9 +144,9 @@ ul li {
   padding: 20px;
   box-shadow: 0px 2px 5px rgb(100, 96, 96);
   border-radius: 10px;
-  z-index: 1;
   margin-top: 4.375rem;
 }
+
 
 .dp {
   width: 40px;
@@ -219,4 +219,19 @@ ul li {
   cursor: pointer;
   border-radius: 8px;
   transition: background-color 0.3s;
+}
+
+button
+{
+  font-size: 16px;
+}
+button .icon
+{
+  width: 30px;
+  height: 30px;
+}
+
+button .icons
+{
+  gap: 4px;
 }

@@ -41,9 +41,10 @@
   float: right;
   border: none;
   padding: 4px;
-  font-size: 14px;
+  font-size: 16px;
   box-shadow: 0px 1px 2px 1px;
-}
+  display: flex;
+  justify-content: center;}
 
 #save_button {
   width: 150px;
