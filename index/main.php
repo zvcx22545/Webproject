@@ -1,6 +1,5 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
+
 require_once 'autoload.php';
 
 if (!isset($_SESSION['user_login'])) {
@@ -131,7 +130,7 @@ include "header.php";
                 <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search" action="search.php" method="POST">
                     <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search"
                         name="search" id="search" autocomplete="off" required>
-                    <button class="btn location btn-outline-light me-2" type="submit" name="submit"><svg
+                    <button class="btn btn-outline-light me-2" type="submit" name="submit"><svg
                             xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-search" viewBox="0 0 16 16">
                             <path
@@ -171,7 +170,7 @@ include "header.php";
                     </a>
 
                 </li>
-                <button class="btn btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal"
+                <button class="btn location btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal"
                     data-bs-toggle="modal" data-bs-dismiss="modal">
                     <div class="icons h-25 w-100 d-flex align-items-center justify-content-center">
                         <div class="text-center" style="font-size:16px;">เพิ่มสถานที่</div>

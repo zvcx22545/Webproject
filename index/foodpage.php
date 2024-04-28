@@ -15,7 +15,7 @@ include "header.php";
 
 
 <body class="backgrounds">
-    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top ">
+    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows ">
         <?php
 
         if (isset($_SESSION['user_login'])) {
@@ -29,7 +29,12 @@ include "header.php";
             // ตรวจสอบว่ามีผู้ใช้หรือไม่
             if ($row) {
                 $user_id = $row['userid']; // ตอนนี้เราได้รับ userid ของผู้ใช้จากตาราง users
-            } else {
+            }
+            else if($row)
+            {
+                $first_name = $row['first_name'];
+            }
+            else {
                 // ถ้าไม่พบข้อมูลผู้ใช้ในฐานข้อมูล ให้ทำการล็อกเอาท์และเปลี่ยนเส้นทาง
                 $_SESSION['error'] = 'ผู้ใช้ไม่ถูกต้อง';
                 header('location: logout.php'); // หรือให้เปลี่ยนเส้นทางไปที่หน้าอื่นที่เหมาะสม
@@ -44,16 +49,47 @@ include "header.php";
 
         //posting start here
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $post = new Post();
-            $result = $post->create_post($user_id, $_POST, $_FILES); // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
-            if ($result == "") {
-                header("location:main.php");
-                exit();
+            if (isset($_POST['post_button'])) {
+                // ประมวลผลของ Modal แรก
+                $post = new Post();
+                $result = $post->create_post($user_id, $_POST, $_FILES); // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
+                if ($result == "") {
+                    header("location:main.php");
+                    exit();
+                } else {
+                    echo "have error posting";
+                    echo $result;
+                }
+            }elseif (isset($_POST['addlocation'])) {
+        // Ensure $user_id and $first_name are set correctly
+        if (isset($_SESSION['user_login'])) {
+            $user_session_id = $_SESSION['user_login'];
+            $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
+            $stmt->bindParam(':user_session_id', $user_session_id);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                $user_id = $row['userid']; // Ensure this is correct
+                $first_name = $row['first_name']; // Ensure this is correct
+                $Addlocations = new Location();
+                $result = $Addlocations->Addlocation($user_id, $_POST, $_FILES, $first_name);
+                if ($result === true) {
+                    // Success message if data added successfully
+                    echo "Location added successfully!";
+                } else {
+                    // Display error message if there's an error
+                    echo "Error: " . $result;
+                }
             } else {
-                echo "have error posting";
-                echo $result;
+                // Handle case where user is not found
             }
+        } else {
+            // Handle case where user session is not set
         }
+    }
+        }
+        
 
         // collect posts
         $post = new Post();
@@ -61,6 +97,7 @@ include "header.php";
         $image_class = new Image();
 
         ?>
+
 
 
 
