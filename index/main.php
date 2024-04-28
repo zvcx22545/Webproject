@@ -235,7 +235,6 @@ include "header.php";
                         </div>
                     </div>
                 </div>
-                <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 
             </div>
@@ -290,13 +289,13 @@ include "header.php";
                         </div>
 
                         <div class="modal-body">
-                            <img src="" style="display: none;" id="post_img" class="w-100 rounded border">
+                            <img src="" style="display: none;" id="location_img" class="w-100 rounded border">
 
                             <div class="my-3">
 
-                                <input class="form-control" name="file" type="file" id="select_post_img"
+                                <input class="form-control" name="file" type="file" id="select_location_img"
                                     style="display: none;" required>
-                                <label for="select_post_img" class="d-flex justify-content-center">
+                                <label for="select_location_img" class="d-flex justify-content-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                                         class="bi bi-cloud-arrow-up text-center mx-auto" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
@@ -340,6 +339,8 @@ include "header.php";
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
     </script>
 <script src="./javascript/main.js"></script>
+<script src="./javascript/custom.js?v=<?= time() ?>"></script>
+
 
 <script>
 </script>
