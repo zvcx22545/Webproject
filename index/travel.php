@@ -15,7 +15,7 @@ include "header.php";
 
 
 <body class="backgrounds">
-    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows ">
+    <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top">
         <?php
 
         if (isset($_SESSION['user_login'])) {
@@ -153,7 +153,8 @@ include "header.php";
                     </a>
 
                 </li>
-                <button class="btn btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal"
+                <div class="mt-3">
+                <button class="btn location btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal"
                     data-bs-toggle="modal" data-bs-dismiss="modal">
                     <div class="icons h-25 w-100 d-flex align-items-center justify-content-center">
                         <div class="text-center" style="font-size:16px;">เพิ่มสถานที่</div>
@@ -167,6 +168,8 @@ include "header.php";
                     </div>
 
                 </button>
+            </div>
+
 
 
 

@@ -41,7 +41,6 @@ require_once 'user.php';
         $query->bindParam(":location_id", $location_id);
         $query->bindParam(":has_image", $has_image);
         $query->bindParam(":first_name", $first_name);
-        $query->execute();
         // Check if query executes successfully
         if ($query->execute()) {
             // Query executed successfully
