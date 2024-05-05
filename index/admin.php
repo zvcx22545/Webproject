@@ -1,7 +1,6 @@
 <?php
-session_start();
-require_once 'config/db.php';
 require_once 'autoload.php';
+require_once 'config/db.php';
 if (!isset($_SESSION['admin_login'])) {
   $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
   header('location:login.php');
@@ -25,7 +24,7 @@ if (!isset($_SESSION['admin_login'])) {
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 
@@ -43,7 +42,7 @@ if (!isset($_SESSION['admin_login'])) {
 ?>
      
         <div class="container">
-        <div class="left">
+        <div class="left bg-base">
                 <!-- ส่วนทางซ้าย -->
                 <h1 class="logo"></h1>
                     <div class="main">
@@ -62,7 +61,7 @@ if (!isset($_SESSION['admin_login'])) {
             </div>
         <div class="right">
             <!-- ส่วนทางขวา -->
-            <nav> <h1 id="pageTitle"></h1><h1><i class="bi bi-bell-fill" style="color:#fff;cursor: pointer;"></i></h1></nav>
+            <nav> <h1 id="pageTitle" class="text-2xl">อนุมัติสถานที่</h1><h1></h1></nav>
              
             <div class="admin-data">
             <div class="top-data">
@@ -105,7 +104,7 @@ if (!isset($_SESSION['admin_login'])) {
 <script src="./javascript/details.js"></script>
 <script src="./javascript/search.js"></script>
 <script src="./javascript/preview.js"></script>
-<script src="./javascript/admin-page.js"></script>
+<!-- <script src="./javascript/admin-page.js"></script> -->
 
 
 
