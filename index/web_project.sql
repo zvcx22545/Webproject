@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2024 at 02:02 PM
+-- Generation Time: May 06, 2024 at 05:04 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -36,17 +36,19 @@ CREATE TABLE `locations` (
   `location_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `has_image` int(11) NOT NULL,
   `first_name` varchar(255) NOT NULL,
-  `create_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `create_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `locations`
 --
 
-INSERT INTO `locations` (`id`, `location_name`, `user_id`, `image`, `map_link`, `location_id`, `has_image`, `first_name`, `create_at`) VALUES
-(1, 'Mixue ', '69704620163528', 'uploads/69704620163528/OtGcjE0ANOPFbB9.jpg', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '679142', 1, 'Mali', '2024-04-28 23:50:53'),
-(3, 'Mixue Kampangsan', '69704620163528', 'uploads/69704620163528/cpp8XDBQfYHcfBu.jpg', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '65137', 1, 'Mali', '2024-04-28 23:50:53'),
-(10, 'Mixue ', '69704620163528', 'uploads/69704620163528/SOPhrE0shZOkxme.jpg', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '4501080428803342446', 1, 'Mali', '2024-04-29 03:16:13');
+INSERT INTO `locations` (`id`, `location_name`, `user_id`, `image`, `map_link`, `location_id`, `has_image`, `first_name`, `create_at`, `status`) VALUES
+(1, 'Mixue ', '69704620163528', 'uploads/69704620163528/OtGcjE0ANOPFbB9.jpg', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '679142', 1, 'Mali', '2024-04-28 23:50:53', ''),
+(3, 'Mixue Kampangsan', '69704620163528', 'uploads/69704620163528/cpp8XDBQfYHcfBu.jpg', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '65137', 1, 'Mali', '2024-04-28 23:50:53', ''),
+(10, 'Mixue ', '69704620163528', 'uploads/69704620163528/SOPhrE0shZOkxme.jpg', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '4501080428803342446', 1, 'Mali', '2024-05-06 01:41:29', 'approved'),
+(12, 'U Avenue', '69704620163528', 'uploads/69704620163528/CjgGPUpSUtSj4Ag.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '569063866057', 1, 'Mali', '2024-05-06 02:06:39', '');
 
 -- --------------------------------------------------------
 
@@ -190,7 +192,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `posts`
