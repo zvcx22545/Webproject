@@ -14,13 +14,23 @@ $userid = $userCreator->create_userid();
 $urole = 'user';
 
 $response = array();
- if (!$first_name) {
+if (!$first_name) {
+   $response['status'] = "error";
+   $response['msg'] = "กรุณากรอกชื่อ";
+} 
+else if (!preg_match('/^[a-zA-Z]+$/', $first_name)) {
     $response['status'] = "error";
-    $response['msg'] = "กรุณากรอกชื่อ";
-} else if (!$last_name) {
+    $response['msg'] = "กรุณากรอกชื่อเฉพาะตัวอักษรเท่านั้น";
+} 
+else if (!$last_name) {
     $response['status'] = "error";
     $response['msg'] = "กรุณากรอกนามสกุล";
-}else if (empty($email) || strpos($email, "@ku.th") === false) {
+}
+else if (!preg_match('/^[a-zA-Z]+$/', $last_name)) {
+    $response['status'] = "error";
+    $response['msg'] = "กรุณากรอกนามสกุลเฉพาะตัวอักษรเท่านั้น";
+}
+ else if (empty($email) || strpos($email, "@ku.th") === false) {
     $response['status'] = "error";
     $response['msg'] = "กรุณากรอกอีเมล@ku.th";
 } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
