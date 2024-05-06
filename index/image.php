@@ -198,7 +198,7 @@ class Image
                 imagejpeg($new_image, $resized_file_name, 90);
                 break;
             case IMAGETYPE_PNG:
-                imagepng($new_image, $resized_file_name, 90);
+                imagepng($new_image, $resized_file_name, 9);
                 break;
             case IMAGETYPE_WEBP:
                 imagewebp($new_image, $resized_file_name, 90);
