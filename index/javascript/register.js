@@ -14,8 +14,13 @@ $(document).ready(function () {
                 let result = JSON.parse(data);
                 if (result.status == "success") {
                     console.log("Success", result)
-                    Swal.fire("สำเร็จ!", result.msg, result.status).then(function () {
-                        window.location.reload();
+                    Swal.fire({
+                        title: "สำเร็จ!",
+                        text: result.msg,
+                        icon: result.status,
+                        confirmButtonText: "ตกลง"
+                    }).then(function () {
+                        window.location.href = "login.php";
                     });
                 } else {
                     console.log("Error", result)
