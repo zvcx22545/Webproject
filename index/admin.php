@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status']) && isset($_
 
 </head>
 
-<body class="hold-transition sidebar-mini bg-base">
+<body class="hold-transition sidebar-mini bg-zinc-100">
     <div class="container">
         <?php
         if (isset($_SESSION['admin_login'])) {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status']) && isset($_
         ?>
 
         <div class="container">
-            <div class="left bg-base">
+            <div class="left bg-white">
                 <!-- ส่วนทางซ้าย -->
                 <h1 class="logo"></h1>
                 <div class="main">
