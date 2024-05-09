@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    if (typeof Swal === 'undefined') {
+        console.log('SweetAlert2 is not loaded!');
+    } else {
+        console.log('SweetAlert2 is loaded successfully.');
+    }
     $("#change_profile_form").submit(function (e) {
         e.preventDefault();
 

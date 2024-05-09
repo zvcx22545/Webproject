@@ -111,7 +111,7 @@ $image_class = new Image();
         $image = $image_class->get_thumb_cover($row['cover_image']);
       }
       ?>
-      <img src="<?php echo $image ?>" style="width: 100%;">
+      <img src="<?php echo $image ?>" style="width: 100%; height:fit-content;">
       <?php
       $image = "images/istockphoto-1337144146-612x612.jpg";
       if (file_exists($row['profile_image'])) {
