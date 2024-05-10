@@ -8,32 +8,37 @@ if (!isset($_SESSION['admin_login'])) {
 
 
 // Handle both status and category updates
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId'])) {
-    // Connect to the database
-    require_once 'config/db.php';
+// Handle status updates
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isset($_POST['status'])) {
+    global $conn;
 
-    // Check if status is set and update status
-    if (isset($_POST['status'])) {
-        $status = $_POST['status'];
-        $query = $conn->prepare("UPDATE locations SET status = :status WHERE id = :locationId");
-        $query->bindParam(":status", $status);
-        $query->bindParam(":locationId", $_POST['locationId']);
-        $query->execute();
+    $status = $_POST['status'];
+    $locationId = $_POST['locationId'];
+    $query = $conn->prepare("UPDATE locations SET status = :status WHERE id = :locationId");
+    $query->bindParam(":status", $status);
+    $query->bindParam(":locationId", $locationId);
+    if ($query->execute()) {
+        echo 'Status update successful.';
+    } else {
+        echo 'Status update failed: ' . implode(";", $query->errorInfo());
     }
-
-    // Check if category is set and update category
-    if (isset($_POST['category'])) {
-        $category = $_POST['category'];
-        $query = $conn->prepare("UPDATE locations SET category = :category WHERE id = :locationId");
-        $query->bindParam(":category", $category);
-        $query->bindParam(":locationId", $_POST['locationId']);
-        $query->execute();
-    }
-
-    // Send response
-    echo 'Update successful.';
 }
 
+// Handle category updates
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isset($_POST['category'])) {
+    global $conn;
+
+    $category = $_POST['category'];
+    $locationId = $_POST['locationId'];
+    $query = $conn->prepare("UPDATE locations SET category_name = :category_name WHERE id = :locationId");
+    $query->bindParam(":category_name", $category);
+    $query->bindParam(":locationId", $locationId);
+    if ($query->execute()) {
+        echo 'Category update successful.';
+    } else {
+        echo 'Category update failed: ' . implode(";", $query->errorInfo());
+    }
+}
 
 ?>
 
@@ -132,14 +137,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId'])) {
                                         </td>
 
                                         <td><a class='map' href='<?php echo $location['map_link']; ?>'>ดูแผนที่</a></td>
+
                                         <td>
                                             <select class="category-dropdown" data-location-id="<?php echo $location['id']; ?>">
-                                                <option value="Selectcategory" <?php echo $location['category'] === 'category' ? 'selected' : ''; ?>>หมวดหมู่</option>
-                                                <option value="clothing" <?php echo $location['category'] === 'clothing' ? 'selected' : ''; ?>>Clothing</option>
-                                                <option value="travel" <?php echo $location['category'] === 'travel' ? 'selected' : ''; ?>>Travel</option>
-                                                <option value="food" <?php echo $location['category'] === 'food' ? 'selected' : ''; ?>>Food</option>
+                                                <option value="food" <?php echo $location['category_name'] === 'food' ? 'selected' : ''; ?>>อาหาร</option>
+                                                <option value="clothing" <?php echo $location['category_name'] === 'clothing' ? 'selected' : ''; ?>>เสื้อผ้า</option>
+                                                <option value="travel" <?php echo $location['category_name'] === 'travel' ? 'selected' : ''; ?>>สถานที่ท่องเที่ยว</option>
                                             </select>
-                                        </td>
+
                                         <td>
                                             <select class="status-dropdown" data-location-id="<?php echo $location['id']; ?>">
                                                 <option value="pending" <?php echo $location['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>

@@ -118,7 +118,7 @@ class Image
                 imagejpeg($new_cropped_image, $cropped_file_name, 90);
                 break;
             case IMAGETYPE_PNG:
-                imagepng($new_cropped_image, $cropped_file_name, 90);
+                imagepng($new_cropped_image, $cropped_file_name, 9);
                 break;
             case IMAGETYPE_WEBP:
                 imagewebp($new_cropped_image, $cropped_file_name, 90);

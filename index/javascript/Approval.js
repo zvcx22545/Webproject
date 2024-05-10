@@ -1,31 +1,25 @@
-
-// เพิ่ม event listener สำหรับ dropdown
 document.querySelectorAll('.status-dropdown, .category-dropdown').forEach(item => {
     item.addEventListener('change', event => {
-        updateStatus(item);  // ใช้ฟังก์ชันเดียวกันสำหรับการอัปเดตสถานะและ category
+        var locationId = item.getAttribute('data-location-id');
+        var value = item.value;
+        var field = item.classList.contains('category-dropdown') ? 'category' : 'status';
+
+        var xhr = new XMLHttpRequest();
+        var url = 'admin.php';
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log(`${field} update successful:`, xhr.responseText);
+            } else {
+                console.error(`${field} update failed. Returned status of ` + xhr.status);
+            }
+        };
+        var params = `${field}=${encodeURIComponent(value)}&locationId=${locationId}`;
+        xhr.send(params);
     });
 });
 
-// ฟังก์ชันสำหรับส่งค่าไปยัง update_status.php
-function updateStatus(dropdown) {
-    var locationId = dropdown.getAttribute('data-location-id');
-    var value = dropdown.value;
-    var field = dropdown.classList.contains('category-dropdown') ? 'category' : 'status';
-
-    var xhr = new XMLHttpRequest();
-    var url = 'admin.php';
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            console.log(xhr.responseText);
-        } else {
-            console.error('Request failed. Returned status of ' + xhr.status);
-        }
-    };
-    var params = field + '=' + encodeURIComponent(value) + '&locationId=' + locationId;
-    xhr.send(params);
-}
 
 // JavaScript function to display a zoomed image
 function zoomImage(imageSrc) {
@@ -86,4 +80,11 @@ function showLargeImage(imageSrc) {
         document.body.removeChild(largeImageContainer);
     });
 }
+})// Event listener for dropdowns
+document.querySelectorAll('.status-dropdown, .category-dropdown').forEach(item => {
+    item.addEventListener('change', event => {
+        updateStatus(item);  // Use the same function for status and category updates
+    });
 });
+
+// Function to send data to the server
