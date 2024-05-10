@@ -1,45 +1,89 @@
 
 // เพิ่ม event listener สำหรับ dropdown
-document.querySelectorAll('.status-dropdown').forEach(item => {
+document.querySelectorAll('.status-dropdown, .category-dropdown').forEach(item => {
     item.addEventListener('change', event => {
-        // เรียกใช้ฟังก์ชันที่จะส่งค่าไปยัง update_status.php
-        updateStatus(item);
+        updateStatus(item);  // ใช้ฟังก์ชันเดียวกันสำหรับการอัปเดตสถานะและ category
     });
 });
 
 // ฟังก์ชันสำหรับส่งค่าไปยัง update_status.php
 function updateStatus(dropdown) {
-    // รับค่า data-location-id จาก dropdown
     var locationId = dropdown.getAttribute('data-location-id');
-    // รับค่าของสถานะที่เลือกจาก dropdown
-    var status = dropdown.value;
+    var value = dropdown.value;
+    var field = dropdown.classList.contains('category-dropdown') ? 'category' : 'status';
 
-    // สร้าง XMLHttpRequest object
     var xhr = new XMLHttpRequest();
-    // กำหนดเส้นทางของ update_status.php
     var url = 'admin.php';
-    // กำหนด method เป็น POST
     xhr.open('POST', url, true);
-    // กำหนดค่า Content-Type เป็น application/x-www-form-urlencoded
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    // เมื่อ request สำเร็จ
     xhr.onload = function () {
         if (xhr.status === 200) {
-            // ดำเนินการตามที่คุณต้องการหลังจากการอัปเดตสถานะสำเร็จ
             console.log(xhr.responseText);
-            // ตรวจสอบว่าการอัปเดตสถานะสำเร็จหรือไม่
-            if (xhr.responseText === 'Status updated successfully.') {
-                // ทำอะไรก็ตามที่คุณต้องการ
-            } else {
-                // ทำอะไรก็ตามที่คุณต้องการในกรณีที่เกิดข้อผิดพลาด
-            }
         } else {
-            // กรณีเกิดข้อผิดพลาดในการส่ง request
             console.error('Request failed. Returned status of ' + xhr.status);
         }
     };
-    // สร้าง parameter ที่จะส่งไปยัง update_status.php
-    var params = 'status=' + status + '&locationId=' + locationId;
-    // ส่ง request
+    var params = field + '=' + encodeURIComponent(value) + '&locationId=' + locationId;
     xhr.send(params);
 }
+
+// JavaScript function to display a zoomed image
+function zoomImage(imageSrc) {
+    // Create a modal or overlay element
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    
+    // Create an image element for the zoomed image
+    var zoomedImg = document.createElement('img');
+    zoomedImg.src = imageSrc;
+    zoomedImg.classList.add('zoomed-image');
+    
+    // Append the zoomed image to the modal
+    modal.appendChild(zoomedImg);
+    
+    // Append the modal to the body
+    document.body.appendChild(modal);
+    
+    // Close the modal when clicked outside the image
+    modal.addEventListener('click', function() {
+        modal.remove();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // ค้นหารูปภาพที่มีคลาส "clickable-image"
+    var clickableImages = document.querySelectorAll(".clickable-image");
+
+    // เพิ่มการจัดการคลิกสำหรับทุกรูปภาพที่มีคลาส "clickable-image"
+    clickableImages.forEach(function (image) {
+        image.addEventListener("click", function () {
+            // เมื่อรูปถูกคลิก แสดงรูปใหญ่ขึ้น
+            showLargeImage(this.src);
+        });
+    });
+
+
+// ฟังก์ชันสำหรับแสดงรูปใหญ่ขึ้น
+function showLargeImage(imageSrc) {
+    // สร้างตัวแสดงรูปใหญ่ขึ้น
+    var largeImageContainer = document.createElement("div");
+    largeImageContainer.classList.add("large-image-container");
+
+    // สร้างภาพใหญ่
+    var largeImage = document.createElement("img");
+    largeImage.src = imageSrc;
+    largeImage.classList.add("large-image");
+
+    // เพิ่มภาพใหญ่ลงในตัวแสดงรูปใหญ่ขึ้น
+    largeImageContainer.appendChild(largeImage);
+
+    // เพิ่มตัวแสดงรูปใหญ่ขึ้นในหน้า
+    document.body.appendChild(largeImageContainer);
+
+    // เพิ่มการจัดการคลิกเพื่อปิดรูปใหญ่
+    largeImageContainer.addEventListener("click", function () {
+        // เมื่อคลิกที่รูปใหญ่ ให้ปิดรูปใหญ่ลง
+        document.body.removeChild(largeImageContainer);
+    });
+}
+});

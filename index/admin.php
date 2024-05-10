@@ -7,33 +7,33 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status']) && isset($_POST['locationId'])) {
-    // เชื่อมต่อกับฐานข้อมูล
+// Handle both status and category updates
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId'])) {
+    // Connect to the database
     require_once 'config/db.php';
 
-    // รับค่า status และ locationId จาก POST data
-    $status = $_POST['status'];
-    $locationId = $_POST['locationId'];
-
-    try {
-        // เตรียมคำสั่ง SQL สำหรับอัปเดตสถานะของสถานที่
+    // Check if status is set and update status
+    if (isset($_POST['status'])) {
+        $status = $_POST['status'];
         $query = $conn->prepare("UPDATE locations SET status = :status WHERE id = :locationId");
-        // กำหนดค่าพารามิเตอร์
         $query->bindParam(":status", $status);
-        $query->bindParam(":locationId", $locationId);
-        // ประมวลผลคำสั่ง SQL
-        if ($query->execute()) {
-            // ส่งข้อความกลับหา JavaScript ว่าการอัปเดตสถานะสำเร็จ
-            echo 'Status updated successfully.';
-        } else {
-            // ส่งข้อความกลับหา JavaScript ว่าการอัปเดตสถานะล้มเหลว
-            echo 'Failed to update status.';
-        }
-    } catch (PDOException $e) {
-        // กรณีเกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล
-        echo 'Database connection error: ' . $e->getMessage();
+        $query->bindParam(":locationId", $_POST['locationId']);
+        $query->execute();
     }
+
+    // Check if category is set and update category
+    if (isset($_POST['category'])) {
+        $category = $_POST['category'];
+        $query = $conn->prepare("UPDATE locations SET category = :category WHERE id = :locationId");
+        $query->bindParam(":category", $category);
+        $query->bindParam(":locationId", $_POST['locationId']);
+        $query->execute();
+    }
+
+    // Send response
+    echo 'Update successful.';
 }
+
 
 ?>
 
@@ -74,10 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status']) && isset($_
                 <div class="main">
                     <br>
                     <ul class="menu">
-                        <a href=""><button class="active p-2" id="teamButton" onclick="changePage('team')"><i class="bi bi-people"></i>อนุมัติสถานที่</button></a>
+                        <a href=""><button class="active p-2" id="teamButton" onclick="changePage('team')"><i
+                                    class="bi bi-people"></i>อนุมัติสถานที่</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href=""><button class="none-active" id="competitionButton" onclick="changePage('competition')"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
+                        <a href=""><button class="none-active" id="competitionButton"
+                                onclick="changePage('competition')"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
                     </ul>
@@ -109,35 +111,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status']) && isset($_
                                 <th class="col4">ชื่อสถานที่</th>
                                 <th class="col2">รูปภาพ</th>
                                 <th class="col2">GoogleMapLink</th>
+                                <th class="col2">หมวดหมู่</th>
                                 <th class="col2">สถานะ</th>
                             </tr>
-                            
+
                             <?php
                             $location = new Location();
                             $locations = $location->GetAllLocation();
-                            
+
                             if (!empty($locations)): ?>
-                            <?php foreach ($locations as $index => $location): ?>
-                            <tr>
-                                <td><?php echo $index + 1; ?></td>
-                                <td><?php echo $location['first_name']; ?></td>
-                                <td><?php echo $location['user_id']; ?></td>
-                                <td><?php echo $location['location_name']; ?></td>
-                                <td class='w-[10%]'><img class='w-[30%] h-[20%] ' src="<?php echo $location['image']; ?>" alt="Location Image"></td>
-                                <td><a class='map' href='<?php echo $location['map_link'];?>'>ดูแผนที่</a></td>
-                                <td>
-                                    <select class="status-dropdown" data-location-id="<?php echo $location['id']; ?>">
-                                        <option value="pending" <?php echo $location['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
-                                        <option value="approved" <?php echo $location['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
-                                        <option value="rejected" <?php echo $location['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
+                                <?php foreach ($locations as $index => $location): ?>
+                                    <tr>
+                                        <td><?php echo $index + 1; ?></td>
+                                        <td><?php echo $location['first_name']; ?></td>
+                                        <td><?php echo $location['user_id']; ?></td>
+                                        <td><?php echo $location['location_name']; ?></td>
+                                        <td class='w-[10%]'>
+                                            <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $location['image']; ?>"
+                                                alt="Location Image" onclick="zoomImage('<?php echo $location['image']; ?>')">
+                                        </td>
+
+                                        <td><a class='map' href='<?php echo $location['map_link']; ?>'>ดูแผนที่</a></td>
+                                        <td>
+                                            <select class="category-dropdown" data-location-id="<?php echo $location['id']; ?>">
+                                                <option value="Selectcategory" <?php echo $location['category'] === 'category' ? 'selected' : ''; ?>>หมวดหมู่</option>
+                                                <option value="clothing" <?php echo $location['category'] === 'clothing' ? 'selected' : ''; ?>>Clothing</option>
+                                                <option value="travel" <?php echo $location['category'] === 'travel' ? 'selected' : ''; ?>>Travel</option>
+                                                <option value="food" <?php echo $location['category'] === 'food' ? 'selected' : ''; ?>>Food</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="status-dropdown" data-location-id="<?php echo $location['id']; ?>">
+                                                <option value="pending" <?php echo $location['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
+                                                <option value="approved" <?php echo $location['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
+                                                <option value="rejected" <?php echo $location['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             <?php else: ?>
-                            <tr>
-                                <td colspan="7">No locations found.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="7">No locations found.</td>
+                                </tr>
                             <?php endif; ?>
 
                         </table>

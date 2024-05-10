@@ -12,7 +12,7 @@ class Category {
         $posts = array();
 
         // Prepare the SQL query to select posts where the category matches the given category
-        $query = $conn->prepare("SELECT * FROM posts WHERE category = :category ORDER BY date DESC");
+        $query = $conn->prepare("SELECT * FROM locations WHERE category = :category ORDER BY date DESC");
         $query->bindParam(":category", $category);
 
         try {
