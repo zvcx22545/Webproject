@@ -276,8 +276,8 @@ include "header.php";
             </div>
             <!-- post area -->
             <?php
-           $stmt = $conn->prepare("SELECT * FROM posts WHERE category = :category ORDER BY date DESC");
-           $stmt->bindParam(':category', $category);
+           $stmt = $conn->prepare("SELECT * FROM locations WHERE category_name = :category_name ORDER BY create_at DESC");
+           $stmt->bindParam(':category_name', $category);
            $category = 'food'; // กำหนดหมวดหมู่ที่ต้องการ
            $stmt->execute();
            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);

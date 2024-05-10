@@ -46,14 +46,21 @@ class Post
                 }
             }
 
+
             $post = "";
             if (isset($data['post'])) {
 
                 $post = addslashes($data['post']);
             }
-            $postid = $this->create_postid();
 
-            $query = $conn->prepare("INSERT INTO posts(user_id,postid,post,image,has_image,is_cover_image,is_profile_image,category) VALUES(:user_id,:postid,:post,:image,:has_image,:is_cover_image,:is_profile_image,:category)");
+            $postid = $this->create_postid();
+            $location = "";
+            if (isset($data['location'])) {
+                $location = addslashes($data['location']);
+            }
+     
+
+            $query = $conn->prepare("INSERT INTO posts(user_id,postid,post,image,has_image,is_cover_image,is_profile_image,category,location_name) VALUES(:user_id,:postid,:post,:image,:has_image,:is_cover_image,:is_profile_image,:category,:location_name)");
             $query->bindParam(":user_id", $user_id);
             $query->bindParam(":postid", $postid);
             $query->bindParam(":post", $post);
@@ -62,6 +69,7 @@ class Post
             $query->bindParam(":is_cover_image", $is_cover_image);
             $query->bindParam(":is_profile_image", $is_profile_image);
             $query->bindParam(":category", $category);
+            $query->bindParam(":location_name", $location);
             $query->execute();
         } else {
             $this->error .= 'Please enter something to post! <br>';
