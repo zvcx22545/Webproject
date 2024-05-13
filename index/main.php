@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_login'])) {
 include "header.php";
 
 
+
 ?>
 
 
@@ -71,6 +72,7 @@ include "header.php";
                         $first_name = $row['first_name']; // Ensure this is correct
                         // Check if location_name already exists
                         $location = isset($_POST['location']) ? $_POST['location'] : "";
+                        $Maplink = isset($_POST['Maplink']) ? $_POST['Maplink'] : "";
                         if (empty($location)) {
                             // Display SweetAlert2 for empty location name
                             echo '<script type="text/javascript">';
@@ -78,24 +80,36 @@ include "header.php";
                             echo '</script>';
                         } else {
                             // Check if location name already exists
-                            $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
-                            $query_check->bindParam(":location_name", $location);
+                            $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name AND map_link = :map_link");
+        $query_check->bindParam(":location_name", $location);
+        $query_check->bindParam(":map_link", $Maplink);
                             $query_check->execute();
                             $result = $query_check->fetchAll(PDO::FETCH_ASSOC);
 
-                            if (!empty($result)) {
-                                // Display SweetAlert2 if location name already exists
-                                echo '<script type="text/javascript">';
-                                echo 'Swal.fire("Error", "มีชื่อสถานที่นี้อยู่แล้ว", "error");';
-                                echo '</script>';
-                            } else {
+                            if ($result) {
+                                foreach ($result as $row) {
+                                    if ($row['location_name'] === $location) {
+                                        // Display SweetAlert2 if location name already exists
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีชื่อสถานที่นี้อยู่แล้ว", "error");';
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    } elseif ($row['map_link'] === $Maplink) {
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีลิงค์สถานที่นี้อยู่แล้ว", "error");';
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    }
+                                }
+                            }
+                            else {
                                 // Add location if validation passes
                                 $Addlocations = new Location();
                                 $result = $Addlocations->Addlocation($user_id, $_POST, $_FILES, $first_name);
                                 if ($result === true) {
                                     // Display success message using SweetAlert2
                                     echo '<script type="text/javascript">';
-                                    echo 'Swal.fire("Success", "Location added successfully!", "success");';
+                                    echo 'Swal.fire("Success", "เพิ่มสถานที่สำเร็จ!", "success");';
                                     echo '</script>';
                                 } else {
                                     // Display error message using SweetAlert2
@@ -358,7 +372,7 @@ include "header.php";
                             aria-label="Close"></button>
 
                     </div>
-                    <form method="post" enctype="multipart/form-data" class="p-4">
+                    <form method="post" enctype="multipart/form-data" class="p-4" id="locationForm">
                         <div class="my-3">
                             <label for="locationname" class="col-form-label">ชื่อสถานที่</label>
                             <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="locationname"
@@ -390,7 +404,7 @@ include "header.php";
                         </div>
 
                         <div class="w-100 mx-auto mt-2 d-flex">
-                            <button name="addlocation" type="submit" class="btn btn-primary mx-auto" id="post_button"
+                            <button name="addlocation" type="submit" class="btn btn-primary mx-auto" id="location_submit"
                                 value="Post">
                                 <div class="text-center">ยืนยัน</div>
                             </button>
@@ -410,8 +424,6 @@ include "header.php";
 
 
 </body>
-<script src=https://code.jquery.com/jquery-3.7.1.min.js></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
@@ -424,6 +436,32 @@ include "header.php";
 
 
 <script>
+    
+</script>
+<script>
+    const locationsubmit = document.getElementById('location_submit');
+locationsubmit.addEventListener('click', () => {
+    validateAndSubmit();
+});
+function validateAndSubmit() {
+    var locationName = document.getElementById('locationname').value;
+    var mapLink = document.getElementById('Map-link').value;
+
+    if (!locationName || !mapLink) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
+        });
+        return false; // Prevent form submission
+    }
+
+    // Additional checks can be added here, for example, checking if values are duplicates
+    // Example: This could be an AJAX call to the server to validate uniqueness
+
+    // If everything is okay, submit the form
+    document.getElementById('locationForm').submit();
+}
 </script>
 
 </html>

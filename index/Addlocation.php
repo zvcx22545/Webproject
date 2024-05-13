@@ -7,6 +7,26 @@ class Location
     public function Addlocation($user_id, $data, $files, $first_name)
     {
         global $conn;
+        if (empty($data['location']) || empty($data['Maplink'])) {
+            echo '<script type="text/javascript">';
+            echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่และลิงค์ Google Map", "error");';
+            echo '</script>';
+            return "Please fill both the location name and the Google Map link.";
+        }
+        $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name AND map_link = :map_link");
+        $query_check->bindParam(":location_name", $data['location']);
+        $query_check->bindParam(":map_link", $data['Maplink']);
+        $query_check->execute();
+        $result = $query_check->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            echo '<script type="text/javascript">';
+            echo 'Swal.fire("Error", "ชื่อสถานที่หรือลิงค์ Google Map นี้มีอยู่แล้วในระบบ", "error");';
+            echo '</script>';
+            return "ชื่อสถานที่หรือลิงค์ Google Map นี้มีอยู่แล้วในระบบ";
+        }
+
+
         if (!empty($data['location']) || !empty($files['file']['name']) || isset($data['location']) || !empty($first_name)) {
             $myimage = "";
             $has_image = 0;
@@ -42,7 +62,7 @@ class Location
                 $location = addslashes($data['location']);
                 $map_link = addslashes(($data['Maplink']));
             }
-     
+
             $location_id = $this->create_location_id();
 
             $query = $conn->prepare("INSERT INTO locations(location_name, user_id, image, map_link, location_id, has_image, first_name) VALUES(:location_name, :user_id, :image, :map_link, :location_id, :has_image, :first_name)");
