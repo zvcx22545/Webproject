@@ -77,7 +77,8 @@ class Location
             if ($query->execute()) {
                 // Query executed successfully
                 return true;
-            } else {
+            }
+             else {
                 // Query execution failed
                 return "Error executing query: " . implode(" ", $query->errorInfo());
             }

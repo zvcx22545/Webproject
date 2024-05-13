@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_login'])) {
 include "header.php";
 
 
+
 ?>
 
 
@@ -29,12 +30,9 @@ include "header.php";
             // ตรวจสอบว่ามีผู้ใช้หรือไม่
             if ($row) {
                 $user_id = $row['userid']; // ตอนนี้เราได้รับ userid ของผู้ใช้จากตาราง users
-            }
-            else if($row)
-            {
+            } else if ($row) {
                 $first_name = $row['first_name'];
-            }
-            else {
+            } else {
                 // ถ้าไม่พบข้อมูลผู้ใช้ในฐานข้อมูล ให้ทำการล็อกเอาท์และเปลี่ยนเส้นทาง
                 $_SESSION['error'] = 'ผู้ใช้ไม่ถูกต้อง';
                 header('location: logout.php'); // หรือให้เปลี่ยนเส้นทางไปที่หน้าอื่นที่เหมาะสม
@@ -60,69 +58,132 @@ include "header.php";
                     echo "have error posting";
                     echo $result;
                 }
-            }elseif (isset($_POST['addlocation'])) {
-        // Ensure $user_id and $first_name are set correctly
-        if (isset($_SESSION['user_login'])) {
-            $user_session_id = $_SESSION['user_login'];
-            $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
-            $stmt->bindParam(':user_session_id', $user_session_id);
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            } elseif (isset($_POST['addlocation'])) {
+                // Ensure $user_id and $first_name are set correctly
+                if (isset($_SESSION['user_login'])) {
+                    $user_session_id = $_SESSION['user_login'];
+                    $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
+                    $stmt->bindParam(':user_session_id', $user_session_id);
+                    $stmt->execute();
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row) {
-                $user_id = $row['userid']; // Ensure this is correct
-                $first_name = $row['first_name']; // Ensure this is correct
-                $Addlocations = new Location();
-                $result = $Addlocations->Addlocation($user_id, $_POST, $_FILES, $first_name);
-                if ($result === true) {
-                    // Success message if data added successfully
-                    echo "Location added successfully!";
+                    if ($row) {
+                        $user_id = $row['userid']; // Ensure this is correct
+                        $first_name = $row['first_name']; // Ensure this is correct
+                        // Check if location_name already exists
+                        $location = isset($_POST['location_name']) ? $_POST['location_name'] : "";
+                        $Maplink = isset($_POST['Maplink']) ? $_POST['Maplink'] : "";
+                        if (empty($location)) {
+                            // Display SweetAlert2 for empty location name
+                            echo '<script type="text/javascript">';
+                            echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่", "error");';
+                            echo '</script>';
+                        } else {
+                            // Check if location name already exists
+                            $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name OR map_link = :map_link");
+                            $query_check->bindParam(":location_name", $location);
+                            $query_check->bindParam(":map_link", $Maplink);
+                            $query_check->execute();
+                            $result = $query_check->fetchAll(PDO::FETCH_ASSOC);
+
+                            if ($result) {
+                                foreach ($result as $row) {
+                                    if ($row['location_name'] === $location) {
+                                        // Display SweetAlert2 if location name already exists
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีชื่อสถานที่นี้อยู่แล้ว", "error");';
+                                        echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    } elseif ($row['map_link'] === $Maplink) {
+                                        // Display SweetAlert2 if map link already exists
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีลิงค์สถานที่นี้อยู่แล้ว", "error");';
+                                        echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    }
+                                }
+                            } else {
+                                // Add location if validation passes
+                                $Addlocations = new Location();
+                                $result = $Addlocations->Addlocation($user_id, $_POST, $_FILES, $first_name);
+                                if ($result === true) {
+                                    // Display success message using SweetAlert2
+                                    echo '<script type="text/javascript">';
+                                    echo 'Swal.fire("Success", "เพิ่มสถานที่สำเร็จ!", "success");';
+                                    echo '</script>';
+                                } else {
+                                    // Display error message using SweetAlert2
+                                    echo '<script type="text/javascript">';
+                                    echo 'Swal.fire("Error", "' . $result . '", "error");';
+                                    echo '</script>';
+                                }
+                            }
+                        }
+
+
+                    } else {
+                        // Handle case where user is not found
+                    }
                 } else {
-                    // Display error message if there's an error
-                    echo "Error: " . $result;
+                    // Handle case where user session is not set
                 }
-            } else {
-                // Handle case where user is not found
             }
-        } else {
-            // Handle case where user session is not set
         }
-    }
-        }
-        
+
 
         // collect posts
         $post = new Post();
         $posts = $post->getAllPosts();  // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
         $image_class = new Image();
-
+        // GetLocation
+        $location = new Location;
+        $locations = $location->GetApprovedLocation();
         ?>
 
 
 
-        <div class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start justify-content-start ">
-            <div class="logo text-left col-12 col-lg-auto"><a href="./main.php" class="nav-link">Travel to Knowledge</a></div>
+        <div
+            class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start justify-content-start ">
+            <div class="logo text-left col-12 col-lg-auto"><a href="./main.php" class="nav-link">Travel to Knowledge</a>
+            </div>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 navbars">
-                <li><a href="./main.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'main.php' ? 'active' : ''; ?>"><i class="fa fa-home"></i></a></li>
-                <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
-                <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
-                <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'clothing.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <li><a href="./main.php"
+                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'main.php' ? 'active' : ''; ?>"><i
+                            class="fa fa-home"></i></a></li>
+                <li><a href="./travel.php"
+                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i
+                            class="fa-solid fa-mountain-sun"></i></a></li>
+                <li><a href="./foodpage.php"
+                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i
+                            class="fa-solid fa-utensils"></i></a></li>
+                <li><a href="./clothing.php"
+                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i
+                            class="fa-solid fa-shirt"></i></a></li>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </ul>
 
             <div class="collapse navbar-collapse w-auto " id="navbarSupportedContent">
 
-                <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search">
-                    <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light me-2" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search" action="search.php" method="POST">
+                    <input class="form-control me-2 rounded-pill" type="search" placeholder="ค้นหาสถานที่"
+                        aria-label="Search" name="search" id="search" autocomplete="off" required>
+                    <button class="btn btn-outline-light me-2" type="submit" name="submit"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                         </svg></button>
                 </form>
                 <div class="text-center">
-                    <button type="button" class="btn btn-outline-light"><a class="nav-link" href="./logout.php" id="logout">Logout</a></button>
+                    <button type="button" class="btn btn-outline-light"><a class="nav-link" href="./logout.php"
+                            id="logout">Logout</a></button>
                 </div>
                 <div class="icon text-white me-2 px-3"><i class="fa-solid fa-sun" id="theme"></i></div>
 
@@ -134,7 +195,7 @@ include "header.php";
 
     <div class="container ">
 
-    <div class="left-panel">
+        <div class="left-panel">
             <ul>
                 <li>
                     <div class="dp">
@@ -154,22 +215,21 @@ include "header.php";
 
                 </li>
                 <div class="mt-3">
-                <button class="btn location btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal"
-                    data-bs-toggle="modal" data-bs-dismiss="modal">
-                    <div class="icons h-25 w-100 d-flex align-items-center justify-content-center">
-                        <div class="text-center" style="font-size:16px;">เพิ่มสถานที่</div>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="icon">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                        </svg>
-                    </div>
+                    <button class="btn location btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal"
+                        data-bs-toggle="modal" data-bs-dismiss="modal">
+                        <div class="icons h-25 w-100 d-flex align-items-center justify-content-center">
+                            <div class="text-center" style="font-size:16px;">เพิ่มสถานที่</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="icon">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            </svg>
+                        </div>
 
-                </button>
-            </div>
-
+                    </button>
+                </div>
 
 
 
@@ -187,7 +247,8 @@ include "header.php";
                         <img src="<?php echo $corner_image ?>" type="images" alt="">
                     </div>
 
-                    <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal" data-bs-target="#postModal" readonly style="cursor: pointer;" />
+                    <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal"
+                        data-bs-target="#postModal" readonly style="cursor: pointer;" />
 
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
@@ -195,9 +256,10 @@ include "header.php";
                             height: 150px !important;
                         }
                     </style>
-                    <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title me-3">คุณอยากโพสต์อะไร</h5>
 
@@ -207,14 +269,24 @@ include "header.php";
 
                                 </div>
                                 <form method="post" enctype="multipart/form-data" class="p-4">
-                                    <select id="categoryDropdown"required
-                                        class="form-select option-container text-center rounded-pill mt-1 w-50 "
-                                        name="category">
-                                        <option value="" disabled selected>หมวดหมู่</option>
-                                        <option value="clothing">Clothing</option>
-                                        <option value="travel">Travel</option>
-                                        <option value="food">Food</option>
-                                    </select>
+                                    <div class="d-flex gap-2">
+                                        <!-- <select id="categoryDropdown" required
+                                            class="form-select option-container text-center rounded-pill mt-1 w-50 "
+                                            name="category">
+                                            <option value="" disabled selected>หมวดหมู่</option>
+                                            <option value="clothing">Clothing</option>
+                                            <option value="travel">Travel</option>
+                                            <option value="food">Food</option>
+                                        </select> -->
+                                        <select id="locationDropdown" required
+                                            class="form-select option-container text-center rounded-pill mt-1 w-50"
+                                            name="location">
+                                            <option value="" disabled selected>กรุณาเลือกสถายที่</option>
+                                            <?php foreach ($locations as $location): ?>
+                                                <option value="<?php echo $location; ?>"><?php echo $location; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
 
                                     <div class="modal-body">
                                         <img src="" style="display: none;" id="post_img" class="w-100 rounded border">
@@ -243,38 +315,39 @@ include "header.php";
 
 
                                         <div class="w-100 mx-auto mt-2 d-flex">
-                            <button name="post_button" type="submit" class="btn btn-primary mx-auto" id="post_button"
-                                value="Post">
-                                <div class="text-center">ยืนยัน</div>
-                            </button>
-                        </div>
+                                            <button name="post_button" type="submit" class="btn btn-primary mx-auto"
+                                                id="post_button" value="Post">
+                                                <div class="text-center">ยืนยัน</div>
+                                            </button>
+                                        </div>
 
                                 </form>
                             </div>
+
                         </div>
                     </div>
-
-
                 </div>
 
-                <div class="post-bottom">
-                    <!-- <div class="action">
+
+            </div>
+
+            <div class="post-bottom">
+                <!-- <div class="action">
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-                    <div class="action mx-auto">
-                        <i class="fa fa-image"></i>
-                        <span>Photo</span>
-                    </div>
-                    <!-- <div class="action">
+                <div class="action mx-auto">
+                    <i class="fa fa-image"></i>
+                    <span>Photo</span>
+                </div>
+                <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
           </div> -->
-                </div>
             </div>
-            </div>
-            <!-- post area -->
-            <?php
+        </div>
+        <!-- post area -->
+        <?php
            $stmt = $conn->prepare("SELECT * FROM posts WHERE category = :category ORDER BY date DESC");
            $stmt->bindParam(':category', $category);
            $category = 'travel'; // กำหนดหมวดหมู่ที่ต้องการ
@@ -293,10 +366,7 @@ include "header.php";
             # code...
 
             ?>
-
-        </div>
-    </div>
-    <div class="modal fade" id="AddlocationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="AddlocationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -308,10 +378,11 @@ include "header.php";
                             aria-label="Close"></button>
 
                     </div>
-                    <form method="post" enctype="multipart/form-data" class="p-4">
+                    <form method="post" enctype="multipart/form-data" class="p-4" id="locationForm">
                         <div class="my-3">
                             <label for="locationname" class="col-form-label">ชื่อสถานที่</label>
-                            <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="locationname" name="location" placeholder="กรุณาใส่ชื่อสถานที่" required>
+                            <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="locationname"
+                                name="location_name" placeholder="กรุณาใส่ชื่อสถานที่" required>
                         </div>
 
                         <div class="modal-body">
@@ -332,14 +403,15 @@ include "header.php";
                                 </label>
                             </div>
                             <div class="my-3">
-                            <label for="Map-link" class="col-form-label">Link GoogleMap</label>
-                            <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="Map-link" name="location" placeholder="กรุณาใส่ลิงค์ GoogleMap" required>
-                        </div>
+                                <label for="Map-link" class="col-form-label">Link GoogleMap</label>
+                                <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="Map-link"
+                                    name="Maplink" placeholder="กรุณาใส่ลิงค์ GoogleMap" required>
+                            </div>
                         </div>
 
-                            <div class="w-100 mx-auto mt-2 d-flex">
-                            <button name="addlocation" type="submit" class="btn btn-primary mx-auto" id="post_button"
-                                value="Post">
+                        <div class="w-100 mx-auto mt-2 d-flex">
+                            <button name="addlocation" type="submit" class="btn btn-primary mx-auto"
+                                id="location_submit" value="Post">
                                 <div class="text-center">ยืนยัน</div>
                             </button>
                         </div>
@@ -350,16 +422,52 @@ include "header.php";
             </div>
         </div>
 
+    </div>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
-    </script>
-    <script src="./javascript/main.js"></script>
-    <script src="./javascript/custom.js?v=<?= time() ?>"></script>
+
+
 
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
+    </script>
+<script src="./javascript/main.js"></script>
+<script src="./javascript/custom.js?v=<?= time() ?>"></script>
+
+
+<script>
+
+</script>
+<script>
+    const locationsubmit = document.getElementById('location_submit');
+    locationsubmit.addEventListener('click', () => {
+        validateAndSubmit();
+    });
+    function validateAndSubmit() {
+        var locationName = document.getElementById('locationname').value;
+        var mapLink = document.getElementById('Map-link').value;
+
+        if (!locationName || !mapLink) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
+            });
+            return false; // Prevent form submission
+        }
+
+        // Additional checks can be added here, for example, checking if values are duplicates
+        // Example: This could be an AJAX call to the server to validate uniqueness
+
+        // If everything is okay, submit the form
+        document.getElementById('locationForm').submit();
+    }
+</script>
 
 </html>
