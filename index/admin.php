@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                         <table>
                             <tr>
                                 <th class="col0">No.</th>
-                                <th class="col1">ชื่อผู้ส่งลิงค์</th>
+                                <th class="col1">ชื่อผู้เพิ่มสถานที่</th>
                                 <th class="col4">User_ID</th>
                                 <th class="col4">ชื่อสถานที่</th>
                                 <th class="col2">รูปภาพ</th>
