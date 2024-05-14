@@ -108,8 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
 
                             if (!empty($posts)): ?>
                                 <?php foreach ($posts as $index => $post): 
-                                $user = new User();
-                                $ROW_USER = $user->getUsers($post['user_id']);?>
+                                    if (!empty($post['location_name'])) {
+                                        continue; // ข้ามโพสต์ที่มี location_name
+                                    }
+                                    $user = new User();
+                                    $ROW_USER = $user->getUsers($post['user_id']);?>
                                     
                                     <tr>
                                         <td><?php echo $index + 1; ?></td>
@@ -120,8 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                                             <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>"
                                                 alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
                                         </td>
-
-
+                            
                                         <td>
                                             <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
                                                 <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
