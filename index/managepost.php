@@ -23,6 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
         echo 'Status update failed: ' . implode(";", $query->errorInfo());
     }
 }
+$post = new Post();
+$posts = $post->getAllPosts();
+$count = 0;
+
+foreach ($posts as $post) {
+    if (empty($post['location_name'])) {
+        $count++;
+    }
+}
 
 ?>
 
@@ -88,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                 <div class="admin-data">
                     <div class="top-data">
                         <div class="listMenu">
-                            <h4>ทั้งหมด : </h4>
+                        <h4>ทั้งหมด : <?php echo $count; ?> โพสต์</h4>
                         </div>
                     </div>
                     <div class="tableMember">
@@ -103,19 +112,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                             </tr>
 
                             <?php
-                            $post = new Post();
-                            $posts = $post->getAllPosts();
-
+                            // $post = new Post();
+                            // $posts = $post->getAllPosts();
+                            
                             if (!empty($posts)): ?>
                                 <?php foreach ($posts as $index => $post): 
                                     if (!empty($post['location_name'])) {
                                         continue; // ข้ามโพสต์ที่มี location_name
                                     }
+                                    $count++;
                                     $user = new User();
                                     $ROW_USER = $user->getUsers($post['user_id']);?>
                                     
                                     <tr>
-                                        <td><?php echo $index + 1; ?></td>
+                                        <td><?php echo $index; ?></td>
                                         <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
                                         <td><?php echo $post['user_id']; ?></td>
                                         <td><?php echo $post['post']; ?></td>
