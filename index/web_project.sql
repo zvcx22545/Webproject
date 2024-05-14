@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2024 at 01:08 PM
+-- Generation Time: May 14, 2024 at 11:05 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -46,7 +46,8 @@ CREATE TABLE `locations` (
 --
 
 INSERT INTO `locations` (`id`, `location_name`, `user_id`, `image`, `map_link`, `location_id`, `has_image`, `first_name`, `category_name`, `create_at`, `status`) VALUES
-(43, 'Mixue', '69704620163528', 'uploads/69704620163528/j26NnkcCTbQEOs6.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '76673', 1, 'Mali', 'food', '2024-05-10 11:47:35', 'approved');
+(43, 'Mixue', '69704620163528', 'uploads/69704620163528/j26NnkcCTbQEOs6.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '76673', 1, 'Mali', 'food', '2024-05-13 11:17:33', 'approved'),
+(48, 'U Avenue', '69704620163528', 'uploads/69704620163528/zToqMiPaCdIu8Tb.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '889597478163713', 1, 'Mali', '', '2024-05-13 14:03:01', '');
 
 -- --------------------------------------------------------
 
@@ -171,7 +172,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `posts`
