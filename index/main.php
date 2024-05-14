@@ -448,14 +448,24 @@ include "header.php";
     function validateAndSubmit() {
         var locationName = document.getElementById('locationname').value;
         var mapLink = document.getElementById('Map-link').value;
+        var image = document.getElementById('select_location_img').value;
 
         if (!locationName || !mapLink) {
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
+                icon: 'warning',
+                title: 'แจ้งเตือน',
                 text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
             });
             return false; // Prevent form submission
+        }
+        else if(!image)
+        {
+            Swal.fire({
+                icon: 'warning',
+                title: 'แจ้งเตือน',
+                text: 'กรุณาอัพโหลดรูปภาพ!'
+            });
+            return false; // Prevent form submission 
         }
 
         // Additional checks can be added here, for example, checking if values are duplicates
