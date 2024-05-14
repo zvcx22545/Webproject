@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                         <table>
                             <tr>
                                 <th class="col0">No.</th>
-                                <th class="col1">ชื่อผู้ส่งลิงค์</th>
+                                <th class="col1">ชื่อผู้เพิ่มสถานที่</th>
                                 <th class="col4">User_ID</th>
                                 <th class="col4">ชื่อสถานที่</th>
                                 <th class="col2">รูปภาพ</th>
@@ -140,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
 
                                         <td>
                                             <select class="category-dropdown" data-location-id="<?php echo $location['id']; ?>">
+                                                <option disabled selected>หมวดหมู่</option>
                                                 <option value="food" <?php echo $location['category_name'] === 'food' ? 'selected' : ''; ?>>อาหาร</option>
                                                 <option value="clothing" <?php echo $location['category_name'] === 'clothing' ? 'selected' : ''; ?>>เสื้อผ้า</option>
                                                 <option value="travel" <?php echo $location['category_name'] === 'travel' ? 'selected' : ''; ?>>สถานที่ท่องเที่ยว</option>

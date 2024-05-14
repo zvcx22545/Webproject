@@ -7,14 +7,14 @@ class Location
     public function Addlocation($user_id, $data, $files, $first_name)
     {
         global $conn;
-        if (empty($data['location']) || empty($data['Maplink'])) {
+        if (empty($data['location_name']) || empty($data['Maplink'])) {
             echo '<script type="text/javascript">';
             echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่และลิงค์ Google Map", "error");';
             echo '</script>';
             return "Please fill both the location name and the Google Map link.";
         }
         $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name AND map_link = :map_link");
-        $query_check->bindParam(":location_name", $data['location']);
+        $query_check->bindParam(":location_name", $data['location_name']);
         $query_check->bindParam(":map_link", $data['Maplink']);
         $query_check->execute();
         $result = $query_check->fetch(PDO::FETCH_ASSOC);
@@ -27,7 +27,7 @@ class Location
         }
 
 
-        if (!empty($data['location']) || !empty($files['file']['name']) || isset($data['location']) || !empty($first_name)) {
+        if (!empty($data['location_name']) || !empty($files['file']['name']) || isset($data['location_name']) || !empty($first_name)) {
             $myimage = "";
             $has_image = 0;
 
@@ -58,8 +58,8 @@ class Location
 
             $location = "";
             $map_link = "";
-            if (isset($data['location'])) {
-                $location = addslashes($data['location']);
+            if (isset($data['location_name'])) {
+                $location = addslashes($data['location_name']);
                 $map_link = addslashes(($data['Maplink']));
             }
 
@@ -77,7 +77,8 @@ class Location
             if ($query->execute()) {
                 // Query executed successfully
                 return true;
-            } else {
+            }
+             else {
                 // Query execution failed
                 return "Error executing query: " . implode(" ", $query->errorInfo());
             }

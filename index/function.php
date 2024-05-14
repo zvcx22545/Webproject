@@ -33,22 +33,24 @@ if (isset($_SESSION['user_login'])) {
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
   * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Prompt", sans-serif;
-}
-  .edit-btn{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Prompt", sans-serif;
+  }
+
+  .edit-btn {
     height: 38px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 4px;
-    letter-spacing:3px;
+    letter-spacing: 3px;
   }
-  .edit-btn:hover
-  {
+
+  .edit-btn:hover {
     color: white;
   }
 </style>
@@ -70,33 +72,70 @@ if (isset($_SESSION['user_login'])) {
       <img class="img-fluid col-sm-12 col-md col-lg col-xl" src="<?php echo $image ?>" type="images" alt="">
     </div>
     <div class="post-info">
-    <p class="name font-weight-bolder mt-3">
+      <p class="name font-weight-bolder mt-3">
         <a href="./Profilepage.php" class="nav-link">
-            <?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?>
+          <?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?>
         </a>
-    </p>
+      </p>
 
-    
-    <span class="time">
+
+      <span class="time">
         <?php
-        setlocale(LC_TIME, 'th_TH.utf8'); // ตั้งค่าให้เป็นภาษาไทยและใช้พื้นที่ที่ถูกต้อง
-        $timestamp = strtotime($ROW['date']);
-        $formattedDate = strftime(' %A %e %B %Y : เวลา %H.%M', $timestamp);
-        echo $formattedDate;
+        setlocale(LC_TIME, 'th_TH.utf8'); // Ensure you're using Thai locale settings
+        date_default_timezone_set('Asia/Bangkok'); // Set the default timezone to Bangkok
+        
+        $timestamp = strtotime($ROW['date']); // Assuming $ROW['date'] holds the date string
+        
+        // Map English days and months to Thai
+        $dayOfWeekEnglish = strftime('%A', $timestamp);
+        $monthOfYearEnglish = strftime('%B', $timestamp);
+
+        $dayOfWeekThaiMap = [
+          'Sunday' => 'วันอาทิตย์',
+          'Monday' => 'วันจันทร์',
+          'Tuesday' => 'วันอังคาร',
+          'Wednesday' => 'วันพุธ',
+          'Thursday' => 'วันพฤหัสบดี',
+          'Friday' => 'วันศุกร์',
+          'Saturday' => 'วันเสาร์'
+        ];
+        $monthOfYearThaiMap = [
+          'January' => 'มกราคม',
+          'February' => 'กุมภาพันธ์',
+          'March' => 'มีนาคม',
+          'April' => 'เมษายน',
+          'May' => 'พฤษภาคม',
+          'June' => 'มิถุนายน',
+          'July' => 'กรกฎาคม',
+          'August' => 'สิงหาคม',
+          'September' => 'กันยายน',
+          'October' => 'ตุลาคม',
+          'November' => 'พฤศจิกายน',
+          'December' => 'ธันวาคม'
+        ];
+
+        $dayOfWeekThai = $dayOfWeekThaiMap[$dayOfWeekEnglish] ?? $dayOfWeekEnglish; // Default to English if not mapped
+        $monthOfYearThai = $monthOfYearThaiMap[$monthOfYearEnglish] ?? $monthOfYearEnglish; // Default to English if not mapped
+        
+        $formattedDate = $dayOfWeekThai . strftime(' %e ', $timestamp) . $monthOfYearThai . strftime(' %Y : เวลา %H.%M', $timestamp);
+
+        echo $formattedDate; // Display the formatted date
         ?>
+
+
       </span>
 
-    <?php
-    if ($ROW['is_profile_image']) {
+      <?php
+      if ($ROW['is_profile_image']) {
         echo "<br>";
         echo "<span style='font-weight:normal;coloe:#aaa;'>updated profile image</span>";
-    }
-    if ($ROW['is_cover_image']) {
+      }
+      if ($ROW['is_cover_image']) {
         echo "<br>";
         echo "<span style='font-weight:normal;coloe:#aaa;'>updated cover image</span>";
-    }
-    ?>
-</div>
+      }
+      ?>
+    </div>
 
     <!-- Trigger สำหรับ Dropdown -->
     <i class="fas fa-ellipsis-h dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown"
@@ -145,7 +184,7 @@ if (isset($_SESSION['user_login'])) {
         <div  style='font-size: 16px;'>Edit</div>
         </a> 
         ";
-      
+
       }
       ?>
     </div>
