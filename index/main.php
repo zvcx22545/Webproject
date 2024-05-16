@@ -352,10 +352,20 @@ include "header.php";
         if ($posts) {
 
 
+            
             foreach ($posts as $ROW) {
-                $user = new User();
+                if(!empty($ROW['location_name']))
+                {
+                    $user = new User();
+                $ROW_USER = $user->getUsers($ROW['user_id']);
+                include 'function.php'; 
+                }elseif($ROW['status'] === 'approved')
+                {
+                    $user = new User();
                 $ROW_USER = $user->getUsers($ROW['user_id']);
                 include 'function.php';
+                };
+               
             }
         }
 

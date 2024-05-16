@@ -348,19 +348,33 @@ include "header.php";
         </div>
         <!-- post area -->
         <?php
-           $stmt = $conn->prepare("SELECT * FROM posts WHERE category = :category ORDER BY date DESC");
+           
+
+           if ($posts) {
+            $stmt = $conn->prepare("SELECT * FROM posts WHERE category = :category ORDER BY date DESC");
            $stmt->bindParam(':category', $category);
            $category = 'food'; // กำหนดหมวดหมู่ที่ต้องการ
            $stmt->execute();
            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-           
-           // แสดงโพสต์
-           foreach ($posts as $ROW) {
-               // โค้ดสำหรับแสดงโพสต์ตามโครงสร้าง HTML ของคุณ
-               $user = new User();
-               $ROW_USER = $user->getUsers($ROW['user_id']);
-               include 'function.php';
-           }
+
+
+            
+            foreach ($posts as $ROW) {
+                if(!empty($ROW['location_name']))
+                {
+                    $user = new User();
+                $ROW_USER = $user->getUsers($ROW['user_id']);
+                include 'function.php'; 
+                }elseif($ROW['status'] === 'approved')
+                {
+                    $user = new User();
+                $ROW_USER = $user->getUsers($ROW['user_id']);
+                include 'function.php';
+                };
+               
+            }
+        }
+
            
 
             # code...
