@@ -22,27 +22,27 @@ document.querySelectorAll('.status-dropdown, .category-dropdown').forEach(item =
 
 
 // JavaScript function to display a zoomed image
-function zoomImage(imageSrc) {
-    // Create a modal or overlay element
-    var modal = document.createElement('div');
-    modal.classList.add('modal');
+// function zoomImage(imageSrc) {
+//     // Create a modal or overlay element
+//     var modal = document.createElement('div');
+//     modal.classList.add('modal');
     
-    // Create an image element for the zoomed image
-    var zoomedImg = document.createElement('img');
-    zoomedImg.src = imageSrc;
-    zoomedImg.classList.add('zoomed-image');
+//     // Create an image element for the zoomed image
+//     var zoomedImg = document.createElement('img');
+//     zoomedImg.src = imageSrc;
+//     zoomedImg.classList.add('zoomed-image');
     
-    // Append the zoomed image to the modal
-    modal.appendChild(zoomedImg);
+//     // Append the zoomed image to the modal
+//     modal.appendChild(zoomedImg);
     
-    // Append the modal to the body
-    document.body.appendChild(modal);
+//     // Append the modal to the body
+//     document.body.appendChild(modal);
     
-    // Close the modal when clicked outside the image
-    modal.addEventListener('click', function() {
-        modal.remove();
-    });
-}
+//     // Close the modal when clicked outside the image
+//     modal.addEventListener('click', function() {
+//         modal.remove();
+//     });
+// }
 
 document.addEventListener('DOMContentLoaded', function () {
     // ค้นหารูปภาพที่มีคลาส "clickable-image"
