@@ -51,7 +51,7 @@ if(isset($_GET['id'])){
 }
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     $Post->delete_post($_POST['postid']);
-    header("Location: Profilepage.php");
+    header("Location: main.php");
     die;
 }
 ?>
