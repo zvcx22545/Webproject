@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2024 at 11:05 PM
+-- Generation Time: May 16, 2024 at 10:30 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -46,8 +46,7 @@ CREATE TABLE `locations` (
 --
 
 INSERT INTO `locations` (`id`, `location_name`, `user_id`, `image`, `map_link`, `location_id`, `has_image`, `first_name`, `category_name`, `create_at`, `status`) VALUES
-(43, 'Mixue', '69704620163528', 'uploads/69704620163528/j26NnkcCTbQEOs6.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '76673', 1, 'Mali', 'food', '2024-05-13 11:17:33', 'approved'),
-(48, 'U Avenue', '69704620163528', 'uploads/69704620163528/zToqMiPaCdIu8Tb.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '889597478163713', 1, 'Mali', '', '2024-05-13 14:03:01', '');
+(49, 'Mixue', '69704620163528', 'uploads/69704620163528/mxhNNhTYEdHqjUe.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '644700297849385', 1, 'Mali', 'food', '2024-05-14 22:42:03', 'approved');
 
 -- --------------------------------------------------------
 
@@ -63,32 +62,30 @@ CREATE TABLE `posts` (
   `image` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `comments` int(11) NOT NULL,
   `category` varchar(255) DEFAULT NULL,
-  `location_name` varchar(255) NOT NULL,
+  `location_name` varchar(255) DEFAULT NULL,
   `likes` int(11) NOT NULL,
   `has_image` tinyint(1) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `is_profile_image` tinyint(1) NOT NULL,
-  `is_cover_image` tinyint(1) NOT NULL
+  `is_cover_image` tinyint(1) NOT NULL,
+  `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `is_profile_image`, `is_cover_image`) VALUES
-(129, 27961068031535, 69704620163528, '', 'uploads/69704620163528/91F4ZQwDaKc4PBf.jpg', 0, '', '', 0, 1, '2024-04-28 23:21:17', 1, 0),
-(130, 9151151, 69704620163528, '', 'uploads/69704620163528/ZaEKHvfgjagf5xg.jpg', 0, '', '', 0, 1, '2024-04-28 23:24:20', 1, 0),
-(131, 4333, 69704620163528, '', 'uploads/69704620163528/wB814VUd3iHFWlx.jpg', 0, '', '', 0, 1, '2024-04-28 23:24:20', 1, 0),
-(133, 3532332258965184, 69704620163528, '', 'uploads/69704620163528/lOsUJbCovZyMzVF.jpg', 0, '', '', 0, 1, '2024-04-28 23:24:32', 1, 0),
-(134, 222403389343385454, 69704620163528, 'เสื้อสีใหม่', 'uploads/69704620163528/H32BHwluWZQs2uP.jpg', 0, 'clothing', '', 0, 1, '2024-04-29 03:20:10', 0, 0),
-(145, 6715939602883043959, 20700969, '', 'uploads/20700969/U9Mh26e9uomh8S0.jpg', 0, '', '', 0, 1, '2024-05-06 15:34:49', 0, 1),
-(146, 631669127194966, 20700969, '', 'uploads/20700969/SLb3V6ell9CbapA.jpg', 0, '', '', 0, 1, '2024-05-06 15:41:27', 0, 1),
-(155, 752119, 69704620163528, '', 'uploads/69704620163528/pf2F2RaiBZJk3wY.jpg', 0, '', '', 0, 1, '2024-05-09 18:59:56', 0, 1),
-(156, 3549995400106, 69704620163528, '', 'uploads/69704620163528/sTPUNY6fj4NZNuL.jpg', 0, '', '', 0, 1, '2024-05-09 19:00:07', 1, 0),
-(157, 391839, 69704620163528, '', 'uploads/69704620163528/Vx32I1nZMfptBgd.jpg', 0, '', '', 0, 1, '2024-05-09 19:00:07', 1, 0),
-(160, 5180343661007450910, 69704620163528, 'delicious', 'uploads/69704620163528/UdkDopR88JOTgI8.jpg', 0, '', '', 0, 1, '2024-05-10 11:09:57', 0, 0),
-(161, 1713091, 69704620163528, 'ร้านอาหาร', 'uploads/69704620163528/GbEpkQTJ73qRZxq.jpg', 0, '', '', 0, 1, '2024-05-10 11:47:57', 0, 0),
-(162, 7746112, 69704620163528, 'gg', 'uploads/69704620163528/9WnpyauIiiiEwEl.jpg', 0, '', 'Mixue', 0, 1, '2024-05-10 12:02:58', 0, 0);
+INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `is_profile_image`, `is_cover_image`, `status`) VALUES
+(129, 27961068031535, 69704620163528, '', 'uploads/69704620163528/91F4ZQwDaKc4PBf.jpg', 0, '', '', 0, 1, '2024-04-28 23:21:17', 1, 0, ''),
+(130, 9151151, 69704620163528, '', 'uploads/69704620163528/ZaEKHvfgjagf5xg.jpg', 0, '', '', 0, 1, '2024-04-28 23:24:20', 1, 0, ''),
+(133, 3532332258965184, 69704620163528, '', 'uploads/69704620163528/lOsUJbCovZyMzVF.jpg', 0, '', '', 0, 1, '2024-04-28 23:24:32', 1, 0, ''),
+(134, 222403389343385454, 69704620163528, 'เสื้อสีใหม่', 'uploads/69704620163528/H32BHwluWZQs2uP.jpg', 0, 'clothing', '', 0, 1, '2024-04-29 03:20:10', 0, 0, ''),
+(145, 6715939602883043959, 20700969, '', 'uploads/20700969/U9Mh26e9uomh8S0.jpg', 0, '', '', 0, 1, '2024-05-06 15:34:49', 0, 1, ''),
+(146, 631669127194966, 20700969, '', 'uploads/20700969/SLb3V6ell9CbapA.jpg', 0, '', '', 0, 1, '2024-05-06 15:41:27', 0, 1, ''),
+(155, 752119, 69704620163528, '', 'uploads/69704620163528/pf2F2RaiBZJk3wY.jpg', 0, '', '', 0, 1, '2024-05-09 18:59:56', 0, 1, ''),
+(157, 391839, 69704620163528, '', 'uploads/69704620163528/Vx32I1nZMfptBgd.jpg', 0, '', '', 0, 1, '2024-05-09 19:00:07', 1, 0, ''),
+(161, 1713091, 69704620163528, 'ร้านอาหาร', 'uploads/69704620163528/GbEpkQTJ73qRZxq.jpg', 0, '', '', 0, 1, '2024-05-14 22:39:48', 0, 0, 'approved'),
+(163, 58379761, 69704620163528, 'ไอศครีมอร่อยมาก', 'uploads/69704620163528/Bn68fX6j6K3TNSL.jpg', 0, 'food', 'Mixue', 0, 1, '2024-05-14 22:42:28', 0, 0, '');
 
 -- --------------------------------------------------------
 
@@ -149,7 +146,8 @@ ALTER TABLE `posts`
   ADD KEY `has_image` (`has_image`),
   ADD KEY `is_profile_image` (`is_profile_image`),
   ADD KEY `is_cover_image` (`is_cover_image`),
-  ADD KEY `category` (`category`);
+  ADD KEY `category` (`category`),
+  ADD KEY `status` (`status`);
 ALTER TABLE `posts` ADD FULLTEXT KEY `post` (`post`);
 
 --
@@ -172,13 +170,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `users`
