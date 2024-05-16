@@ -278,7 +278,7 @@ include "header.php";
                                             <option value="travel">Travel</option>
                                             <option value="food">Food</option>
                                         </select> -->
-                                        <select id="locationDropdown" required
+                                        <select id="locationDropdown" 
                                             class="form-select option-container text-center rounded-pill mt-1 w-50"
                                             name="location">
                                             <option value="" disabled selected>กรุณาเลือกสถายที่</option>
