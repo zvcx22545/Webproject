@@ -111,7 +111,7 @@ include "header.php";
                                 if ($result === true) {
                                     // Display success message using SweetAlert2
                                     echo '<script type="text/javascript">';
-                                    echo 'Swal.fire("Success", "เพิ่มสถานที่สำเร็จ!", "success");';
+                                    echo 'Swal.fire("Success", "เพิ่มสถานที่สำเร็จ!กรุณารอAdminตรวจสอบสถานที่", "success");';
                                     echo '</script>';
                                 } else {
                                     // Display error message using SweetAlert2
