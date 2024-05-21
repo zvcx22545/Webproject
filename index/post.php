@@ -65,10 +65,11 @@ class Post
             $query->bindParam(":category", $category);
             $query->bindParam(":location_name", $location_name);
             $query->execute();
+            return ['status' => 'success', 'location_name' => $location_name];
         } else {
             $this->error .= 'Please enter something to post! <br>';
+            return ['status' => 'error', 'message' => $this->error];
         }
-        return $this->error;
     }
 
     public function get_posts($id)

@@ -50,14 +50,20 @@ include "header.php";
             if (isset($_POST['post_button'])) {
                 // ประมวลผลของ Modal แรก
                 $post = new Post();
-                $result = $post->create_post($user_id, $_POST, $_FILES); // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
-                if ($result == "") {
-                    header("location:main.php");
+                $result = $post->create_post($user_id, $_POST, $_FILES);
+                if ($result['status'] == 'success') {
+                    if (!empty($result['location_name'])) {
+                        $_SESSION['post_location'] = true;
+                    } else {
+                        $_SESSION['post_success'] = true;
+                    }
+                    header("location: main.php");
                     exit();
                 } else {
                     echo "have error posting";
-                    echo $result;
+                    echo $result['message'];
                 }
+
             } elseif (isset($_POST['addlocation'])) {
                 // Ensure $user_id and $first_name are set correctly
                 if (isset($_SESSION['user_login'])) {
@@ -146,6 +152,7 @@ include "header.php";
 
         <div
             class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start justify-content-start ">
+
             <div class="logo text-left col-12 col-lg-auto"><a href="./main.php" class="nav-link">Travel to Knowledge</a>
             </div>
 
@@ -194,6 +201,21 @@ include "header.php";
     </header>
 
     <div class="container ">
+    <script>
+    <?php if (isset($_SESSION['post_location']) && $_SESSION['post_location']): ?>
+        var postlocationSuccess = true;
+        <?php unset($_SESSION['post_location']); ?>
+    <?php else: ?>
+        var postlocationSuccess = false;
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['post_success']) && $_SESSION['post_success']): ?>
+        var postSuccess = true;
+        <?php unset($_SESSION['post_success']); ?>
+    <?php else: ?>
+        var postSuccess = false;
+    <?php endif; ?>
+</script>
 
         <div class="left-panel">
             <ul>
@@ -278,7 +300,7 @@ include "header.php";
                                             <option value="travel">Travel</option>
                                             <option value="food">Food</option>
                                         </select> -->
-                                        <select id="locationDropdown" 
+                                        <select id="locationDropdown"
                                             class="form-select option-container text-center rounded-pill mt-1 w-50"
                                             name="location">
                                             <option value="" disabled selected>กรุณาเลือกสถานที่</option>
@@ -296,7 +318,7 @@ include "header.php";
                                             <input class="form-control" name="file" type="file" id="select_post_img"
                                                 style="display: none;">
                                             <label for="select_post_img" class="d-flex justify-content-center">
-                                            <i class="fa fa-image mx-auto"></i>
+                                                <i class="fa fa-image mx-auto"></i>
                                             </label>
                                         </div>
                                         <div class="mb-3">
@@ -345,20 +367,19 @@ include "header.php";
         if ($posts) {
 
 
-            
+
             foreach ($posts as $ROW) {
-                if(!empty($ROW['location_name']))
-                {
+                if (!empty($ROW['location_name'])) {
                     $user = new User();
-                $ROW_USER = $user->getUsers($ROW['user_id']);
-                include 'function.php'; 
-                }elseif($ROW['status'] === 'approved')
-                {
+                    $ROW_USER = $user->getUsers($ROW['user_id']);
+                    include 'function.php';
+                } elseif ($ROW['status'] === 'approved') {
                     $user = new User();
-                $ROW_USER = $user->getUsers($ROW['user_id']);
-                include 'function.php';
-                };
-               
+                    $ROW_USER = $user->getUsers($ROW['user_id']);
+                    include 'function.php';
+                }
+                ;
+
             }
         }
 
@@ -444,10 +465,6 @@ include "header.php";
 
 </script>
 <script>
-    const locationsubmit = document.getElementById('location_submit');
-    locationsubmit.addEventListener('click', () => {
-        validateAndSubmit();
-    });
     function validateAndSubmit() {
         var locationName = document.getElementById('locationname').value;
         var mapLink = document.getElementById('Map-link').value;
@@ -461,8 +478,7 @@ include "header.php";
             });
             return false; // Prevent form submission
         }
-        else if(!image)
-        {
+        else if (!image) {
             Swal.fire({
                 icon: 'warning',
                 title: 'แจ้งเตือน',
@@ -476,7 +492,40 @@ include "header.php";
 
         // If everything is okay, submit the form
         document.getElementById('locationForm').submit();
+
+
+
+
     }
+
+
+
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        console.log(postSuccess);
+        console.log(postlocationSuccess);
+        if (postSuccess) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'โพสต์สำเร็จ',
+                        text: 'โพสต์สำเร็จแล้วกรุณารอทางAdmin อนุมัติ!!'
+                    });
+                } else if (postlocationSuccess) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'โพสต์สำเร็จ',
+                        text: 'โพสต์สำเร็จแล้ว!!'
+                    });
+                }
+    });
+    const locationsubmit = document.getElementById('location_submit');
+    if (locationsubmit) {
+        locationsubmit.addEventListener('click', () => {
+            validateAndSubmit();
+        });
+    }
+
+
 </script>
 
 </html>
