@@ -136,16 +136,15 @@ if (isset($_SESSION['user_login'])) {
       }
       ?>
     </div>
-
-    <!-- Trigger สำหรับ Dropdown -->
+<!-- 
     <i class="fas fa-ellipsis-h dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-      aria-expanded="false"></i>
+      aria-expanded="false"></i> -->
 
     <!-- เมนู Dropdown -->
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <!-- <ul class="dropdown-menu" style="display: none;" aria-labelledby="dropdownMenuButton1">
       <li><a class="dropdown-item" href="#edit">Edit</a></li>
       <li><a class="dropdown-item" href="#delete">Delete</a></li>
-    </ul>
+    </ul> -->
 
 
   </div>

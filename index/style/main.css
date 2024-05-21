@@ -245,3 +245,9 @@ button .icons
 {
   gap: 4px;
 }
+
+.fa-image::before
+{
+  width: 30px;
+  height: 30px;
+}
