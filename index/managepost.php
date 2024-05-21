@@ -129,7 +129,7 @@ foreach ($posts as $post) {
                                     $ROW_USER = $user->getUsers($post['user_id']);?>
                                     
                                     <tr>
-                                        <td><?php echo $index; ?></td>
+                                        <td><?php echo $index + 1; ?></td>
                                         <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
                                         <td><?php echo $post['user_id']; ?></td>
                                         <td><?php echo $post['post']; ?></td>

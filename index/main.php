@@ -325,7 +325,7 @@ include "header.php";
                                             <label for="exampleFormControlTextarea1" class="form-label"></label>
                                             <textarea name="post" class="form-control h-50"
                                                 id="exampleFormControlTextarea1" rows="1"
-                                                placeholder="คุณกำลังคิดอะไรอยู่"></textarea>
+                                                placeholder="คุณกำลังคิดอะไรอยู่" required></textarea>
                                         </div>
 
 
@@ -469,34 +469,46 @@ include "header.php";
         var locationName = document.getElementById('locationname').value;
         var mapLink = document.getElementById('Map-link').value;
         var image = document.getElementById('select_location_img').value;
+        
 
-        if (!locationName || !mapLink) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'แจ้งเตือน',
-                text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
-            });
-            return false; // Prevent form submission
-        }
-        else if (!image) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'แจ้งเตือน',
-                text: 'กรุณาอัพโหลดรูปภาพ!'
-            });
-            return false; // Prevent form submission 
-        }
-
+if (!locationName || !mapLink) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'แจ้งเตือน',
+        text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
+    });
+    return false; // Prevent form submission
+} else if (!image) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'แจ้งเตือน',
+        text: 'กรุณาอัพโหลดรูปภาพ!'
+    });
+    return false; // Prevent form submission 
+    
+} 
         // Additional checks can be added here, for example, checking if values are duplicates
         // Example: This could be an AJAX call to the server to validate uniqueness
 
         // If everything is okay, submit the form
         document.getElementById('locationForm').submit();
-
-
-
-
     }
+
+    const ValidatePost = () =>
+    {
+        let postTextArea = document.getElementById('exampleFormControlTextarea1');
+        let postText = postTextArea.value.trim(); // Trim any leading or trailing whitespace
+     if (!postText) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'แจ้งเตือน',
+        text: 'กรุณากรอกข้อความที่ต้องการโพสต์!'
+    });
+    return false; // Prevent form submission
+}
+    }
+
+    
 
 
 
@@ -532,12 +544,31 @@ include "header.php";
         }
 
     });
-    const locationsubmit = document.getElementById('location_submit');
-    if (locationsubmit) {
-        locationsubmit.addEventListener('click', () => {
+    const postForm = document.querySelector('form');
+
+if (postForm) {
+    postForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent default form submission
+
+        if (postForm.id === 'locationForm') {
             validateAndSubmit();
-        });
-    }
+        } else if (postForm.id === 'postModal') {
+            ValidatePost();
+        }
+    });
+}
+;
+
+    if (locationsubmit) {
+    locationsubmit.addEventListener('click', () => {
+        validateAndSubmit();
+    });
+} else if (PostsSubmit) {
+    PostsSubmit.addEventListener('click', () => {
+        ValidatePost();
+    });
+}
+
 
 
 
