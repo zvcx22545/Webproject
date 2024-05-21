@@ -213,6 +213,34 @@ class Post
         }
         return $this->error;
     }
+
+    public function ReportPost($data)
+    {
+        global $conn;
+        if (!empty($data['postid']) && $data['userid']) {
+            $postid = $data['postid'];
+            $userid = $data['userid'];
+    
+            // Insert the report into the database
+            $query = $conn->prepare("INSERT INTO reports (userid, postid) VALUES (:userid, :postid)");
+            $query->bindParam(':userid', $userid);
+            $query->bindParam(':postid', $postid);
+            if ($query->execute()) {
+                // Count the reports for the post
+                $countQuery = $conn->prepare("SELECT COUNT(*) as report_count FROM reports WHERE postid = :postid");
+                $countQuery->bindParam(':postid', $postid);
+                $countQuery->execute();
+                $result = $countQuery->fetch(PDO::FETCH_ASSOC);
+                $reportCount = $result['report_count'];
+    
+                echo json_encode(['status' => 'success', 'message' => 'Report submitted successfully', 'report_count' => $reportCount]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to submit report']);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
+        } 
+    }
     
 }
 

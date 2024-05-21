@@ -201,21 +201,21 @@ include "header.php";
     </header>
 
     <div class="container ">
-    <script>
-    <?php if (isset($_SESSION['post_location']) && $_SESSION['post_location']): ?>
-        var postlocationSuccess = true;
-        <?php unset($_SESSION['post_location']); ?>
-    <?php else: ?>
-        var postlocationSuccess = false;
-    <?php endif; ?>
+        <script>
+            <?php if (isset($_SESSION['post_location']) && $_SESSION['post_location']): ?>
+                var postlocationSuccess = true;
+                <?php unset($_SESSION['post_location']); ?>
+            <?php else: ?>
+                var postlocationSuccess = false;
+            <?php endif; ?>
 
-    <?php if (isset($_SESSION['post_success']) && $_SESSION['post_success']): ?>
-        var postSuccess = true;
-        <?php unset($_SESSION['post_success']); ?>
-    <?php else: ?>
-        var postSuccess = false;
-    <?php endif; ?>
-</script>
+            <?php if (isset($_SESSION['post_success']) && $_SESSION['post_success']): ?>
+                var postSuccess = true;
+                <?php unset($_SESSION['post_success']); ?>
+            <?php else: ?>
+                var postSuccess = false;
+            <?php endif; ?>
+        </script>
 
         <div class="left-panel">
             <ul>
@@ -505,18 +505,32 @@ include "header.php";
         console.log(postSuccess);
         console.log(postlocationSuccess);
         if (postSuccess) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'โพสต์สำเร็จ',
-                        text: 'โพสต์สำเร็จแล้วกรุณารอทางAdmin อนุมัติ!!'
-                    });
-                } else if (postlocationSuccess) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'โพสต์สำเร็จ',
-                        text: 'โพสต์สำเร็จแล้ว!!'
-                    });
+            Swal.fire({
+                icon: 'success',
+                title: 'โพสต์สำเร็จ',
+                text: 'โพสต์สำเร็จแล้วกรุณารอทางAdmin อนุมัติ!!'
+            });
+        } else if (postlocationSuccess) {
+            Swal.fire({
+                icon: 'success',
+                title: 'โพสต์สำเร็จ',
+                text: 'โพสต์สำเร็จแล้ว!!'
+            });
+        }
+
+        const toggleDropdown = document.getElementById('toggle-dropdown');
+        const ShowDropdown = document.querySelector('.content-button');
+
+        if (toggleDropdown) {
+            toggleDropdown.addEventListener('click', function () {
+                if (ShowDropdown.style.display === 'block') {
+                    ShowDropdown.style.display = 'none';
+                } else {
+                    ShowDropdown.style.display = 'block';
                 }
+            });
+        }
+
     });
     const locationsubmit = document.getElementById('location_submit');
     if (locationsubmit) {
@@ -524,6 +538,8 @@ include "header.php";
             validateAndSubmit();
         });
     }
+
+
 
 
 </script>

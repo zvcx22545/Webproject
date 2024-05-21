@@ -136,16 +136,19 @@ if (isset($_SESSION['user_login'])) {
       }
       ?>
     </div>
-<!-- 
-    <i class="fas fa-ellipsis-h dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-      aria-expanded="false"></i> -->
 
-    <!-- เมนู Dropdown -->
-    <!-- <ul class="dropdown-menu" style="display: none;" aria-labelledby="dropdownMenuButton1">
-      <li><a class="dropdown-item" href="#edit">Edit</a></li>
-      <li><a class="dropdown-item" href="#delete">Delete</a></li>
-    </ul> -->
-
+    <div class="posts" data-postid="<?php echo $ROW['postid']; ?>">
+      <i class="fa-solid fa-ellipsis" id="toggle-dropdown"></i>
+      <ul class="content-button">
+      <li><button class="dropdown-item report-button" data-postid="<?php echo $ROW['postid']; ?>">
+      <i class="fa-solid fa-flag"></i>
+      <div class="text">Report</div>
+    </button></li>
+    <hr class="divider">
+      </ul>
+    </div>
+    
+    
 
   </div>
   <div class="post-content">

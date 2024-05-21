@@ -13,6 +13,7 @@
     --secondary-color: #fff;  /* Text สว่าง */
     --three-color: #352F44;
     --four-color: #817f7f;
+    --five-color:#000106;;
   }
   
   .light-theme {
@@ -20,6 +21,7 @@
     --secondary-color: #000106;  /* Text สีเข้ม */
     --three-color: #fffffff8;
      --four-color: #817f7f;
+     --five-color:#352F44;
   }
 /* .container-post {
     flex:1;
@@ -44,6 +46,73 @@
     padding:10px;
 }
 
+.post .post-top .posts
+{
+    margin-left: auto;
+    padding:0 12px ;
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+}
+.post .post-top .posts .fa-ellipsis
+{
+    display: flex;
+    justify-content: end;
+}
+.post .post-top .posts ul li
+{
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.post .post-top .posts ul li button
+{
+    margin: 0 auto;
+    padding: 8px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 8px;
+     & .fa-flag
+     {
+        color: white;
+     }
+}
+.post .post-top .posts ul li button:hover
+{
+    background-color: #eee;
+    color: #000;
+    & .fa-flag
+    {
+        color: #000;
+    }
+}
+
+.post .post-top .posts ul .divider
+{
+    background-color: #eee;
+}
+.post .post-top .posts ul
+{
+    padding: 1rem;
+    list-style: none;
+    margin-right: 2rem;
+    background-color: var(--five-color);
+    color: white;
+    border-radius: 8px;
+    min-width: 50px;
+    width: 100%;
+    min-height: 150px;
+    height: 100%;
+    position: absolute;
+    left: -30px;
+    z-index: 10;
+    display: none;
+}
 .post .post-top .dp{
     width:60px;
     height:60px;
@@ -75,7 +144,6 @@
 }
 
 .post .post-top i{
-    margin-left:auto;
     cursor: pointer;
     color: var(--secondary-color);
 }
