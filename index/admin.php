@@ -87,6 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                                 onclick="changePage('competition')"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
+                        <a href="./ReportPost.php"><button class="none-active" id="competitionButton"
+                                onclick="changePage('competition')"><i class="bi bi-boxes"></i>รายงานโพสค์</button></a>
+                    </ul>
+                    <ul class="menu">
                     </ul>
                     <button class="logout" type="button"><a href="./logout.php">
                             <p><i class="bi bi-arrow-bar-right"></i>Log out</p>
