@@ -70,6 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+
+
+        $location = new Location();
+        $locations = $location->GetAllLocation();
         ?>
 
         <div class="container">
@@ -108,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                 <div class="admin-data">
                     <div class="top-data">
                         <div class="listMenu">
-                            <h4>ทั้งหมด : </h4>
+                            <h4>ทั้งหมด :<?php echo count($locations); ?> </h4>
                         </div>
                     </div>
                     <div class="tableMember">
@@ -125,8 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                             </tr>
 
                             <?php
-                            $location = new Location();
-                            $locations = $location->GetAllLocation();
+                           
 
                             if (!empty($locations)): ?>
                                 <?php foreach ($locations as $index => $location): ?>

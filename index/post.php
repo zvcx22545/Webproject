@@ -214,33 +214,41 @@ class Post
         return $this->error;
     }
 
-    public function ReportPost($data)
-    {
-        global $conn;
-        if (!empty($data['postid']) && $data['userid']) {
-            $postid = $data['postid'];
-            $userid = $data['userid'];
-    
-            // Insert the report into the database
-            $query = $conn->prepare("INSERT INTO reports (userid, postid) VALUES (:userid, :postid)");
-            $query->bindParam(':userid', $userid);
-            $query->bindParam(':postid', $postid);
-            if ($query->execute()) {
-                // Count the reports for the post
-                $countQuery = $conn->prepare("SELECT COUNT(*) as report_count FROM reports WHERE postid = :postid");
-                $countQuery->bindParam(':postid', $postid);
-                $countQuery->execute();
-                $result = $countQuery->fetch(PDO::FETCH_ASSOC);
-                $reportCount = $result['report_count'];
-    
-                echo json_encode(['status' => 'success', 'message' => 'Report submitted successfully', 'report_count' => $reportCount]);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to submit report']);
-            }
+    public function ReportPost($data, $userid)
+{
+    global $conn;
+    if (!empty($data['post_id']) && !empty($userid)) {
+        $postid = $data['post_id'];
+
+        // Insert the report into the database
+        $query = $conn->prepare("INSERT INTO reports (post_id, user_id) VALUES (:post_id, :user_id)");
+        $query->bindParam(':post_id', $postid);
+        $query->bindParam(':user_id', $userid);
+        if ($query->execute()) {
+            // Count the reports for the post
+            $countQuery = $conn->prepare("SELECT COUNT(*) as report_count FROM reports WHERE post_id = :post_id");
+            $countQuery->bindParam(':post_id', $postid);
+            $countQuery->execute();
+            $result = $countQuery->fetch(PDO::FETCH_ASSOC);
+            $reportCount = $result['report_count'];
+
+            // Update the countreport field in the posts table
+            $updateQuery = $conn->prepare("UPDATE posts SET countreport = :report_count WHERE postid = :post_id");
+            $updateQuery->bindParam(':report_count', $reportCount);
+            $updateQuery->bindParam(':post_id', $postid);
+            $updateQuery->execute();
+
+            return ['status' => 'success', 'message' => 'Report submitted successfully', 'report_count' => $reportCount];
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
-        } 
+            return ['status' => 'error', 'message' => 'Failed to submit report'];
+        }
+    } else {
+        return ['status' => 'error', 'message' => 'Invalid request'];
     }
+}
+
+
+
     
 }
 

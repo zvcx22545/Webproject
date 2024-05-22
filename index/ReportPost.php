@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
 
     $status = $_POST['status'];
     $locationId = $_POST['locationId'];
-    $query = $conn->prepare("UPDATE locations SET status = :status WHERE id = :locationId");
+    $query = $conn->prepare("UPDATE posts SET status = :status WHERE postid = :locationId");
     $query->bindParam(":status", $status);
     $query->bindParam(":locationId", $locationId);
     if ($query->execute()) {
@@ -23,20 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
         echo 'Status update failed: ' . implode(";", $query->errorInfo());
     }
 }
+$post = new Post();
+$posts = $post->getAllPosts();
+$count = 0;
 
-// Handle category updates
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isset($_POST['category'])) {
-    global $conn;
-
-    $category = $_POST['category'];
-    $locationId = $_POST['locationId'];
-    $query = $conn->prepare("UPDATE locations SET category_name = :category_name WHERE id = :locationId");
-    $query->bindParam(":category_name", $category);
-    $query->bindParam(":locationId", $locationId);
-    if ($query->execute()) {
-        echo 'Category update successful.';
-    } else {
-        echo 'Category update failed: ' . implode(";", $query->errorInfo());
+foreach ($posts as $post) {
+    if (empty($post['location_name'])) {
+        $count++;
     }
 }
 
@@ -79,16 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
                 <div class="main">
                     <br>
                     <ul class="menu">
-                        <a href="./admin.php"><button class="none-active" id="teamButton"><i
-                                    class="bi bi-people"></i>อนุมัติสถานที่</button></a>
+                        <a href="./admin.php"><button class="none-active " id="teamButton"><i class="bi bi-people"></i>อนุมัติสถานที่</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href="./managepost.php"><button class="none-active" id="competitionButton"
-                                onclick="changePage('competition')"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
+                        <a href="./managepost.php"><button class="none-active" id="competitionButton"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href="./ReportPost.php"><button class="active p-2" id="competitionButton"
-                               ><i class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
+                        <a href="./ReportPost.php"><button class="active p-2" id="competitionButton"><i class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
                     </ul>
@@ -101,67 +91,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
             <div class="right">
                 <!-- ส่วนทางขวา -->
                 <nav>
-                    <h1 id="pageTitle" class="text-2xl">อนุมัติสถานที่</h1>
+                    <h1 id="pageTitle" class="text-2xl">จัดการโพสต์</h1>
                     <h1></h1>
                 </nav>
 
                 <div class="admin-data">
                     <div class="top-data">
                         <div class="listMenu">
-                            <h4>ทั้งหมด : </h4>
+                            <h4>ทั้งหมด : <?php echo $count; ?> โพสต์</h4>
                         </div>
                     </div>
                     <div class="tableMember">
                         <table>
                             <tr>
                                 <th class="col0">No.</th>
-                                <th class="col1">ชื่อผู้เพิ่มสถานที่</th>
+                                <th class="col1">ชื่อ-นามสกุล</th>
                                 <th class="col4">User_ID</th>
-                                <th class="col4">ชื่อสถานที่</th>
+                                <th class="col4">ข้อความโพสต์</th>
                                 <th class="col2">รูปภาพ</th>
-                                <th class="col2">GoogleMapLink</th>
-                                <th class="col2">หมวดหมู่</th>
+                                <th class="col2">จำนวนการถูกรายงานโพสต์</th>
                                 <th class="col2">สถานะ</th>
                             </tr>
 
                             <?php
-                            $location = new Location();
-                            $locations = $location->GetAllLocation();
+                            // $post = new Post();
+                            // $posts = $post->getAllPosts();
 
-                            if (!empty($locations)): ?>
-                                <?php foreach ($locations as $index => $location): ?>
+                            if (!empty($posts)) : ?>
+                                <?php foreach ($posts as $index => $post) :
+                                    // if (!empty($post['location_name'])) {
+                                    //     continue; // ข้ามโพสต์ที่มี location_name
+                                    // }
+                                    $count++;
+                                    $user = new User();
+                                    $ROW_USER = $user->getUsers($post['user_id']); ?>
+                                    <?php  if(!empty($post['countreport'])) { ?> 
                                     <tr>
                                         <td><?php echo $index + 1; ?></td>
-                                        <td><?php echo $location['first_name']; ?></td>
-                                        <td><?php echo $location['user_id']; ?></td>
-                                        <td><?php echo $location['location_name']; ?></td>
-                                        <td class='w-[10%]'>
-                                            <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $location['image']; ?>"
-                                                alt="Location Image" onclick="zoomImage('<?php echo $location['image']; ?>')">
-                                        </td>
-
-                                        <td><a class='map' href='<?php echo $location['map_link']; ?>'>ดูแผนที่</a></td>
-
+                                        <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
+                                        <td><?php echo $post['user_id']; ?></td>
+                                        <td><?php echo $post['post']; ?></td>
+                                        <?php if (isset($post['image'])) : ?>
+                                            <td class='w-[10%]'>
+                                                <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>" alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
+                                            </td>
+                                        <?php else : ?>
+                                            <td></td> <!-- Empty cell if no image -->
+                                        <?php endif; ?>
+                                        <td  class="text-center"><?php echo $post['countreport']; ?></td>
                                         <td>
-                                            <select class="category-dropdown" data-location-id="<?php echo $location['id']; ?>">
-                                                <option disabled selected>หมวดหมู่</option>
-                                                <option value="food" <?php echo $location['category_name'] === 'food' ? 'selected' : ''; ?>>อาหาร</option>
-                                                <option value="clothing" <?php echo $location['category_name'] === 'clothing' ? 'selected' : ''; ?>>เสื้อผ้า</option>
-                                                <option value="travel" <?php echo $location['category_name'] === 'travel' ? 'selected' : ''; ?>>สถานที่ท่องเที่ยว</option>
-                                            </select>
-
-                                        <td>
-                                            <select class="status-dropdown" data-location-id="<?php echo $location['id']; ?>">
-                                                <option value="pending" <?php echo $location['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
-                                                <option value="approved" <?php echo $location['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
-                                                <option value="rejected" <?php echo $location['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
+                                            <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
+                                                <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
+                                                <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
+                                                <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
                                             </select>
                                         </td>
                                     </tr>
+
+                                    <?php } ?>
                                 <?php endforeach; ?>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <tr>
-                                    <td colspan="7">No locations found.</td>
+                                    <td colspan="7">No posts found.</td>
                                 </tr>
                             <?php endif; ?>
 
@@ -179,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
 <script src="./javascript/details.js"></script>
 <script src="./javascript/search.js"></script>
 <script src="./javascript/preview.js"></script>
-<script src="./javascript/Approval.js"></script>
+<script src="./javascript/Approvepost.js"></script>
 
 <!-- <script src="./javascript/admin-page.js"></script> -->
 
