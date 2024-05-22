@@ -28,9 +28,11 @@ $posts = $post->getAllPosts();
 $count = 0;
 
 foreach ($posts as $post) {
-    if (empty($post['location_name'])) {
+    if($post['countreport'])
+    {
         $count++;
     }
+        
 }
 
 ?>
