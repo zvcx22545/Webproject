@@ -137,21 +137,22 @@ include "header.php";
             }
 
             if ($_SERVER['REQUEST_METHOD'] == "POST") {
-                header('Content-Type: application/json'); // Ensure JSON response
-                $input = json_decode(file_get_contents('php://input'), true);
-            
-                if (isset($input['post_id'])) {
+                if (isset($_POST['post_id']) && isset($_SESSION['user_login'])) {
                     $post = new Post();
-                    $report = $post->ReportPost($input,$user_id);
-                    echo json_encode($report);
+                    $report = $post->ReportPost($_POST, $user_id);
+
+                    if ($report['status'] == 'success') {
+                        echo json_encode($report);
+                    } else {
+                        echo json_encode(['status' => 'error', 'message' => $report['message']]);
+                    }
                     exit();
                 } else {
                     echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
                     exit();
                 }
             }
-            
-    }
+        }
 
 
         // collect posts
@@ -365,7 +366,6 @@ include "header.php";
                     include 'function.php';
                 }
             }
-            
         }
 
         # code...
@@ -381,7 +381,7 @@ include "header.php";
                         <button type="button" class="btn-close mr-lg-2" data-bs-dismiss="modal" aria-label="Close"></button>
 
                     </div>
-                    <form method="post" enctype="multipart/form-data" class="p-4" id="locationForm">
+                    <form method="post" enctype="multipart/form-data" class="p-4" id="locationForm2">
                         <div class="my-3">
                             <label for="locationname" class="col-form-label">ชื่อสถานที่</label>
                             <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="locationname" name="location_name" placeholder="กรุณาใส่ชื่อสถานที่" required>
@@ -407,9 +407,8 @@ include "header.php";
                         </div>
 
                         <div class="w-100 mx-auto mt-2 d-flex">
-                            <button name="addlocation" type="submit" class="btn btn-primary mx-auto" id="location_submit" value="Post">
-                                <div class="text-center">ยืนยัน</div>
-                            </button>
+                        <button type="submit" name="addlocation" class="btn btn-primary mx-auto" id="location_submit">ยืนยัน</button>
+
                         </div>
 
                     </form>
@@ -434,59 +433,55 @@ include "header.php";
 <script src="./javascript/main.js"></script>
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
-
 <script>
-
-</script>
-<script>
-    function validateAndSubmit() {
-        var locationName = document.getElementById('locationname').value;
-        var mapLink = document.getElementById('Map-link').value;
-        var image = document.getElementById('select_location_img').value;
-
-
-        if (!locationName || !mapLink) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'แจ้งเตือน',
-                text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
-            });
-            return false; // Prevent form submission
-        } else if (!image) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'แจ้งเตือน',
-                text: 'กรุณาอัพโหลดรูปภาพ!'
-            });
-            return false; // Prevent form submission 
-
-        }
-        // Additional checks can be added here, for example, checking if values are duplicates
-        // Example: This could be an AJAX call to the server to validate uniqueness
-
-        // If everything is okay, submit the form
-        document.getElementById('locationForm').submit();
-    }
-
-    const ValidatePost = () => {
-        let postTextArea = document.getElementById('exampleFormControlTextarea1');
-        let postText = postTextArea.value.trim(); // Trim any leading or trailing whitespace
-        if (!postText) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'แจ้งเตือน',
-                text: 'กรุณากรอกข้อความที่ต้องการโพสต์!'
-            });
-            return false; // Prevent form submission
-        }
-    }
-
-
-
-
-
+        let locationForm = document.getElementById('locationForm2')
 
     document.addEventListener('DOMContentLoaded', async function() {
+
+        console.log("DOM fully loaded and parsed");
+
+    if (locationForm) {
+        console.log("Form is found, setting up event listener.");
+        locationForm.addEventListener('submit', function(event) {
+            console.log("Submit event triggered."); // This should log when submit is pressed
+            event.preventDefault();  // Prevent the form from submitting
+            validateAndSubmit();
+        });
+    } else {
+        console.log("Form is not found."); // This will help identify if there is a problem finding the form
+    }
+});
+
+    function validateAndSubmit() {
+    var locationName = document.getElementById('locationname').value.trim();
+    var mapLink = document.getElementById('Map-link').value.trim();
+    var image = document.getElementById('select_location_img').files.length;
+
+    console.log("Validation started");
+    console.log("Location Name: " + locationName);
+    console.log("Map Link: " + mapLink);
+    console.log("Image Files Count: " + image);
+
+    if (!locationName || !mapLink) {
+        console.log("Validation failed: Name or Map link missing.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'แจ้งเตือน',
+            text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
+        });
+    } else if (image === 0) {
+        console.log("Validation failed: No image selected.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'แจ้งเตือน',
+            text: 'กรุณาอัพโหลดรูปภาพ!'
+        });
+    } else {
+        console.log("Validation passed, form will be submitted.");
+        document.getElementById('locationForm2').submit();
+    }
+}
+
         console.log(postSuccess);
         console.log(postlocationSuccess);
         if (postSuccess) {
@@ -517,63 +512,40 @@ include "header.php";
         }
 
         const reportButtons = document.querySelectorAll('.report-button');
-        if(reportButtons)
-        {
+        if (reportButtons) {
             console.log(`have the report btn`)
             const reportButtons = document.querySelectorAll('.report-button');
-        reportButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.getAttribute('data-postid');
-                const userSessionId = '<?php echo $_SESSION['user_login']; ?>'; // Assuming user_login is stored in session
+            reportButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const postId = this.getAttribute('data-postid');
+                    const userSessionId = '<?php echo $_SESSION['user_login']; ?>'; // Assuming user_login is stored in session
 
-                fetch('', { // empty URL to send request to the same page
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ post_id: postId, user_login: userSessionId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        Swal.fire('Success', 'Report submitted successfully', 'success');
-                    } else {
-                        Swal.fire('Error', data.message, 'error');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                    fetch('', { // empty URL to send request to the same page
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                post_id: postId,
+                                user_login: userSessionId
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                Swal.fire('Success', 'Report submitted successfully', 'success');
+                            } else {
+                                Swal.fire('Error', data.message, 'error');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
             });
-        });
         }
-            
 
 
-    });
 
 
-    const postForm = document.querySelector('form');
-
-    if (postForm) {
-        postForm.addEventListener('submit', (event) => {
-            event.preventDefault(); // Prevent default form submission
-
-            if (postForm.id === 'locationForm') {
-                validateAndSubmit();
-            } else if (postForm.id === 'postModal') {
-                ValidatePost();
-            }
-        });
-    };
-
-    if (locationsubmit) {
-        locationsubmit.addEventListener('click', () => {
-            validateAndSubmit();
-        });
-    } else if (PostsSubmit) {
-        PostsSubmit.addEventListener('click', () => {
-            ValidatePost();
-        });
-    }
 </script>
 
 </html>

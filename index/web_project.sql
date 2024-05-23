@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2024 at 10:30 AM
+-- Generation Time: May 23, 2024 at 01:09 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -46,7 +46,8 @@ CREATE TABLE `locations` (
 --
 
 INSERT INTO `locations` (`id`, `location_name`, `user_id`, `image`, `map_link`, `location_id`, `has_image`, `first_name`, `category_name`, `create_at`, `status`) VALUES
-(49, 'Mixue', '69704620163528', 'uploads/69704620163528/mxhNNhTYEdHqjUe.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '644700297849385', 1, 'Mali', 'food', '2024-05-14 22:42:03', 'approved');
+(49, 'Mixue', '69704620163528', 'uploads/69704620163528/mxhNNhTYEdHqjUe.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '644700297849385', 1, 'Mali', 'food', '2024-05-14 22:42:03', 'approved'),
+(50, 'Dilly Lazy', '69704620163528', 'uploads/69704620163528/NkARsok3e7TiHtW.png', 'https://maps.app.goo.gl/8vgzNPxNPsxWnhnG6', '5002614', 1, 'Mali', 'food', '2024-05-16 09:49:48', 'approved');
 
 -- --------------------------------------------------------
 
@@ -68,24 +69,46 @@ CREATE TABLE `posts` (
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `is_profile_image` tinyint(1) NOT NULL,
   `is_cover_image` tinyint(1) NOT NULL,
-  `status` varchar(255) NOT NULL
+  `status` varchar(255) NOT NULL,
+  `countreport` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `is_profile_image`, `is_cover_image`, `status`) VALUES
-(129, 27961068031535, 69704620163528, '', 'uploads/69704620163528/91F4ZQwDaKc4PBf.jpg', 0, '', '', 0, 1, '2024-04-28 23:21:17', 1, 0, ''),
-(130, 9151151, 69704620163528, '', 'uploads/69704620163528/ZaEKHvfgjagf5xg.jpg', 0, '', '', 0, 1, '2024-04-28 23:24:20', 1, 0, ''),
-(133, 3532332258965184, 69704620163528, '', 'uploads/69704620163528/lOsUJbCovZyMzVF.jpg', 0, '', '', 0, 1, '2024-04-28 23:24:32', 1, 0, ''),
-(134, 222403389343385454, 69704620163528, 'เสื้อสีใหม่', 'uploads/69704620163528/H32BHwluWZQs2uP.jpg', 0, 'clothing', '', 0, 1, '2024-04-29 03:20:10', 0, 0, ''),
-(145, 6715939602883043959, 20700969, '', 'uploads/20700969/U9Mh26e9uomh8S0.jpg', 0, '', '', 0, 1, '2024-05-06 15:34:49', 0, 1, ''),
-(146, 631669127194966, 20700969, '', 'uploads/20700969/SLb3V6ell9CbapA.jpg', 0, '', '', 0, 1, '2024-05-06 15:41:27', 0, 1, ''),
-(155, 752119, 69704620163528, '', 'uploads/69704620163528/pf2F2RaiBZJk3wY.jpg', 0, '', '', 0, 1, '2024-05-09 18:59:56', 0, 1, ''),
-(157, 391839, 69704620163528, '', 'uploads/69704620163528/Vx32I1nZMfptBgd.jpg', 0, '', '', 0, 1, '2024-05-09 19:00:07', 1, 0, ''),
-(161, 1713091, 69704620163528, 'ร้านอาหาร', 'uploads/69704620163528/GbEpkQTJ73qRZxq.jpg', 0, '', '', 0, 1, '2024-05-14 22:39:48', 0, 0, 'approved'),
-(163, 58379761, 69704620163528, 'ไอศครีมอร่อยมาก', 'uploads/69704620163528/Bn68fX6j6K3TNSL.jpg', 0, 'food', 'Mixue', 0, 1, '2024-05-14 22:42:28', 0, 0, '');
+INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `is_profile_image`, `is_cover_image`, `status`, `countreport`) VALUES
+(163, 58379761, 69704620163528, 'ไอศครีมอร่อยมาก', 'uploads/69704620163528/Bn68fX6j6K3TNSL.jpg', 0, 'food', 'Mixue', 0, 1, '2024-05-14 22:42:28', 0, 0, '', 0),
+(166, 4863084969414070, 69704620163528, 'Cafe นี้อาหารอร่อย', 'uploads/69704620163528/O2qUK44qX9RAQa6.jpg', 0, 'food', 'Dilly Lazy', 0, 1, '2024-05-22 19:54:55', 0, 0, 'approved', 8),
+(169, 297129814910527822, 69704620163528, 'fd', '', 0, '', '', 0, 0, '2024-05-22 20:11:23', 0, 0, '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reports`
+--
+
+CREATE TABLE `reports` (
+  `id` int(11) NOT NULL,
+  `post_id` varchar(255) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `report_count` int(11) NOT NULL,
+  `report_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reports`
+--
+
+INSERT INTO `reports` (`id`, `post_id`, `user_id`, `report_count`, `report_time`) VALUES
+(3, '4863084969414070', '69704620163528', 0, '2024-05-22 18:21:17'),
+(4, '4863084969414070', '69704620163528', 0, '2024-05-22 18:31:29'),
+(5, '4863084969414070', '69704620163528', 0, '2024-05-22 19:14:59'),
+(6, '4863084969414070', '69704620163528', 0, '2024-05-22 19:32:28'),
+(7, '4863084969414070', '69704620163528', 0, '2024-05-22 19:32:31'),
+(8, '4863084969414070', '69704620163528', 0, '2024-05-22 19:41:48'),
+(9, '4863084969414070', '69704620163528', 0, '2024-05-22 19:46:49'),
+(10, '4863084969414070', '69704620163528', 0, '2024-05-22 19:54:55');
 
 -- --------------------------------------------------------
 
@@ -113,7 +136,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `userid`, `url_address`, `email`, `password`, `first_name`, `last_name`, `urole`, `profile_image`, `cover_image`, `created_at`) VALUES
 (41, 2251245, '', 'chisanupong.li@ku.th', '$2y$10$OBGm5impCgRumygXNu.wXuf.huULeFMUnc.5WGPZ9VuhBrnPKJAeK', 'Chisanupong', 'Limsakul', 'admin', '', '', '2023-11-01 10:07:33'),
-(42, 69704620163528, 'mali.konglerdruk', 'Mali@ku.th', '$2y$10$a9fJE2f6iwFcdrM.DGXwJ.9ZtoWYIcNGYiVFVlqp29m9bSTS.vPqi', 'Mali', 'Konglerdruk', 'user', 'uploads/69704620163528/Vx32I1nZMfptBgd.jpg', 'uploads/69704620163528/pf2F2RaiBZJk3wY.jpg', '2024-05-09 19:00:07'),
+(42, 69704620163528, 'mali.konglerdruk', 'Mali@ku.th', '$2y$10$a9fJE2f6iwFcdrM.DGXwJ.9ZtoWYIcNGYiVFVlqp29m9bSTS.vPqi', 'Mali', 'Konglerdruk', 'user', 'uploads/69704620163528/5xSgNgxTZo6zp1q.jpg', 'uploads/69704620163528/pf2F2RaiBZJk3wY.jpg', '2024-05-17 19:10:13'),
 (43, 233577, 'arisorn.rungruk', 'Arisorn@ku.th', '$2y$10$bgVj90PuHz/qdE5/KF/aTOOXfx8D2.bLK2oaBLkDaEEOOqFW0VGlW', 'Arisorn', 'Rungruk', 'user', 'uploads/233577/zr4PQf8LkygXpZJ.jpg', 'uploads/233577/xTbI9OZ8rONfwlV.jpg', '2023-11-02 19:49:31'),
 (49, 20700969, 'testone.testerone', 'Tester@ku.th', '$2y$10$ZCVL3CxCj75g22xPQZoMiOiRRE7tmvByQ1Ur2XeSFcf3HQNL5ovZO', 'Testone', 'TesterOne', 'user', '', 'uploads/20700969/SLb3V6ell9CbapA.jpg', '2024-05-06 15:41:27');
 
@@ -147,8 +170,17 @@ ALTER TABLE `posts`
   ADD KEY `is_profile_image` (`is_profile_image`),
   ADD KEY `is_cover_image` (`is_cover_image`),
   ADD KEY `category` (`category`),
-  ADD KEY `status` (`status`);
+  ADD KEY `status` (`status`),
+  ADD KEY `countreport` (`countreport`);
 ALTER TABLE `posts` ADD FULLTEXT KEY `post` (`post`);
+
+--
+-- Indexes for table `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `post_id` (`post_id`,`user_id`),
+  ADD KEY `report_count` (`report_count`);
 
 --
 -- Indexes for table `users`
@@ -170,13 +202,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
+  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
+
+--
+-- AUTO_INCREMENT for table `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
