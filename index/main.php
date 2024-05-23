@@ -32,6 +32,7 @@ include "header.php";
             // ตรวจสอบว่ามีผู้ใช้หรือไม่
             if ($row) {
                 $user_id = $row['userid']; // ตอนนี้เราได้รับ userid ของผู้ใช้จากตาราง users
+                $_SESSION['user_id'] = $user_id;
             } else if ($row) {
                 $first_name = $row['first_name'];
             } else {
@@ -137,10 +138,11 @@ include "header.php";
             }
 
             if ($_SERVER['REQUEST_METHOD'] == "POST") {
-                if (isset($_POST['post_id']) && isset($_SESSION['user_login'])) {
+                if (isset($_POST['post_id']) && isset($_SESSION['user_id'])) { // Ensure you are using the correct session variable
                     $post = new Post();
+                    $user_id = $_SESSION['user_id']; // Correctly retrieve user_id from session
                     $report = $post->ReportPost($_POST, $user_id);
-
+            
                     if ($report['status'] == 'success') {
                         echo json_encode($report);
                     } else {
@@ -148,7 +150,7 @@ include "header.php";
                     }
                     exit();
                 } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
+                    echo json_encode(['status' => 'error', 'message' => 'Post ID or User ID missing in request']);
                     exit();
                 }
             }
@@ -450,6 +452,32 @@ include "header.php";
     } else {
         console.log("Form is not found."); // This will help identify if there is a problem finding the form
     }
+
+
+    document.querySelectorAll('.report-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const postId = this.getAttribute('data-postid');
+        const userSessionId = '<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'not set'; ?>';
+
+        fetch('', { // Replace '' with the actual PHP script URL if not the same page
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', // Changed to handle URL encoded form data
+            },
+            body: `post_id=${postId}&user_id=${userSessionId}` // Send data as URL encoded form data
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                Swal.fire('Success', 'Report submitted successfully', 'success');
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
 });
 
     function validateAndSubmit() {
@@ -511,38 +539,7 @@ include "header.php";
             });
         }
 
-        const reportButtons = document.querySelectorAll('.report-button');
-        if (reportButtons) {
-            console.log(`have the report btn`)
-            const reportButtons = document.querySelectorAll('.report-button');
-            reportButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const postId = this.getAttribute('data-postid');
-                    const userSessionId = '<?php echo $_SESSION['user_login']; ?>'; // Assuming user_login is stored in session
-
-                    fetch('', { // empty URL to send request to the same page
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                post_id: postId,
-                                user_login: userSessionId
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                Swal.fire('Success', 'Report submitted successfully', 'success');
-                            } else {
-                                Swal.fire('Error', data.message, 'error');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
-            });
-        }
-
+      
 
 
 
