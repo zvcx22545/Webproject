@@ -425,9 +425,16 @@ include "header.php";
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
-    // let locationForm = document.getElementById('locationForm2')
 
     document.addEventListener('DOMContentLoaded', async function() {
+        let location_submit = document.getElementById('location_submit');
+        if(location_submit)
+        {
+            location_submit.addEventListener('click',() =>
+        {
+            validateAndSubmit();
+        })
+        }
 
         console.log("DOM fully loaded and parsed");
 
