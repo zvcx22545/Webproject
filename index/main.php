@@ -49,6 +49,93 @@ include "header.php";
         }
 
         //posting start here
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            if (isset($_POST['post_button'])) {
+                // ประมวลผลของ Modal แรก
+                $post = new Post();
+                $result = $post->create_post($user_id, $_POST, $_FILES);
+                if ($result['status'] == 'success') {
+                    if (!empty($result['location_name'])) {
+                        $_SESSION['post_location'] = true;
+                    } else {
+                        $_SESSION['post_success'] = true;
+                    }
+                    header("location: main.php");
+                    exit();
+                } else {
+                    echo "have error posting";
+                    echo $result['message'];
+                }
+            } elseif (isset($_POST['addlocation'])) {
+                // Ensure $user_id and $first_name are set correctly
+                if (isset($_SESSION['user_login'])) {
+                    $user_session_id = $_SESSION['user_login'];
+                    $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
+                    $stmt->bindParam(':user_session_id', $user_session_id);
+                    $stmt->execute();
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if ($row) {
+                        $user_id = $row['userid']; // Ensure this is correct
+                        $first_name = $row['first_name']; // Ensure this is correct
+                        // Check if location_name already exists
+                        $location = isset($_POST['location_name']) ? $_POST['location_name'] : "";
+                        $Maplink = isset($_POST['Maplink']) ? $_POST['Maplink'] : "";
+                        if (empty($location)) {
+                            // Display SweetAlert2 for empty location name
+                            echo '<script type="text/javascript">';
+                            echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่", "error");';
+                            echo '</script>';
+                        } else {
+                            // Check if location name already exists
+                            $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name OR map_link = :map_link");
+                            $query_check->bindParam(":location_name", $location);
+                            $query_check->bindParam(":map_link", $Maplink);
+                            $query_check->execute();
+                            $result = $query_check->fetchAll(PDO::FETCH_ASSOC);
+                            if ($result) {
+                                foreach ($result as $row) {
+                                    if ($row['location_name'] === $location) {
+                                        // Display SweetAlert2 if location name already exists
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีชื่อสถานที่นี้อยู่แล้ว", "error");';
+                                        echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    } elseif ($row['map_link'] === $Maplink) {
+                                        // Display SweetAlert2 if map link already exists
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีลิงค์สถานที่นี้อยู่แล้ว", "error");';
+                                        echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    }
+                                }
+                            } else {
+                                // Add location if validation passes
+                                $Addlocations = new Location();
+                                $result = $Addlocations->Addlocation($user_id, $_POST, $_FILES, $first_name);
+                                if ($result === true) {
+                                    // Display success message using SweetAlert2
+                                    echo '<script type="text/javascript">';
+                                    echo 'Swal.fire("Success", "เพิ่มสถานที่สำเร็จ!กรุณารอAdminตรวจสอบสถานที่", "success");';
+                                    echo '</script>';
+                                } else {
+                                    // Display error message using SweetAlert2
+                                    echo '<script type="text/javascript">';
+                                    echo 'Swal.fire("Error", "' . $result . '", "error");';
+                                    echo '</script>';
+                                }
+                            }
+                        }
+                    } else {
+                        // Handle case where user is not found
+                    }
+                } else {
+                    // Handle case where user session is not set
+                }
+            }
+        }
+        
 
 
 
