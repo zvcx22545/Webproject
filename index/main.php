@@ -378,7 +378,7 @@ include "header.php";
                             });
                             console.log('Report submitted successfully', data);
                         } else {
-                            Swal.fire('warning', data.message, 'รายงานไม่สำเร็จ');
+                            Swal.fire('รายงานไม่สำเร็จ!', data.message, 'warning');
                             console.log('Error:', data.message);
                             // Handle error - you can display a message or update the UI
                         }
