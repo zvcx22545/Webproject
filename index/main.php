@@ -66,7 +66,8 @@ include "header.php";
                     echo "have error posting";
                     echo $result['message'];
                 }
-            } elseif (isset($_POST['addlocation'])) {
+            }
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addlocation'])) {
                 // Ensure $user_id and $first_name are set correctly
                 if (isset($_SESSION['user_login'])) {
                     $user_session_id = $_SESSION['user_login'];
@@ -80,13 +81,13 @@ include "header.php";
                         // Check if location_name already exists
                         $location = isset($_POST['location_name']) ? $_POST['location_name'] : "";
                         $Maplink = isset($_POST['Maplink']) ? $_POST['Maplink'] : "";
-                        if (empty($location)) {
-                            // Display SweetAlert2 for empty location name
+                        if (empty($location) || empty($Maplink)) {
+                            // Display SweetAlert2 for empty location name or map link
                             echo '<script type="text/javascript">';
-                            echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่", "error");';
+                            echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่และลิงค์ Google Map", "error");';
                             echo '</script>';
                         } else {
-                            // Check if location name already exists
+                            // Check if location name or map link already exists
                             $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name OR map_link = :map_link");
                             $query_check->bindParam(":location_name", $location);
                             $query_check->bindParam(":map_link", $Maplink);
@@ -129,13 +130,19 @@ include "header.php";
                         }
                     } else {
                         // Handle case where user is not found
+                        echo '<script type="text/javascript">';
+                        echo 'Swal.fire("Error", "User not found", "error");';
+                        echo '</script>';
                     }
                 } else {
                     // Handle case where user session is not set
+                    echo '<script type="text/javascript">';
+                    echo 'Swal.fire("Error", "User session not set", "error");';
+                    echo '</script>';
                 }
             }
         }
-        
+
 
 
 
@@ -418,23 +425,11 @@ include "header.php";
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
-    let locationForm = document.getElementById('locationForm2')
+    // let locationForm = document.getElementById('locationForm2')
 
     document.addEventListener('DOMContentLoaded', async function() {
 
         console.log("DOM fully loaded and parsed");
-
-        if (locationForm) {
-            console.log("Form is found, setting up event listener.");
-            locationForm.addEventListener('submit', function(event) {
-                console.log("Submit event triggered."); // This should log when submit is pressed
-                event.preventDefault(); // Prevent the form from submitting
-                validateAndSubmit();
-            });
-        } else {
-            console.log("Form is not found."); // This will help identify if there is a problem finding the form
-        }
-
 
         document.querySelectorAll('.report-button').forEach(button => {
             button.addEventListener('click', function() {
@@ -506,7 +501,7 @@ include "header.php";
             });
         } else {
             console.log("Validation passed, form will be submitted.");
-            document.getElementById('locationForm2').submit();
+            locationForm.submit();
         }
     }
 
