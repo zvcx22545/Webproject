@@ -79,7 +79,6 @@ public function create_post($user_id, $data, $files)
         return ['status' => 'error', 'message' => $this->error];
     }
 }
-
     public function get_posts($id)
     {
         global $conn;
@@ -122,8 +121,6 @@ public function create_post($user_id, $data, $files)
         $query->bindParam(":postid", $postid,PDO::PARAM_INT);
         $query->execute();
 
-            
-        
     }
     public function i_own_post($postid,$user_login)
     {
