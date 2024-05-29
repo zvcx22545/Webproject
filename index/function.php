@@ -2,7 +2,6 @@
 <?php
 require_once 'autoload.php';
 
-
 if (!isset($_SESSION['user_login'])) {
   $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
   header('location:login.php');
@@ -88,7 +87,7 @@ if (isset($_SESSION['user_login'])) {
         $timestamp = strtotime($ROW['date']); // Assuming $ROW['date'] holds the date string
         
         // Map English days and months to Thai
-        $dayOfWeekEnglish = strftime('%A', $timestamp);
+        $dayOfWeekEnglish =  strftime('%A', $timestamp);
         $monthOfYearEnglish = strftime('%B', $timestamp);
 
         $dayOfWeekThaiMap = [
@@ -118,7 +117,7 @@ if (isset($_SESSION['user_login'])) {
         $dayOfWeekThai = $dayOfWeekThaiMap[$dayOfWeekEnglish] ?? $dayOfWeekEnglish; // Default to English if not mapped
         $monthOfYearThai = $monthOfYearThaiMap[$monthOfYearEnglish] ?? $monthOfYearEnglish; // Default to English if not mapped
         
-        $formattedDate = $dayOfWeekThai . strftime(' %e ', $timestamp) . $monthOfYearThai . strftime(' %Y : เวลา %H.%M', $timestamp);
+        $formattedDate = $dayOfWeekThai . date(' d ', $timestamp) . $monthOfYearThai . date(' Y : เวลา H:i', $timestamp);
 
         echo $formattedDate; // Display the formatted date
         ?>
@@ -140,17 +139,16 @@ if (isset($_SESSION['user_login'])) {
 
     <div class="posts" data-postid="<?php echo $ROW['postid']; ?>">
       <i class="fa-solid fa-ellipsis" id="toggle-dropdown"></i>
-      <ul class="content-button">
-      <li><button class="dropdown-item report-button" data-postid="<?php echo $ROW['postid']; ?>">
-      <i class="fa-solid fa-flag"></i>
-      <div class="text">Report</div>
-    </button></li>
-    <hr class="divider">
+        <ul class="content-button">
+          <li>
+            <button class="dropdown-item report-button" data-postid="<?php echo $ROW['postid']; ?>">
+              <i class="fa-solid fa-flag"></i>
+                <div class="text">Report</div>
+            </button>
+          </li>
+          <hr class="divider">
       </ul>
     </div>
-    
-    
-
   </div>
   <div class="post-content">
     <?php echo $ROW['post'] ?>
@@ -164,15 +162,19 @@ if (isset($_SESSION['user_login'])) {
     ?>
   </div>
   <div class="post-bottom">
-    <div class="action">
+    <a class="btn btn btn-light" href="backend/post.php?id=<?php echo $ROW['postid'] ?>">
       <i class="bi bi-star-fill"></i>
       <span>Star</span>
-    </div>
-    <div class="action">
+      <?php
+        if($ROW['likes'] > 0) {
+          echo "<span class='badge badge-dark'>".number_format($ROW['likes'])."</span>";
+        }
+      ?>
+    </a>
+    <button class="btn btn btn-light" data-bs-toggle="modal" data-bs-target="#commentModal">
       <i class="far fa-comment"></i>
       <span>Comment</span>
-    </div>
-
+    </button>
     <div class="containericon d-flex align-content-center">
       <?php
       $post = new Post();
@@ -191,8 +193,48 @@ if (isset($_SESSION['user_login'])) {
       }
       ?>
     </div>
+  </div>
+  <div class="comments mt-2">
+    <?php
+      $comment = new Comment();
+      $data = $comment->getAllComment($ROW['postid']);
+      foreach ($data as $row) {
 
+        $util = new Util();
+        $create_date = $util->coverdate($row['create_date']);
 
+        echo "<div class='card mb-1'>".
+                "<div class='card-body'>".
+                  $row['content'].
+                  "<br><span class='fw-light' style='font-size: 12px;'>".$row['fullname']."</span>".
+                  " <span class='fw-light' style='font-size: 10px;'>".$create_date."</span>".
+                "</div>".
+              "</div>";
+      }
+    ?>
+  </div>
+</div>
 
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form action="backend/comment.php" method="post">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLongTitle">แสดงความคิดเห็น</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="content">ความคิดเห็น</label>
+          <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+        </div>
+        <input type="hidden" name="post_id" value="<?php echo $ROW['postid'];?>">
+        <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">บันทึก</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+      </div>
+      </form>
+    </div>
   </div>
 </div>

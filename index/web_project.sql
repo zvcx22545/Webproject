@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 27, 2024 at 11:49 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: localhost:8889
+-- Generation Time: May 29, 2024 at 07:43 PM
+-- Server version: 5.7.39
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,29 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `content` text NOT NULL,
+  `post_id` varchar(100) NOT NULL,
+  `user_id` varchar(100) NOT NULL,
+  `create_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `content`, `post_id`, `user_id`, `create_date`) VALUES
+(1, 'น่าไปสุดๆ ต้องไปกอนสักครั้ง', '58379761', '69704620163528', '2024-05-30 01:16:41'),
+(2, 'ต้องไปโดน', '58379761', '69704620163528', '2024-05-30 01:48:57'),
+(3, 'โดนๆ', '58379761', '69704620163528', '2024-05-30 01:49:16');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `locations`
 --
 
@@ -33,13 +56,13 @@ CREATE TABLE `locations` (
   `user_id` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
   `map_link` varchar(255) NOT NULL,
-  `location_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `location_id` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `has_image` int(11) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `category_name` varchar(255) NOT NULL,
-  `create_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `locations`
@@ -47,8 +70,7 @@ CREATE TABLE `locations` (
 
 INSERT INTO `locations` (`id`, `location_name`, `user_id`, `image`, `map_link`, `location_id`, `has_image`, `first_name`, `category_name`, `create_at`, `status`) VALUES
 (49, 'Mixue', '69704620163528', 'uploads/69704620163528/mxhNNhTYEdHqjUe.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '644700297849385', 1, 'Mali', 'food', '2024-05-14 22:42:03', 'approved'),
-(50, 'Dilly Lazy', '69704620163528', 'uploads/69704620163528/NkARsok3e7TiHtW.png', 'https://maps.app.goo.gl/8vgzNPxNPsxWnhnG6', '5002614', 1, 'Mali', 'food', '2024-05-16 09:49:48', 'approved'),
-(52, 'โลตัสกำแพงแสน', '69704620163528', 'uploads/69704620163528/6og5aMIodi4f8SR.jpg', 'https://maps.app.goo.gl/D17fPbXX2VD1cwou7', '141138255', 1, 'Mali', '', '2024-05-27 20:55:46', '');
+(50, 'Dilly Lazy', '69704620163528', 'uploads/69704620163528/NkARsok3e7TiHtW.png', 'https://maps.app.goo.gl/8vgzNPxNPsxWnhnG6', '5002614', 1, 'Mali', 'food', '2024-05-16 09:49:48', 'approved');
 
 -- --------------------------------------------------------
 
@@ -60,28 +82,28 @@ CREATE TABLE `posts` (
   `id` bigint(19) NOT NULL,
   `postid` bigint(19) NOT NULL,
   `user_id` bigint(19) NOT NULL,
-  `post` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `image` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `post` text CHARACTER SET utf8mb4 NOT NULL,
+  `image` varchar(500) CHARACTER SET utf8mb4 NOT NULL,
   `comments` int(11) NOT NULL,
   `category` varchar(255) DEFAULT NULL,
   `location_name` varchar(255) DEFAULT NULL,
-  `likes` int(11) NOT NULL,
+  `likes` int(11) NOT NULL DEFAULT '0',
   `has_image` tinyint(1) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `is_profile_image` tinyint(1) NOT NULL,
   `is_cover_image` tinyint(1) NOT NULL,
   `status` varchar(255) NOT NULL,
   `countreport` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `posts`
 --
 
 INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `is_profile_image`, `is_cover_image`, `status`, `countreport`) VALUES
-(166, 4863084969414070, 69704620163528, 'Cafe นี้อาหารอร่อย', 'uploads/69704620163528/O2qUK44qX9RAQa6.jpg', 0, 'food', 'Dilly Lazy', 0, 1, '2024-05-27 16:28:48', 0, 0, 'approved', 24),
-(169, 297129814910527822, 69704620163528, 'fd', '', 0, '', '', 0, 0, '2024-05-22 20:11:23', 0, 0, '', 0),
-(179, 1796570, 69704620163528, 'ร้านนี้อร่อย', 'uploads/69704620163528/uYwI2lwvLlhUPOq.jpg', 0, 'food', 'Mixue', 0, 1, '2024-05-27 20:56:53', 0, 0, '', 1);
+(163, 58379761, 69704620163528, 'ไอศครีมอร่อยมาก', 'uploads/69704620163528/Bn68fX6j6K3TNSL.jpg', 0, 'food', 'Mixue', 1007, 1, '2024-05-29 19:37:13', 0, 0, '', 0),
+(166, 4863084969414070, 69704620163528, 'Cafe นี้อาหารอร่อย', 'uploads/69704620163528/O2qUK44qX9RAQa6.jpg', 0, 'food', 'Dilly Lazy', 0, 1, '2024-05-22 19:54:55', 0, 0, 'approved', 8),
+(169, 297129814910527822, 69704620163528, 'fd', '', 0, '', '', 0, 0, '2024-05-22 20:11:23', 0, 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -94,8 +116,8 @@ CREATE TABLE `reports` (
   `post_id` varchar(255) NOT NULL,
   `user_id` varchar(255) NOT NULL,
   `report_count` int(11) NOT NULL,
-  `report_time` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `report_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `reports`
@@ -109,25 +131,7 @@ INSERT INTO `reports` (`id`, `post_id`, `user_id`, `report_count`, `report_time`
 (7, '4863084969414070', '69704620163528', 0, '2024-05-22 19:32:31'),
 (8, '4863084969414070', '69704620163528', 0, '2024-05-22 19:41:48'),
 (9, '4863084969414070', '69704620163528', 0, '2024-05-22 19:46:49'),
-(10, '4863084969414070', '69704620163528', 0, '2024-05-22 19:54:55'),
-(11, '4863084969414070', '69704620163528', 0, '2024-05-27 11:43:56'),
-(12, '4863084969414070', '69704620163528', 0, '2024-05-27 12:13:47'),
-(13, '4863084969414070', '69704620163528', 0, '2024-05-27 12:19:49'),
-(14, '4863084969414070', '69704620163528', 0, '2024-05-27 12:51:01'),
-(15, '4863084969414070', '69704620163528', 0, '2024-05-27 12:54:56'),
-(16, '4863084969414070', '69704620163528', 0, '2024-05-27 12:59:16'),
-(17, '4863084969414070', '69704620163528', 0, '2024-05-27 13:41:57'),
-(18, '4863084969414070', '69704620163528', 0, '2024-05-27 14:44:07'),
-(19, '4863084969414070', '69704620163528', 0, '2024-05-27 14:45:06'),
-(20, '4863084969414070', '69704620163528', 0, '2024-05-27 14:45:41'),
-(21, '4863084969414070', '69704620163528', 0, '2024-05-27 15:44:34'),
-(22, '4863084969414070', '69704620163528', 0, '2024-05-27 15:49:08'),
-(23, '4863084969414070', '69704620163528', 0, '2024-05-27 15:52:22'),
-(24, '4863084969414070', '69704620163528', 0, '2024-05-27 16:02:39'),
-(25, '4863084969414070', '69704620163528', 0, '2024-05-27 16:28:20'),
-(26, '4863084969414070', '69704620163528', 0, '2024-05-27 16:28:48'),
-(27, '5713', '69704620163528', 0, '2024-05-27 20:01:14'),
-(28, '1796570', '69704620163528', 0, '2024-05-27 20:56:53');
+(10, '4863084969414070', '69704620163528', 0, '2024-05-22 19:54:55');
 
 -- --------------------------------------------------------
 
@@ -146,8 +150,8 @@ CREATE TABLE `users` (
   `urole` varchar(255) NOT NULL,
   `profile_image` varchar(1000) NOT NULL,
   `cover_image` varchar(1000) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
@@ -162,6 +166,12 @@ INSERT INTO `users` (`id`, `userid`, `url_address`, `email`, `password`, `first_
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `locations`
@@ -218,22 +228,28 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
