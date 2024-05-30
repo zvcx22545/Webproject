@@ -173,7 +173,7 @@ include "header.php";
 
             </ul>
 
-            <div class="hamburger content w-auto " id="navbarSupportedContent">
+            <div class="collapse navbar-collapse w-auto" id="navbarSupportedContent">
 
                 <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search" action="search.php" method="POST">
                     <input class="form-control me-2 rounded-pill" type="search" placeholder="ค้นหาสถานที่" aria-label="Search" name="search" id="search" autocomplete="off" required>
