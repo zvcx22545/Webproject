@@ -167,12 +167,13 @@ include "header.php";
                 <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
                 <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
                 <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
-                <button class="navbar-toggler" type="button">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
+               <div class="d-flex align-items-center px-2">
+                <i class="fas fa-bars hamburger" id="navbar-toggler"></i></div>
+
+
             </ul>
 
-            <div class="collapse navbar-collapse w-auto " id="navbarSupportedContent">
+            <div class="hamburger content w-auto " id="navbarSupportedContent">
 
                 <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search" action="search.php" method="POST">
                     <input class="form-control me-2 rounded-pill" type="search" placeholder="ค้นหาสถานที่" aria-label="Search" name="search" id="search" autocomplete="off" required>
@@ -422,6 +423,7 @@ include "header.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
 </script>
 <script src="./javascript/main.js"></script>
+<script src="./javascript/hamburger.js"></script>
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
