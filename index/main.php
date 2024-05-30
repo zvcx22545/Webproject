@@ -465,11 +465,16 @@ include "header.php";
                                 timer: 2000, // Auto close after 2 seconds
                                 showConfirmButton: false // Hide the confirm button
                             });
+                            const dropdown = button.closest('.posts').querySelector('.content-button');
+                    dropdown.style.display = 'none';
                             
                             console.log('Report submitted successfully', data);
                         } else {
                             Swal.fire('รายงานไม่สำเร็จ!', data.message, 'warning');
                             console.log('Error:', data.message);
+                            const dropdown = button.closest('.posts').querySelector('.content-button');
+                    dropdown.style.display = 'none';
+                            
                             // Handle error - you can display a message or update the UI
                         }
                     })
