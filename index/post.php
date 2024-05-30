@@ -291,6 +291,22 @@ class Post
         }
     }
 
+    public function get_all_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("SELECT id FROM history_likes WHERE post_id = :post_id and user_id = :user_id");
+        $query->bindParam(":post_id", $post_id);
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result){
+            return $result;
+        }else{
+            return null;
+        }
+    }
+
     public function add_like_history($post_id, $user_id)
     {
         global $conn;

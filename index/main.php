@@ -586,20 +586,27 @@ include "header.php";
                 // Examine the text in the response
                 response.json().then(function(data) {
                     const likes = data.likes
+                    const like_id = data.like_id
+
+                    $($this).data('likeid', like_id)
+
+                    if(like_id == '0'){
+                        $($this).find('.bi-star-fill').removeClass('bi-star-fill').addClass('bi-star')
+
+                    }else{
+                        $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
+
+                    }
+
                     if(likes == '0'){
                         $('#ele-' + post_id).html('')
-                        $($this).data('likeid', 0)
-                        $($this).find('.bi-star-fill').removeClass('bi-star-fill').addClass('bi-star')
+
                     }else if(likes == '1'){
-     
-                        $($this).data('likeid', data.like_id)
                         let ele = "<span class='badge badge-dark like-count' id='post-"+post_id+"'>"+likes+"</span>"
                         $('#ele-'+ post_id).html(ele)
-                        $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
 
                     }else{
                         $('#post-' + post_id).html(likes)
-                        $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
                     }
                     
                 });
