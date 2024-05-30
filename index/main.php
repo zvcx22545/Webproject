@@ -300,7 +300,7 @@ include "header.php";
 
                                             <input class="form-control" name="file" type="file" id="select_post_img" style="display: none;">
                                             <label for="select_post_img" class="d-flex justify-content-center">
-                                                <i class="fa fa-image mx-auto"></i>
+                                                <i class="fa fa-image photo"></i>
                                             </label>
                                         </div>
                                         <div class="mb-3">
@@ -511,18 +511,19 @@ include "header.php";
             });
         }
 
-        const toggleDropdown = document.getElementById('toggle-dropdown');
-        const ShowDropdown = document.querySelector('.content-button');
+    const toggleDropdowns = document.querySelectorAll('.fa-ellipsis');
+const showDropdowns = document.querySelectorAll('.content-button');
 
-        if (toggleDropdown) {
-            toggleDropdown.addEventListener('click', function() {
-                if (ShowDropdown.style.display === 'block') {
-                    ShowDropdown.style.display = 'none';
-                } else {
-                    ShowDropdown.style.display = 'block';
-                }
-            });
+toggleDropdowns.forEach((toggleDropdown, index) => {
+    toggleDropdown.addEventListener('click', function() {
+        if (showDropdowns[index].style.display === 'block') {
+            showDropdowns[index].style.display = 'none';
+        } else {
+            showDropdowns[index].style.display = 'block';
         }
+    });
+});
+
 </script>
 
 </html>
