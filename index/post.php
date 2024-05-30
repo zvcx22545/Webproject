@@ -140,15 +140,15 @@ class Post
         
     }
     public function getAllPosts()
-{
-    global $conn;
-    
-    $query = $conn->prepare("SELECT * FROM posts ORDER BY date DESC");
-    $query->execute();
-    $result = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts
-    
-    return $result; // Return the array of posts
-}
+    {
+        global $conn;
+        
+        $query = $conn->prepare("SELECT * FROM posts ORDER BY date DESC");
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts
+        
+        return $result; // Return the array of posts
+    }
 
     private function create_postid()
     {
@@ -258,15 +258,70 @@ class Post
         }
     }
 
-    public function update_like($postid)
+    public function update_like($postid, $type)
     {
         global $conn;
 
-        $updateQuery = $conn->prepare("UPDATE posts SET likes = likes + 1 WHERE postid = :post_id");
+        if($type == 'like'){
+            $updateQuery = $conn->prepare("UPDATE posts SET likes = likes + 1 WHERE postid = :post_id");
+        }else{
+            $updateQuery = $conn->prepare("UPDATE posts SET likes = likes - 1 WHERE postid = :post_id");
+        }
+        
         $updateQuery->bindParam(':post_id', $postid);
         $updateQuery->execute();
 
         return ['status' => 'success', 'message' => 'Report submitted successfully'];
+    }
+
+    public function get_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("SELECT id FROM history_likes WHERE post_id = :post_id and user_id = :user_id");
+        $query->bindParam(":post_id", $post_id);
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result)
+        {
+            return $result["0"];
+        }else{
+            return null;
+        }
+    }
+
+    public function add_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("INSERT INTO history_likes (user_id, post_id) VALUES (:user_id, :post_id)");
+        $query->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $query->bindParam(":post_id", $post_id, PDO::PARAM_INT);
+
+        try {
+            $query->execute();
+            return $conn->lastInsertId();
+        } catch (\Throwable $th) {
+            //throw $th;
+            return false;
+        }
+    }
+
+    public function delete_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("DELETE FROM history_likes WHERE post_id = :post_id and user_id = :user_id");
+        $query->bindParam(":post_id", $post_id);
+        $query->bindParam(":user_id", $user_id);
+
+        try {
+            $query->execute();
+            return true;
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return false;
+        }
     }
     
 }

@@ -536,19 +536,57 @@ include "header.php";
         });
     }
 
-    const toggleDropdowns = document.querySelectorAll('.fa-ellipsis');
-const showDropdowns = document.querySelectorAll('.content-button');
+    const toggleDropdown = document.getElementById('toggle-dropdown');
+    const ShowDropdown = document.querySelector('.content-button');
 
-toggleDropdowns.forEach((toggleDropdown, index) => {
-    toggleDropdown.addEventListener('click', function() {
-        if (showDropdowns[index].style.display === 'block') {
-            showDropdowns[index].style.display = 'none';
-        } else {
-            showDropdowns[index].style.display = 'block';
-        }
-    });
-});
+    if (toggleDropdown) {
+        toggleDropdown.addEventListener('click', function() {
+            if (ShowDropdown.style.display === 'block') {
+                ShowDropdown.style.display = 'none';
+            } else {
+                ShowDropdown.style.display = 'block';
+            }
+        });
+    }
 
+    $(document).ready(function() {
+        $('.btn-like').click(function() {
+            let $this = $(this);
+            let post_id = $(this).data('id')
+            let like_id = $(this).data('likeid')
+
+            
+
+            fetch('./backend/post.php?post_id=' + post_id + '&like_id=' + like_id)
+            .then(
+                function(response) {
+                // Examine the text in the response
+                response.json().then(function(data) {
+                    const likes = data.likes
+                    if(likes == '0'){
+                        $('#ele-' + post_id).remove()
+                        $($this).find('.bi-star-fill').removeClass('bi-star-fill').addClass('bi-star')
+                    }else if(likes == '1'){
+     
+                        $($this).data('likeid', data.like_id)
+                        let ele = "<span class='badge badge-dark like-count' id='post-"+post_id+"'>"+likes+"</span>"
+                        $('#ele-'+ post_id).html(ele)
+                        $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
+
+                    }else{
+                        $('#post-' + post_id).html(likes)
+                        $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
+                    }
+                    
+                });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error :-S', err);
+            });
+        })
+        // console.log('Javascript');
+    })
 </script>
 
 </html>

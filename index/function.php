@@ -161,16 +161,32 @@ if (isset($_SESSION['user_login'])) {
     }
     ?>
   </div>
+  <?php
+      $like_id = 0;
+      $post = new Post();
+      $history_like = $post->get_like_history($ROW['postid'], $user_id);
+      if($history_like){
+        $like_id = $history_like['id'];
+      }
+    ?>
   <div class="post-bottom">
-    <a class="btn btn btn-light" href="backend/post.php?id=<?php echo $ROW['postid'] ?>">
-      <i class="bi bi-star-fill"></i>
-      <span>Star</span>
+    <button class="btn btn btn-light btn-like" data-id="<?php echo $ROW['postid'] ?>" data-likeid="<?php echo $like_id ?>">
       <?php
-        if($ROW['likes'] > 0) {
-          echo "<span class='badge badge-dark'>".number_format($ROW['likes'])."</span>";
+        if($like_id == 0){
+          echo '<i class="bi bi-star"></i>';
+        }else{
+          echo '<i class="bi bi-star-fill"></i>';
         }
       ?>
-    </a>
+      <span>Star</span>
+      <span id="ele-<?php echo $ROW['postid'] ?>">
+      <?php
+        if($ROW['likes'] > 0) {
+          echo "<span class='badge badge-dark like-count' id='post-".$ROW['postid']."'>".number_format($ROW['likes'])."</span>";
+        }
+      ?>
+      </span>
+    </button>
     <button class="btn btn btn-light" data-bs-toggle="modal" data-bs-target="#commentModal">
       <i class="far fa-comment"></i>
       <span>Comment</span>
