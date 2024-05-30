@@ -409,6 +409,30 @@ include "header.php";
             </div>
         </div>
 
+        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <form action="backend/comment.php" method="post" id="form-comment">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalLongTitle">แสดงความคิดเห็น</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                    <label for="content">ความคิดเห็น</label>
+                    <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                    </div>
+                    <input type="hidden" name="post_id" value="">
+                    <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+                </form>
+                </div>
+            </div>
+            </div>
+
     </div>
     </div>
 
@@ -550,6 +574,7 @@ include "header.php";
     }
 
     $(document).ready(function() {
+        
         $('.btn-like').click(function() {
             let $this = $(this);
             let post_id = $(this).data('id')
@@ -562,7 +587,8 @@ include "header.php";
                 response.json().then(function(data) {
                     const likes = data.likes
                     if(likes == '0'){
-                        $('#ele-' + post_id).remove()
+                        $('#ele-' + post_id).html('')
+                        $($this).data('likeid', 0)
                         $($this).find('.bi-star-fill').removeClass('bi-star-fill').addClass('bi-star')
                     }else if(likes == '1'){
      
@@ -582,6 +608,12 @@ include "header.php";
             .catch(function(err) {
                 console.log('Fetch Error :-S', err);
             });
+        })
+        
+        $('.btn-comment').click(function(){
+            let post_id = $(this).data('id')
+            $('input[name="post_id"]', $('#form-comment')).val(post_id)
+            $('#commentModal').modal('show')
         })
     })
 </script>

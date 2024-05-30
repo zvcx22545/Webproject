@@ -187,7 +187,7 @@ if (isset($_SESSION['user_login'])) {
       ?>
       </span>
     </button>
-    <button class="btn btn btn-light" data-bs-toggle="modal" data-bs-target="#commentModal">
+    <button class="btn btn btn-light btn-comment" data-id="<?php echo $ROW['postid'] ?>">
       <i class="far fa-comment"></i>
       <span>Comment</span>
     </button>
@@ -228,29 +228,5 @@ if (isset($_SESSION['user_login'])) {
               "</div>";
       }
     ?>
-  </div>
-</div>
-
-<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <form action="backend/comment.php" method="post">
-      <div class="modal-header">
-        <h5 class="modal-title" id="commentModalLongTitle">แสดงความคิดเห็น</h5>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="content">ความคิดเห็น</label>
-          <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
-        </div>
-        <input type="hidden" name="post_id" value="<?php echo $ROW['postid'];?>">
-        <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">บันทึก</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-      </div>
-      </form>
-    </div>
   </div>
 </div>

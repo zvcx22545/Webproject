@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: May 30, 2024 at 02:08 PM
+-- Generation Time: May 30, 2024 at 05:38 PM
 -- Server version: 5.7.39
 -- PHP Version: 8.2.0
 
@@ -43,7 +43,12 @@ INSERT INTO `comments` (`id`, `content`, `post_id`, `user_id`, `create_date`) VA
 (1, 'น่าไปสุดๆ ต้องไปกอนสักครั้ง', '58379761', '69704620163528', '2024-05-30 01:16:41'),
 (2, 'ต้องไปโดน', '58379761', '69704620163528', '2024-05-30 01:48:57'),
 (3, 'โดนๆ', '58379761', '69704620163528', '2024-05-30 01:49:16'),
-(4, 'เม้นแรก', '58379761', '69704620163528', '2024-05-30 21:05:49');
+(4, 'เม้นแรก', '58379761', '69704620163528', '2024-05-30 21:05:49'),
+(5, 'ร้านสวย', '4863084969414070', '69704620163528', '2024-05-31 00:28:53'),
+(6, 'เม้นๆ', '58379761', '69704620163528', '2024-05-31 00:30:19'),
+(7, '////', '4863084969414070', '69704620163528', '2024-05-31 00:34:09'),
+(8, 'ภภภภภ', '58379761', '69704620163528', '2024-05-31 00:34:23'),
+(9, 'ฟหกดฟหกดฟหกด', '4863084969414070', '69704620163528', '2024-05-31 00:34:29');
 
 -- --------------------------------------------------------
 
@@ -56,6 +61,13 @@ CREATE TABLE `history_likes` (
   `post_id` varchar(100) NOT NULL,
   `user_id` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `history_likes`
+--
+
+INSERT INTO `history_likes` (`id`, `post_id`, `user_id`) VALUES
+(41, '58379761', '69704620163528');
 
 -- --------------------------------------------------------
 
@@ -102,7 +114,8 @@ CREATE TABLE `posts` (
   `location_name` varchar(255) DEFAULT NULL,
   `likes` int(11) NOT NULL DEFAULT '0',
   `has_image` tinyint(1) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_date` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `is_profile_image` tinyint(1) NOT NULL,
   `is_cover_image` tinyint(1) NOT NULL,
   `status` varchar(255) NOT NULL,
@@ -113,10 +126,10 @@ CREATE TABLE `posts` (
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `is_profile_image`, `is_cover_image`, `status`, `countreport`) VALUES
-(163, 58379761, 69704620163528, 'ไอศครีมอร่อยมาก', 'uploads/69704620163528/Bn68fX6j6K3TNSL.jpg', 0, 'food', 'Mixue', 0, 1, '2024-05-30 14:01:33', 0, 0, '', 0),
-(166, 4863084969414070, 69704620163528, 'Cafe นี้อาหารอร่อย', 'uploads/69704620163528/O2qUK44qX9RAQa6.jpg', 0, 'food', 'Dilly Lazy', 0, 1, '2024-05-30 10:32:19', 0, 0, 'approved', 8),
-(169, 297129814910527822, 69704620163528, 'fd', '', 0, '', '', 0, 0, '2024-05-22 20:11:23', 0, 0, '', 0);
+INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `update_date`, `is_profile_image`, `is_cover_image`, `status`, `countreport`) VALUES
+(163, 58379761, 69704620163528, 'ไอศครีมอร่อยมาก', 'uploads/69704620163528/Bn68fX6j6K3TNSL.jpg', 0, 'food', 'Mixue', 1, 1, '2024-05-30 17:29:52', '2024-05-31 00:37:42', 0, 0, '', 0),
+(166, 4863084969414070, 69704620163528, 'Cafe นี้อาหารอร่อย', 'uploads/69704620163528/O2qUK44qX9RAQa6.jpg', 0, 'food', 'Dilly Lazy', 0, 1, '2024-05-30 17:34:57', '2024-05-31 00:37:38', 0, 0, 'approved', 8),
+(169, 297129814910527822, 69704620163528, 'fd', '', 0, '', '', 0, 0, '2024-05-22 20:11:23', NULL, 0, 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -250,13 +263,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `history_likes`
 --
 ALTER TABLE `history_likes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `locations`
