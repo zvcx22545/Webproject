@@ -1,159 +1,158 @@
 <?php
 
 require_once 'autoload.php';
+
+
+
 if (!isset($_SESSION['user_login'])) {
     $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
+
     header('location:login.php');
 }
 
 include "header.php";
+
+
+
 ?>
+
 
 <body class="backgrounds">
     <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top">
         <?php
-          if (isset($_SESSION['user_login'])) {
-              // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
-              $user_session_id = $_SESSION['user_login'];
-              $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
-              $stmt->bindParam(':user_session_id', $user_session_id);
-              $stmt->execute();
-              $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-              // ตรวจสอบว่ามีผู้ใช้หรือไม่
-              if ($row) {
-                  $user_id = $row['userid']; // ตอนนี้เราได้รับ userid ของผู้ใช้จากตาราง users
-                  $_SESSION['user_id'] = $user_id;
-              } else if ($row) {
-                  $first_name = $row['first_name'];
-              } else {
-                  // ถ้าไม่พบข้อมูลผู้ใช้ในฐานข้อมูล ให้ทำการล็อกเอาท์และเปลี่ยนเส้นทาง
-                  $_SESSION['error'] = 'ผู้ใช้ไม่ถูกต้อง';
-                  header('location: logout.php'); // หรือให้เปลี่ยนเส้นทางไปที่หน้าอื่นที่เหมาะสม
-                  exit();
-              }
-          } else {
-              // ถ้าไม่มีเซสชันของผู้ใช้ล็อกอิน เชิญผู้ใช้ล็อกอินก่อน
-              $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
-              header('location: login.php');
-              exit();
-          }
+        if (isset($_SESSION['user_login'])) {
+            // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
+            $user_session_id = $_SESSION['user_login'];
+            $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
+            $stmt->bindParam(':user_session_id', $user_session_id);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-          //posting start here
-          if ($_SERVER['REQUEST_METHOD'] == "POST") {
-              if (isset($_POST['post_button'])) {
-                  // ประมวลผลของ Modal แรก
-                  $post = new Post();
-                  $result = $post->create_post($user_id, $_POST, $_FILES);
-                  if ($result['status'] == 'success') {
-                      if (!empty($result['location_name'])) {
-                          $_SESSION['post_location'] = true;
-                      } else {
-                          $_SESSION['post_success'] = true;
-                      }
-                      header("location: main.php");
-                      exit();
-                  } else {
-                      echo "have error posting";
-                      echo $result['message'];
-                  }
-              } elseif (isset($_POST['addlocation'])) {
-                  // Ensure $user_id and $first_name are set correctly
-                  if (isset($_SESSION['user_login'])) {
-                      $user_session_id = $_SESSION['user_login'];
-                      $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
-                      $stmt->bindParam(':user_session_id', $user_session_id);
-                      $stmt->execute();
-                      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            // ตรวจสอบว่ามีผู้ใช้หรือไม่
+            if ($row) {
+                $user_id = $row['userid']; // ตอนนี้เราได้รับ userid ของผู้ใช้จากตาราง users
+                $_SESSION['user_id'] = $user_id;
+            } else if ($row) {
+                $first_name = $row['first_name'];
+            } else {
+                // ถ้าไม่พบข้อมูลผู้ใช้ในฐานข้อมูล ให้ทำการล็อกเอาท์และเปลี่ยนเส้นทาง
+                $_SESSION['error'] = 'ผู้ใช้ไม่ถูกต้อง';
+                header('location: logout.php'); // หรือให้เปลี่ยนเส้นทางไปที่หน้าอื่นที่เหมาะสม
+                exit();
+            }
+        } else {
+            // ถ้าไม่มีเซสชันของผู้ใช้ล็อกอิน เชิญผู้ใช้ล็อกอินก่อน
+            $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
+            header('location: login.php');
+            exit();
+        }
 
-                      if ($row) {
-                          $user_id = $row['userid']; // Ensure this is correct
-                          $first_name = $row['first_name']; // Ensure this is correct
-                          // Check if location_name already exists
-                          $location = isset($_POST['location_name']) ? $_POST['location_name'] : "";
-                          $Maplink = isset($_POST['Maplink']) ? $_POST['Maplink'] : "";
-                          if (empty($location)) {
-                              // Display SweetAlert2 for empty location name
-                              echo '<script type="text/javascript">';
-                              echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่", "error");';
-                              echo '</script>';
-                          } else {
-                              // Check if location name already exists
-                              $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name OR map_link = :map_link");
-                              $query_check->bindParam(":location_name", $location);
-                              $query_check->bindParam(":map_link", $Maplink);
-                              $query_check->execute();
-                              $result = $query_check->fetchAll(PDO::FETCH_ASSOC);
+        //posting start here
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            if (isset($_POST['post_button'])) {
+                // ประมวลผลของ Modal แรก
+                $post = new Post();
+                $result = $post->create_post($user_id, $_POST, $_FILES);
+                if ($result['status'] == 'success') {
+                    if (!empty($result['location_name'])) {
+                        $_SESSION['post_location'] = true;
+                    } else {
+                        $_SESSION['post_success'] = true;
+                    }
+                    header("location: main.php");
+                    exit();
+                } else {
+                    echo "have error posting";
+                    echo $result['message'];
+                }
+            }
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addlocation'])) {
+                // Ensure $user_id and $first_name are set correctly
+                if (isset($_SESSION['user_login'])) {
+                    $user_session_id = $_SESSION['user_login'];
+                    $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
+                    $stmt->bindParam(':user_session_id', $user_session_id);
+                    $stmt->execute();
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if ($row) {
+                        $user_id = $row['userid']; // Ensure this is correct
+                        $first_name = $row['first_name']; // Ensure this is correct
+                        // Check if location_name already exists
+                        $location = isset($_POST['location_name']) ? $_POST['location_name'] : "";
+                        $Maplink = isset($_POST['Maplink']) ? $_POST['Maplink'] : "";
+                        if (empty($location) || empty($Maplink)) {
+                            // Display SweetAlert2 for empty location name or map link
+                            echo '<script type="text/javascript">';
+                            echo 'Swal.fire("Error", "กรุณากรอกชื่อสถานที่และลิงค์ Google Map", "error");';
+                            echo '</script>';
+                        } else {
+                            // Check if location name or map link already exists
+                            $query_check = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name OR map_link = :map_link");
+                            $query_check->bindParam(":location_name", $location);
+                            $query_check->bindParam(":map_link", $Maplink);
+                            $query_check->execute();
+                            $result = $query_check->fetchAll(PDO::FETCH_ASSOC);
+                            if ($result) {
+                                foreach ($result as $row) {
+                                    if ($row['location_name'] === $location) {
+                                        // Display SweetAlert2 if location name already exists
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีชื่อสถานที่นี้อยู่แล้ว", "error");';
+                                        echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    } elseif ($row['map_link'] === $Maplink) {
+                                        // Display SweetAlert2 if map link already exists
+                                        echo '<script type="text/javascript">';
+                                        echo 'Swal.fire("Error", "มีลิงค์สถานที่นี้อยู่แล้ว", "error");';
+                                        echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
+                                        echo '</script>';
+                                        exit; // Exit after displaying error message
+                                    }
+                                }
+                            } else {
+                                // Add location if validation passes
+                                $Addlocations = new Location();
+                                $result = $Addlocations->Addlocation($user_id, $_POST, $_FILES, $first_name);
+                                if ($result === true) {
+                                    // Display success message using SweetAlert2
+                                    echo '<script type="text/javascript">';
+                                    echo 'Swal.fire("Success", "เพิ่มสถานที่สำเร็จ!กรุณารอAdminตรวจสอบสถานที่", "success");';
+                                    echo '</script>';
+                                } else {
+                                    // Display error message using SweetAlert2
+                                    echo '<script type="text/javascript">';
+                                    echo 'Swal.fire("Error", "' . $result . '", "error");';
+                                    echo '</script>';
+                                }
+                            }
+                        }
+                    } else {
+                        // Handle case where user is not found
+                        echo '<script type="text/javascript">';
+                        echo 'Swal.fire("Error", "User not found", "error");';
+                        echo '</script>';
+                    }
+                } else {
+                    // Handle case where user session is not set
+                    echo '<script type="text/javascript">';
+                    echo 'Swal.fire("Error", "User session not set", "error");';
+                    echo '</script>';
+                }
+            }
+        }
 
-                              if ($result) {
-                                  foreach ($result as $row) {
-                                      if ($row['location_name'] === $location) {
-                                          // Display SweetAlert2 if location name already exists
-                                          echo '<script type="text/javascript">';
-                                          echo 'Swal.fire("Error", "มีชื่อสถานที่นี้อยู่แล้ว", "error");';
-                                          echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
-                                          echo '</script>';
-                                          exit; // Exit after displaying error message
-                                      } elseif ($row['map_link'] === $Maplink) {
-                                          // Display SweetAlert2 if map link already exists
-                                          echo '<script type="text/javascript">';
-                                          echo 'Swal.fire("Error", "มีลิงค์สถานที่นี้อยู่แล้ว", "error");';
-                                          echo 'setTimeout(function(){ window.location.href = "main.php"; }, 2000);'; // Redirect to main.php after 2 seconds
-                                          echo '</script>';
-                                          exit; // Exit after displaying error message
-                                      }
-                                  }
-                              } else {
-                                  // Add location if validation passes
-                                  $Addlocations = new Location();
-                                  $result = $Addlocations->Addlocation($user_id, $_POST, $_FILES, $first_name);
-                                  if ($result === true) {
-                                      // Display success message using SweetAlert2
-                                      echo '<script type="text/javascript">';
-                                      echo 'Swal.fire("Success", "เพิ่มสถานที่สำเร็จ!กรุณารอAdminตรวจสอบสถานที่", "success");';
-                                      echo '</script>';
-                                  } else {
-                                      // Display error message using SweetAlert2
-                                      echo '<script type="text/javascript">';
-                                      echo 'Swal.fire("Error", "' . $result . '", "error");';
-                                      echo '</script>';
-                                  }
-                              }
-                          }
-                      } else {
-                          // Handle case where user is not found
-                      }
-                  } else {
-                      // Handle case where user session is not set
-                  }
-              }
 
-              if ($_SERVER['REQUEST_METHOD'] == "POST") {
-                  if (isset($_POST['post_id']) && isset($_SESSION['user_id'])) { // Ensure you are using the correct session variable
-                      $post = new Post();
-                      $user_id = $_SESSION['user_id']; // Correctly retrieve user_id from session
-                      $report = $post->ReportPost($_POST, $user_id);
-              
-                      if ($report['status'] == 'success') {
-                          echo json_encode($report);
-                      } else {
-                          echo json_encode(['status' => 'error', 'message' => $report['message']]);
-                      }
-                      exit();
-                  } else {
-                      echo json_encode(['status' => 'error', 'message' => 'Post ID or User ID missing in request']);
-                      exit();
-                  }
-              }
-          }
 
-          // collect posts
-          $post = new Post();
-          $posts = $post->getAllPosts();  // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
-          $image_class = new Image();
-          // GetLocation
-          $location = new Location;
-          $locations = $location->GetApprovedLocation();
+
+        // collect posts
+        $post = new Post();
+        $posts = $post->getAllPosts();  // ใช้ $user_id ซึ่งเป็น userid แทนที่จะใช้ $_SESSION['user_login']
+        $image_class = new Image();
+        // GetLocation
+        $location = new Location;
+        $locations = $location->GetApprovedLocation();
         ?>
 
 
@@ -344,6 +343,9 @@ include "header.php";
         <?php
 
         if ($posts) {
+
+
+
             foreach ($posts as $ROW) {
                 if (!empty($ROW['location_name']) && $ROW['status'] !== 'rejected') {
                     $user = new User();
@@ -396,7 +398,7 @@ include "header.php";
                         </div>
 
                         <div class="w-100 mx-auto mt-2 d-flex">
-                        <button type="submit" name="addlocation" class="btn btn-primary mx-auto" id="location_submit">ยืนยัน</button>
+                            <button type="submit" name="addlocation" class="btn btn-primary mx-auto" id="location_submit">ยืนยัน</button>
 
                         </div>
 
@@ -406,10 +408,12 @@ include "header.php";
             </div>
         </div>
 
-      </div>
+    </div>
     </div>
 
-    
+
+
+
 
 </body>
 
@@ -421,45 +425,59 @@ include "header.php";
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
-        let locationForm = document.getElementById('locationForm2')
 
     document.addEventListener('DOMContentLoaded', async function() {
-
-        console.log("DOM fully loaded and parsed");
-
-        if (locationForm) {
-            console.log("Form is found, setting up event listener.");
-            locationForm.addEventListener('submit', function(event) {
-                console.log("Submit event triggered."); // This should log when submit is pressed
-                event.preventDefault();  // Prevent the form from submitting
-                validateAndSubmit();
-            });
-        } else {
-            console.log("Form is not found."); // This will help identify if there is a problem finding the form
+        let location_submit = document.getElementById('location_submit');
+        if(location_submit)
+        {
+            location_submit.addEventListener('click',() =>
+        {
+            validateAndSubmit();
+        })
         }
 
+        console.log("DOM fully loaded and parsed");
 
         document.querySelectorAll('.report-button').forEach(button => {
             button.addEventListener('click', function() {
                 const postId = this.getAttribute('data-postid');
                 const userSessionId = '<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'not set'; ?>';
 
-                fetch('', { // Replace '' with the actual PHP script URL if not the same page
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded', // Changed to handle URL encoded form data
-                    },
-                    body: `post_id=${postId}&user_id=${userSessionId}` // Send data as URL encoded form data
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        Swal.fire('Success', 'Report submitted successfully', 'success');
-                    } else {
-                        Swal.fire('Error', data.message, 'error');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                fetch('report_post.php', { // Ensure this is the correct path to your PHP script
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `post_id=${postId}&user_id=${userSessionId}`
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'รายงานสำเร็จ!',
+                                text: 'รายงานโพสต์สำเร็จแล้วกรุณารอแอดมินตรวจสอบ!',
+                                timer: 2000, // Auto close after 2 seconds
+                                showConfirmButton: false // Hide the confirm button
+                            });
+                            
+                            console.log('Report submitted successfully', data);
+                        } else {
+                            Swal.fire('รายงานไม่สำเร็จ!', data.message, 'warning');
+                            console.log('Error:', data.message);
+                            // Handle error - you can display a message or update the UI
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'An error occurred. Please try again.', 'error');
+                        // Handle fetch error - you can display a message or update the UI
+                    });
             });
         });
 
@@ -491,25 +509,25 @@ include "header.php";
             });
         } else {
             console.log("Validation passed, form will be submitted.");
-            document.getElementById('locationForm2').submit();
+            locationForm.submit();
         }
     }
 
-        console.log(postSuccess);
-        console.log(postlocationSuccess);
-        if (postSuccess) {
-            Swal.fire({
-                icon: 'success',
-                title: 'โพสต์สำเร็จ',
-                text: 'โพสต์สำเร็จแล้วกรุณารอทางAdmin อนุมัติ!!'
-            });
-        } else if (postlocationSuccess) {
-            Swal.fire({
-                icon: 'success',
-                title: 'โพสต์สำเร็จ',
-                text: 'โพสต์สำเร็จแล้ว!!'
-            });
-        }
+    console.log(postSuccess);
+    console.log(postlocationSuccess);
+    if (postSuccess) {
+        Swal.fire({
+            icon: 'success',
+            title: 'โพสต์สำเร็จ',
+            text: 'โพสต์สำเร็จแล้วกรุณารอทางAdmin อนุมัติ!!'
+        });
+    } else if (postlocationSuccess) {
+        Swal.fire({
+            icon: 'success',
+            title: 'โพสต์สำเร็จ',
+            text: 'โพสต์สำเร็จแล้ว!!'
+        });
+    }
 
     const toggleDropdowns = document.querySelectorAll('.fa-ellipsis');
 const showDropdowns = document.querySelectorAll('.content-button');
