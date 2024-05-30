@@ -167,10 +167,9 @@ include "header.php";
                 <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
                 <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
                 <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
-               <div class="d-flex align-items-center px-2">
-                <i class="fas fa-bars hamburger" id="navbar-toggler"></i></div>
-
-
+                <button class="navbar-toggler" type="button">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </ul>
 
             <div class="collapse navbar-collapse w-auto" id="navbarSupportedContent">
@@ -560,18 +559,18 @@ include "header.php";
         });
     }
 
-    const toggleDropdown = document.getElementById('toggle-dropdown');
-    const ShowDropdown = document.querySelector('.content-button');
+    const toggleDropdowns = document.querySelectorAll('.fa-ellipsis');
+    const showDropdowns = document.querySelectorAll('.content-button');
 
-    if (toggleDropdown) {
+    toggleDropdowns.forEach((toggleDropdown, index) => {
         toggleDropdown.addEventListener('click', function() {
-            if (ShowDropdown.style.display === 'block') {
-                ShowDropdown.style.display = 'none';
+            if (showDropdowns[index].style.display === 'block') {
+                showDropdowns[index].style.display = 'none';
             } else {
-                ShowDropdown.style.display = 'block';
+                showDropdowns[index].style.display = 'block';
             }
         });
-    }
+    });
 
     $(document).ready(function() {
         
