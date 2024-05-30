@@ -252,3 +252,9 @@
         padding: 10px;
     }
 }
+
+.post .comments
+{
+    overflow-y:auto;
+    height: 18vh;
+}
