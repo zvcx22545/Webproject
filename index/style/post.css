@@ -145,6 +145,11 @@
 
 .post .post-top i{
     cursor: pointer;
+    color: #000;
+}
+
+.post .post-top .posts i.fa-solid{
+    cursor: poiner;
     color: var(--secondary-color);
 }
 

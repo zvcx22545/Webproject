@@ -216,31 +216,45 @@ class Post
 
     public function ReportPost($data, $userid) {
         global $conn;
-        // Added check for user ID to ensure it's not empty
-        if (!empty($data['post_id']) && !empty($userid)) {
-            $postid = $data['post_id'];
     
-            $query = $conn->prepare("INSERT INTO reports (post_id, user_id) VALUES (:post_id, :user_id)");
-            $query->bindParam(':post_id', $postid);
-            $query->bindParam(':user_id', $userid);
-            if ($query->execute()) {
-                $countQuery = $conn->prepare("SELECT COUNT(*) as report_count FROM reports WHERE post_id = :post_id");
-                $countQuery->bindParam(':post_id', $postid);
-                $countQuery->execute();
-                $result = $countQuery->fetch(PDO::FETCH_ASSOC);
-                $reportCount = $result['report_count'];
-    
-                $updateQuery = $conn->prepare("UPDATE posts SET countreport = :report_count WHERE postid = :post_id");
-                $updateQuery->bindParam(':report_count', $reportCount);
-                $updateQuery->bindParam(':post_id', $postid);
-                $updateQuery->execute();
-    
-                return ['status' => 'success', 'message' => 'Report submitted successfully', 'report_count' => $reportCount];
-            } else {
-                return ['status' => 'error', 'message' => 'Failed to submit report'];
-            }
-        } else {
+        // Check for required data
+        if (empty($data['post_id']) || empty($userid)) {
             return ['status' => 'error', 'message' => 'Required data missing'];
+        }
+    
+        $postid = $data['post_id'];
+    
+        // Check if the user has already reported this post
+        $checkQuery = $conn->prepare("SELECT COUNT(*) as count FROM reports WHERE post_id = :post_id AND user_id = :user_id");
+        $checkQuery->bindParam(':post_id', $postid);
+        $checkQuery->bindParam(':user_id', $userid);
+        $checkQuery->execute();
+        $result = $checkQuery->fetch(PDO::FETCH_ASSOC);
+    
+        if ($result['count'] > 0) {
+            return ['status' => 'error', 'message' => 'สามารถรีพอร์ตได้เพียง 1 ครั้งต่อโพสต์'];
+        }
+    
+        // Insert new report
+        $query = $conn->prepare("INSERT INTO reports (post_id, user_id) VALUES (:post_id, :user_id)");
+        $query->bindParam(':post_id', $postid);
+        $query->bindParam(':user_id', $userid);
+        if ($query->execute()) {
+            // Update report count for the post
+            $countQuery = $conn->prepare("SELECT COUNT(*) as report_count FROM reports WHERE post_id = :post_id");
+            $countQuery->bindParam(':post_id', $postid);
+            $countQuery->execute();
+            $result = $countQuery->fetch(PDO::FETCH_ASSOC);
+            $reportCount = $result['report_count'];
+    
+            $updateQuery = $conn->prepare("UPDATE posts SET countreport = :report_count WHERE postid = :post_id");
+            $updateQuery->bindParam(':report_count', $reportCount);
+            $updateQuery->bindParam(':post_id', $postid);
+            $updateQuery->execute();
+    
+            return ['status' => 'success', 'message' => 'Report submitted successfully', 'report_count' => $reportCount];
+        } else {
+            return ['status' => 'error', 'message' => 'Failed to submit report'];
         }
     }
 
