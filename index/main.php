@@ -555,8 +555,6 @@ include "header.php";
             let post_id = $(this).data('id')
             let like_id = $(this).data('likeid')
 
-            
-
             fetch('./backend/post.php?post_id=' + post_id + '&like_id=' + like_id)
             .then(
                 function(response) {
@@ -585,7 +583,6 @@ include "header.php";
                 console.log('Fetch Error :-S', err);
             });
         })
-        // console.log('Javascript');
     })
 </script>
 
