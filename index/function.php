@@ -210,23 +210,28 @@ if (isset($_SESSION['user_login'])) {
       ?>
     </div>
   </div>
-  <div class="comments mt-2">
+  <?php
+    $comment = new Comment();
+    $data = $comment->getAllComment($ROW['postid']);
+    $commentsContainerStyle = "";
+    if ($data) {
+        $commentsContainerStyle = "style='height: 18vh; overflow-y: auto;'";
+    }
+?>
+<div class='comments mt-2' <?php echo $commentsContainerStyle; ?>>
     <?php
-      $comment = new Comment();
-      $data = $comment->getAllComment($ROW['postid']);
-      foreach ($data as $row) {
-
+    foreach ($data as $row) {
         $util = new Util();
         $create_date = $util->coverdate($row['create_date']);
-
-        echo "<div class='card mb-1'>".
-                "<div class='card-body'>".
-                  $row['content'].
-                  "<br><span class='fw-light' style='font-size: 12px;'>".$row['fullname']."</span>".
-                  " <span class='fw-light' style='font-size: 10px;'>".$create_date."</span>".
-                "</div>".
-              "</div>";
-      }
+        echo "<div class='card mb-1'>" .
+            "<div class='card-body'>" .
+            $row['content'] .
+            "<br><span class='fw-light' style='font-size: 12px;'>" . $row['fullname'] . "</span>" .
+            " <span class='fw-light' style='font-size: 10px;'>" . $create_date . "</span>" .
+            "</div>" .
+            "</div>";
+    }
     ?>
-  </div>
+</div>
+
 </div>
