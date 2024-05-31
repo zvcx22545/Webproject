@@ -4,81 +4,74 @@ require_once 'user.php';
 class Post
 {
     private $error = "";
+    public function create_post($user_id, $data, $files)
+    {
+        global $conn;
+        if (!empty($data['post']) || !empty($files['file']['name']) || isset($data['is_profile_image']) || isset($data['is_cover_image'])) {
+            $myimage = "";
+            $has_image = 0;
+            $is_cover_image = 0;
+            $is_profile_image = 0;
+            $category = isset($data['category']) ? $data['category'] : '';
 
-public function create_post($user_id, $data, $files)
-{
-    global $conn;
-
-    if (!empty($data['post']) || !empty($files['file']['name']) || isset($data['is_profile_image']) || isset($data['is_cover_image'])) {
-        $myimage = "";
-        $has_image = 0;
-        $is_cover_image = 0;
-        $is_profile_image = 0;
-        $category = isset($data['category']) ? $data['category'] : '';
-
-        // Get the category_name from locations table based on the selected location
-        $location_name = isset($data['location']) ? $data['location'] : '';
-        if (!empty($location_name)) {
-            $query_location = $conn->prepare("SELECT category_name FROM locations WHERE location_name = :location_name");
-            $query_location->bindParam(":location_name", $location_name);
-            $query_location->execute();
-            $result_location = $query_location->fetch(PDO::FETCH_ASSOC);
-            if ($result_location) {
-                $category = $result_location['category_name'];
-            }
-        }
-
-        if (isset($data['is_profile_image']) || isset($data['is_cover_image'])) {
-            $myimage = $files;
-            $has_image = 1;
-            if (isset($data['is_cover_image']) && $data['is_cover_image']) {
-                $is_cover_image = 1;
-                $is_profile_image = 0; // Ensure is_profile_image is not set when is_cover_image is set
-            } elseif (isset($data['is_profile_image']) && $data['is_profile_image']) {
-                $is_profile_image = 1;
-                $is_cover_image = 0; // Ensure is_cover_image is not set when is_profile_image is set
-            }
-        } else {
-            if (!empty($files['file']['name'])) {
-                $folder = "uploads/" . $user_id . "/";
-                if (!file_exists($folder)) {
-                    mkdir($folder, 0777, true);
-                    file_put_contents($folder . "index.php", "");
+            // Get the category_name from locations table based on the selected location
+            $location_name = isset($data['location']) ? $data['location'] : '';
+            if (!empty($location_name)) {
+                $query_location = $conn->prepare("SELECT category_name FROM locations WHERE location_name = :location_name");
+                $query_location->bindParam(":location_name", $location_name);
+                $query_location->execute();
+                $result_location = $query_location->fetch(PDO::FETCH_ASSOC);
+                if ($result_location) {
+                    $category = $result_location['category_name'];
                 }
-                $image_class = new Image();
-                $myimage = $folder . $image_class->generate_filename(15) . ".jpg";
-                move_uploaded_file($files["file"]["tmp_name"], $myimage);
-                $image_class->resize_image($myimage, $myimage, 1500, 1500);
-                $has_image = 1;
             }
-        }
 
-        $post = isset($data['post']) ? addslashes($data['post']) : "";
-        $postid = $this->create_postid();
+            if (isset($data['is_profile_image']) || isset($data['is_cover_image'])) {
+                $myimage = $files;
+                $has_image = 1;
+                if (isset($data['is_cover_image']) && $data['is_cover_image']) {
+                    $is_cover_image = 1;
+                    $is_profile_image = 0; // Ensure is_profile_image is not set when is_cover_image is set
+                } elseif (isset($data['is_profile_image']) && $data['is_profile_image']) {
+                    $is_profile_image = 1;
+                    $is_cover_image = 0; // Ensure is_cover_image is not set when is_profile_image is set
+                }
+            } else {
+                if (!empty($files['file']['name'])) {
+                    $folder = "uploads/" . $user_id . "/";
+                    if (!file_exists($folder)) {
+                        mkdir($folder, 0777, true);
+                        file_put_contents($folder . "index.php", "");
+                    }
+                    $image_class = new Image();
+                    $myimage = $folder . $image_class->generate_filename(15) . ".jpg";
+                    move_uploaded_file($_FILES["file"]["tmp_name"], $myimage);
+                    $image_class->resize_image($myimage, $myimage, 1500, 1500);
+                    $has_image = 1;
+                }
+            }
 
-        $query = $conn->prepare("INSERT INTO posts(user_id, postid, post, image, has_image, is_cover_image, is_profile_image, category, location_name) VALUES(:user_id, :postid, :post, :image, :has_image, :is_cover_image, :is_profile_image, :category, :location_name)");
-        $query->bindParam(":user_id", $user_id);
-        $query->bindParam(":postid", $postid);
-        $query->bindParam(":post", $post);
-        $query->bindParam(":image", $myimage);
-        $query->bindParam(":has_image", $has_image);
-        $query->bindParam(":is_cover_image", $is_cover_image);
-        $query->bindParam(":is_profile_image", $is_profile_image);
-        $query->bindParam(":category", $category);
-        $query->bindParam(":location_name", $location_name);
-        
-        if ($query->execute()) {
+            $post = isset($data['post']) ? addslashes($data['post']) : "";
+            $postid = $this->create_postid();
+
+            $query = $conn->prepare("INSERT INTO posts(user_id,postid,post,image,has_image,is_cover_image,is_profile_image,category,location_name) VALUES(:user_id,:postid,:post,:image,:has_image,:is_cover_image,:is_profile_image,:category,:location_name)");
+            $query->bindParam(":user_id", $user_id);
+            $query->bindParam(":postid", $postid);
+            $query->bindParam(":post", $post);
+            $query->bindParam(":image", $myimage);
+            $query->bindParam(":has_image", $has_image);
+            $query->bindParam(":is_cover_image", $is_cover_image);
+            $query->bindParam(":is_profile_image", $is_profile_image);
+            $query->bindParam(":category", $category);
+            $query->bindParam(":location_name", $location_name);
+            $query->execute();
             return ['status' => 'success', 'location_name' => $location_name];
         } else {
-            $error_info = $query->errorInfo();
-            $this->error .= 'Error executing query: ' . implode(" ", $error_info);
+            $this->error .= 'Please enter something to post! <br>';
             return ['status' => 'error', 'message' => $this->error];
         }
-    } else {
-        $this->error .= 'Please enter something to post! <br>';
-        return ['status' => 'error', 'message' => $this->error];
     }
-}
+
     public function get_posts($id)
     {
         global $conn;
@@ -111,7 +104,7 @@ public function create_post($user_id, $data, $files)
             return false;
         }
     }
-    public function delete_post($postid,)
+    public function delete_post($postid)
     {
         global $conn;
         if(!is_numeric($postid)) {
@@ -121,6 +114,8 @@ public function create_post($user_id, $data, $files)
         $query->bindParam(":postid", $postid,PDO::PARAM_INT);
         $query->execute();
 
+            
+        
     }
     public function i_own_post($postid,$user_login)
     {
@@ -145,15 +140,15 @@ public function create_post($user_id, $data, $files)
         
     }
     public function getAllPosts()
-{
-    global $conn;
-    
-    $query = $conn->prepare("SELECT * FROM posts ORDER BY date DESC");
-    $query->execute();
-    $result = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts
-    
-    return $result; // Return the array of posts
-}
+    {
+        global $conn;
+        
+        $query = $conn->prepare("SELECT * FROM posts ORDER BY date DESC");
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts
+        
+        return $result; // Return the array of posts
+    }
 
     private function create_postid()
     {
@@ -262,9 +257,88 @@ public function create_post($user_id, $data, $files)
             return ['status' => 'error', 'message' => 'Failed to submit report'];
         }
     }
-    
 
+    public function update_like($postid, $type)
+    {
+        global $conn;
 
+        if($type == 'like'){
+            $updateQuery = $conn->prepare("UPDATE posts SET likes = likes + 1 WHERE postid = :post_id");
+        }else{
+            $updateQuery = $conn->prepare("UPDATE posts SET likes = likes - 1 WHERE postid = :post_id");
+        }
+        
+        $updateQuery->bindParam(':post_id', $postid);
+        $updateQuery->execute();
+
+        return ['status' => 'success', 'message' => 'Report submitted successfully'];
+    }
+
+    public function get_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("SELECT id FROM history_likes WHERE post_id = :post_id and user_id = :user_id");
+        $query->bindParam(":post_id", $post_id);
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result)
+        {
+            return $result["0"];
+        }else{
+            return null;
+        }
+    }
+
+    public function get_all_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("SELECT id FROM history_likes WHERE post_id = :post_id and user_id = :user_id");
+        $query->bindParam(":post_id", $post_id);
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result){
+            return $result;
+        }else{
+            return null;
+        }
+    }
+
+    public function add_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("INSERT INTO history_likes (user_id, post_id) VALUES (:user_id, :post_id)");
+        $query->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $query->bindParam(":post_id", $post_id, PDO::PARAM_INT);
+
+        try {
+            $query->execute();
+            return $conn->lastInsertId();
+        } catch (\Throwable $th) {
+            //throw $th;
+            return false;
+        }
+    }
+
+    public function delete_like_history($post_id, $user_id)
+    {
+        global $conn;
+        $query = $conn->prepare("DELETE FROM history_likes WHERE post_id = :post_id and user_id = :user_id");
+        $query->bindParam(":post_id", $post_id);
+        $query->bindParam(":user_id", $user_id);
+
+        try {
+            $query->execute();
+            return true;
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return false;
+        }
+    }
     
 }
 

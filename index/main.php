@@ -167,12 +167,12 @@ include "header.php";
                 <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
                 <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
                 <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </ul>
 
-            <div class="collapse navbar-collapse w-auto " id="navbarSupportedContent">
+            <div class="collapse navbar-collapse w-auto" id="navbarSupportedContent">
 
                 <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search" action="search.php" method="POST">
                     <input class="form-control me-2 rounded-pill" type="search" placeholder="ค้นหาสถานที่" aria-label="Search" name="search" id="search" autocomplete="off" required>
@@ -408,6 +408,30 @@ include "header.php";
             </div>
         </div>
 
+        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <form action="backend/comment.php" method="post" id="form-comment">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commentModalLongTitle">แสดงความคิดเห็น</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                    <label for="content">ความคิดเห็น</label>
+                    <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                    </div>
+                    <input type="hidden" name="post_id" value="">
+                    <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+                </form>
+                </div>
+            </div>
+            </div>
+
     </div>
     </div>
 
@@ -422,6 +446,7 @@ include "header.php";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
 </script>
 <script src="./javascript/main.js"></script>
+<script src="./javascript/hamburger.js"></script>
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
@@ -465,10 +490,16 @@ include "header.php";
                                 timer: 2000, // Auto close after 2 seconds
                                 showConfirmButton: false // Hide the confirm button
                             });
+                            const dropdown = button.closest('.posts').querySelector('.content-button');
+                    dropdown.style.display = 'none';
+                            
                             console.log('Report submitted successfully', data);
                         } else {
                             Swal.fire('รายงานไม่สำเร็จ!', data.message, 'warning');
                             console.log('Error:', data.message);
+                            const dropdown = button.closest('.posts').querySelector('.content-button');
+                    dropdown.style.display = 'none';
+                            
                             // Handle error - you can display a message or update the UI
                         }
                     })
@@ -529,18 +560,68 @@ include "header.php";
     }
 
     const toggleDropdowns = document.querySelectorAll('.fa-ellipsis');
-const showDropdowns = document.querySelectorAll('.content-button');
+    const showDropdowns = document.querySelectorAll('.content-button');
 
-toggleDropdowns.forEach((toggleDropdown, index) => {
-    toggleDropdown.addEventListener('click', function() {
-        if (showDropdowns[index].style.display === 'block') {
-            showDropdowns[index].style.display = 'none';
-        } else {
-            showDropdowns[index].style.display = 'block';
-        }
+    toggleDropdowns.forEach((toggleDropdown, index) => {
+        toggleDropdown.addEventListener('click', function() {
+            if (showDropdowns[index].style.display === 'block') {
+                showDropdowns[index].style.display = 'none';
+            } else {
+                showDropdowns[index].style.display = 'block';
+            }
+        });
     });
-});
 
+    $(document).ready(function() {
+        
+        $('.btn-like').click(function() {
+            let $this = $(this);
+            let post_id = $(this).data('id')
+            let like_id = $(this).data('likeid')
+
+            fetch('./backend/post.php?post_id=' + post_id + '&like_id=' + like_id)
+            .then(
+                function(response) {
+                // Examine the text in the response
+                response.json().then(function(data) {
+                    const likes = data.likes
+                    const like_id = data.like_id
+
+                    $($this).data('likeid', like_id)
+
+                    if(like_id == '0'){
+                        $($this).find('.bi-star-fill').removeClass('bi-star-fill').addClass('bi-star')
+
+                    }else{
+                        $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
+
+                    }
+
+                    if(likes == '0'){
+                        $('#ele-' + post_id).html('')
+
+                    }else if(likes == '1'){
+                        let ele = "<span class='badge badge-dark like-count' id='post-"+post_id+"'>"+likes+"</span>"
+                        $('#ele-'+ post_id).html(ele)
+
+                    }else{
+                        $('#post-' + post_id).html(likes)
+                    }
+                    
+                });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error :-S', err);
+            });
+        })
+        
+        $('.btn-comment').click(function(){
+            let post_id = $(this).data('id')
+            $('input[name="post_id"]', $('#form-comment')).val(post_id)
+            $('#commentModal').modal('show')
+        })
+    })
 </script>
 
 </html>

@@ -2,7 +2,6 @@
 <?php
 require_once 'autoload.php';
 
-
 if (!isset($_SESSION['user_login'])) {
   $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
   header('location:login.php');
@@ -88,7 +87,7 @@ if (isset($_SESSION['user_login'])) {
         $timestamp = strtotime($ROW['date']); // Assuming $ROW['date'] holds the date string
         
         // Map English days and months to Thai
-        $dayOfWeekEnglish = strftime('%A', $timestamp);
+        $dayOfWeekEnglish =  strftime('%A', $timestamp);
         $monthOfYearEnglish = strftime('%B', $timestamp);
 
         $dayOfWeekThaiMap = [
@@ -118,7 +117,7 @@ if (isset($_SESSION['user_login'])) {
         $dayOfWeekThai = $dayOfWeekThaiMap[$dayOfWeekEnglish] ?? $dayOfWeekEnglish; // Default to English if not mapped
         $monthOfYearThai = $monthOfYearThaiMap[$monthOfYearEnglish] ?? $monthOfYearEnglish; // Default to English if not mapped
         
-        $formattedDate = $dayOfWeekThai . strftime(' %e ', $timestamp) . $monthOfYearThai . strftime(' %Y : เวลา %H.%M', $timestamp);
+        $formattedDate = $dayOfWeekThai . date(' d ', $timestamp) . $monthOfYearThai . date(' Y : เวลา H:i', $timestamp);
 
         echo $formattedDate; // Display the formatted date
         ?>
@@ -140,17 +139,16 @@ if (isset($_SESSION['user_login'])) {
 
     <div class="posts" data-postid="<?php echo $ROW['postid']; ?>">
       <i class="fa-solid fa-ellipsis" id="toggle-dropdown"></i>
-      <ul class="content-button">
-      <li><button class="dropdown-item report-button" data-postid="<?php echo $ROW['postid']; ?>">
-      <i class="fa-solid fa-flag"></i>
-      <div class="text">Report</div>
-    </button></li>
-    <hr class="divider">
+        <ul class="content-button">
+          <li>
+            <button class="dropdown-item report-button" data-postid="<?php echo $ROW['postid']; ?>">
+              <i class="fa-solid fa-flag"></i>
+                <div class="text">Report</div>
+            </button>
+          </li>
+          <hr class="divider">
       </ul>
     </div>
-    
-    
-
   </div>
   <div class="post-content">
     <?php echo $ROW['post'] ?>
@@ -163,16 +161,36 @@ if (isset($_SESSION['user_login'])) {
     }
     ?>
   </div>
+  <?php
+      $like_id = 0;
+      $post = new Post();
+      $history_like = $post->get_like_history($ROW['postid'], $user_id);
+      if($history_like){
+        $like_id = $history_like['id'];
+      }
+    ?>
   <div class="post-bottom">
-    <div class="action">
-      <i class="bi bi-star-fill"></i>
+    <button class="btn btn btn-light btn-like" data-id="<?php echo $ROW['postid'] ?>" data-likeid="<?php echo $like_id ?>">
+      <?php
+        if($like_id == 0){
+          echo '<i class="bi bi-star"></i>';
+        }else{
+          echo '<i class="bi bi-star-fill"></i>';
+        }
+      ?>
       <span>Star</span>
-    </div>
-    <div class="action">
+      <span id="ele-<?php echo $ROW['postid'] ?>">
+      <?php
+        if($ROW['likes'] > 0) {
+          echo "<span class='badge badge-dark like-count' id='post-".$ROW['postid']."'>".number_format($ROW['likes'])."</span>";
+        }
+      ?>
+      </span>
+    </button>
+    <button class="btn btn btn-light btn-comment" data-id="<?php echo $ROW['postid'] ?>">
       <i class="far fa-comment"></i>
       <span>Comment</span>
-    </div>
-
+    </button>
     <div class="containericon d-flex align-content-center">
       <?php
       $post = new Post();
@@ -191,8 +209,29 @@ if (isset($_SESSION['user_login'])) {
       }
       ?>
     </div>
-
-
-
   </div>
+  <?php
+    $comment = new Comment();
+    $data = $comment->getAllComment($ROW['postid']);
+    $commentsContainerStyle = "";
+    if ($data) {
+        $commentsContainerStyle = "style='height: 18vh; overflow-y: auto;'";
+    }
+?>
+<div class='comments mt-2' <?php echo $commentsContainerStyle; ?>>
+    <?php
+    foreach ($data as $row) {
+        $util = new Util();
+        $create_date = $util->coverdate($row['create_date']);
+        echo "<div class='card mb-1'>" .
+            "<div class='card-body'>" .
+            $row['content'] .
+            "<br><span class='fw-light' style='font-size: 12px;'>" . $row['fullname'] . "</span>" .
+            " <span class='fw-light' style='font-size: 10px;'>" . $create_date . "</span>" .
+            "</div>" .
+            "</div>";
+    }
+    ?>
+</div>
+
 </div>
