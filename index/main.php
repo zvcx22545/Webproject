@@ -313,7 +313,7 @@ include "header.php";
                                         </select> -->
                                         <select id="locationDropdown"
                                             class="form-select option-container text-center rounded-pill mt-1 w-50"
-                                            name="location">
+                                            name="location" required>
                                             <option value="" disabled selected>กรุณาเลือกสถานที่</option>
                                             <?php foreach ($locations as $location): ?>
                                                 <option value="<?php echo $location; ?>"><?php echo $location; ?></option>

@@ -5,14 +5,39 @@ require_once 'autoload.php';
 if (isset($_POST['query'])) {
     global $conn;
     $inputText = $_POST['query'];
-    $sql = "SELECT post, location_name FROM posts WHERE post LIKE :query OR location_name LIKE :query";
+
+    // Query to fetch posts and location names from the posts table
+    $sqlPosts = "
+        SELECT p.post, p.location_name 
+        FROM posts p
+        LEFT JOIN locations l ON p.location_name = l.location_name
+        WHERE p.post LIKE :query OR p.location_name LIKE :query
+    ";
+
+    // Query to fetch location names from the locations table
+    $sqlLocations = "
+        SELECT NULL AS post, l.location_name 
+        FROM locations l
+        WHERE l.location_name LIKE :query
+    ";
+
+    // Combine both queries using UNION
+    $sql = "($sqlPosts) UNION ($sqlLocations)";
+
     $stmt = $conn->prepare($sql);
     $stmt->execute(['query' => '%' . $inputText . '%']);
     $result = $stmt->fetchAll();
 
     if ($result) {
-        foreach($result as $row) {
-            echo '<a class="search-content border-1">' . htmlspecialchars($row['post']) . '</a>';
+        foreach ($result as $row) {
+            if ($row['location_name']) {
+                if (!empty($row['post'])) {
+                    echo '<a class="search-content border-1">' . htmlspecialchars($row['post']) . '</a>';
+                } else if (!empty($row['location_name'])) {
+                    echo '<a class="search-content border-1">' . htmlspecialchars($row['location_name']) . '</a>';
+                }
+            }
+
         }
     } else {
         echo '<p class="list-group-item border-1 text-center d-flex check-search justify-content-center">No record found.</p>';

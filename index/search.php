@@ -143,12 +143,6 @@ include "header.php";
                     echo '</script>';
                 }
             }
-            if(isset($_POST['search']))
-            {
-                $query = $conn->prepare("SELECT * FROM posts ORDER BY date DESC");
-                $query->execute();
-                $result = $query->fetchAll(PDO::FETCH_ASSOC);
-            }
         }
 
 
@@ -382,12 +376,39 @@ include "header.php";
         </div>
         <!-- post area -->
         <?php
+      $PostResult = [];
 
-        if ($posts) {
+if (isset($_POST['search'])) {
+    global $conn;
+    $inputText = $_POST['search'];
+    
+    // Check if the input is a location name in the locations table
+    $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
+    $query->bindParam(":location_name", $inputText);
+    $query->execute();
+    $locationResult = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($locationResult) {
+        // If the input is a location name, fetch all posts with that location name, sorted by likes
+        $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name ORDER BY likes DESC");
+        $query->bindParam(":location_name", $inputText);
+        $query->execute();
+        $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        // If the input is not a location name, fetch posts matching the post content, sorted by likes
+        $inputTextWithWildcards = '%' . $inputText . '%';
+        $query = $conn->prepare("SELECT * FROM posts WHERE post LIKE :inputText ORDER BY likes DESC");
+        $query->bindParam(":inputText", $inputTextWithWildcards);
+        $query->execute();
+        $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
+        if ($PostResult) {
 
 
 
-            foreach ($posts as $ROW) {
+            foreach ($PostResult as $ROW) {
                 if (!empty($ROW['location_name']) && $ROW['status'] !== 'rejected') {
                     $user = new User();
                     $ROW_USER = $user->getUsers($ROW['user_id']);
