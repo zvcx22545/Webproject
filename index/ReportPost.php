@@ -93,7 +93,7 @@ foreach ($posts as $post) {
             <div class="right">
                 <!-- ส่วนทางขวา -->
                 <nav>
-                    <h1 id="pageTitle" class="text-2xl">จัดการโพสต์</h1>
+                    <h1 id="pageTitle" class="text-2xl">รายงานการโพสต์</h1>
                     <h1></h1>
                 </nav>
 
