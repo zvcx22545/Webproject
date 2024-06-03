@@ -52,7 +52,8 @@
 .post .post-top .posts .fa-ellipsis
 {
     display: flex;
-    justify-content: end;
+    width: 10%;
+    margin-left: auto;
 }
 .post .post-top .posts ul li
 {
@@ -146,6 +147,7 @@
 .post .post-top .posts i.fa-solid{
     cursor: poiner;
     color: var(--secondary-color);
+    margin-left: auto;
 }
 
 .post .post-top > input{
