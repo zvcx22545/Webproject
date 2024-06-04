@@ -4,7 +4,7 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -67,15 +67,17 @@ session_start();
                         name="email" aria-describedby="email">
                     <label for="floatingInput">Email address</label>
                 </div>
-                <div class="form-floating my-2">
+                <div class="form-floating my-2 password-toggle">
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
                         name="password">
                     <label for="floatingPassword">Password</label>
+                    <i class="fa-solid fa-eye-slash"></i>
                 </div>
-                <div class="form-floating my-2">
+                <div class="form-floating my-2 password-toggle">
                     <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm Password"
                         name="c_password">
                     <label for="ConfirmPassword">Confirm Password</label>
+                    <i class="fa-solid fa-eye-slash"></i>
                 </div>
                 
 

@@ -58,3 +58,23 @@ body {
   }
 }
   
+
+.password-toggle
+{
+  position: relative;
+  .fa-solid.fa-eye
+  {
+    position: absolute;
+    font-size: 20px;
+    top: 30%;
+    right:20px
+  }
+  .fa-solid.fa-eye-slash
+  {
+    position: absolute;
+    font-size: 20px;
+    top: 30%;
+    right:20px;
+    cursor: pointer;
+  }
+}
