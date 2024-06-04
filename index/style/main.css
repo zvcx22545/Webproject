@@ -258,3 +258,34 @@ button .icons
   color: #fff;
   background-color: #343a40;
 }
+
+.collapse .search
+{
+  position: relative;
+}
+.list-groups
+{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  top: 40px;
+  left: 15px;
+  border-radius: 12px 12px 12px 12px;
+  width: 75%;
+  text-align: center;
+}
+.search-content
+{
+  text-decoration: none;
+  color: #000106;
+  border-bottom: 1px solid #000;
+  cursor: pointer;
+  padding: 8px 4px;
+}
+
+p.check-search
+{
+  margin: 0;
+}

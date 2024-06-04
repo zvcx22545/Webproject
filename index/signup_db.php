@@ -12,23 +12,25 @@ $url_address = strtolower($first_name) . "." . strtolower($last_name);
 $userCreator = new create_user();
 $userid = $userCreator->create_userid();
 $urole = 'user';
-
+function isValidName($name) {
+    return preg_match('/^[a-zA-Zก-๙]+$/u', $name);
+}
 $response = array();
-if (!$first_name) {
-   $response['status'] = "error";
-   $response['msg'] = "กรุณากรอกชื่อ";
-} 
-else if (!preg_match('/^[a-zA-Z]+$/', $first_name)) {
+if (empty($first_name)) {
     $response['status'] = "error";
-    $response['msg'] = "กรุณากรอกชื่อเฉพาะตัวอักษรเท่านั้น";
+    $response['msg'] = "กรุณากรอกชื่อ";
+} else if (!isValidName($first_name)) {
+    $response['status'] = "error";
+    $response['msg'] = "กรุณากรอกชื่อเป็นตัวอักษรไทยหรืออังกฤษเท่านั้น";
 } 
-else if (!$last_name) {
+
+// Check last name
+else if (empty($last_name)) {
     $response['status'] = "error";
     $response['msg'] = "กรุณากรอกนามสกุล";
-}
-else if (!preg_match('/^[a-zA-Z]+$/', $last_name)) {
+} else if (!isValidName($last_name)) {
     $response['status'] = "error";
-    $response['msg'] = "กรุณากรอกนามสกุลเฉพาะตัวอักษรเท่านั้น";
+    $response['msg'] = "กรุณากรอกนามสกุลเป็นตัวอักษรไทยหรืออังกฤษเท่านั้น";
 }
  else if (empty($email) || strpos($email, "@ku.th") === false) {
     $response['status'] = "error";
