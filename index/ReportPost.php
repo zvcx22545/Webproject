@@ -93,7 +93,7 @@ foreach ($posts as $post) {
             <div class="right">
                 <!-- ส่วนทางขวา -->
                 <nav>
-                    <h1 id="pageTitle" class="text-2xl">จัดการโพสต์</h1>
+                    <h1 id="pageTitle" class="text-2xl">รายงานการโพสต์</h1>
                     <h1></h1>
                 </nav>
 
@@ -144,8 +144,8 @@ foreach ($posts as $post) {
                                         <td>
                                             <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
                                                 <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
-                                                <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
-                                                <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
+                                                <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>เปิดการมองเห็น</option>
+                                                <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ปิดการมองเห็น</option>
                                             </select>
                                         </td>
                                     </tr>
