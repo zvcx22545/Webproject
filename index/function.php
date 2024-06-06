@@ -73,9 +73,11 @@ if (isset($_SESSION['user_login'])) {
     </div>
     <div class="post-info">
       <p class="name font-weight-bolder mt-3">
-        <a href="./ProfilepagePerson.php" class="nav-link">
-          <?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?>
-        </a>
+      <a href='ProfilepagePerson.php?user_id=<?php echo $ROW['user_id']; ?>' class='nav-link'>
+        <?php echo $ROW_USER['first_name'] . ' ' . $ROW_USER['last_name']; ?>
+    </a>
+
+
       </p>
 
 
