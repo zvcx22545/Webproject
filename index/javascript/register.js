@@ -31,15 +31,20 @@ $(document).ready(function () {
     });
 
     // Toggle password visibility
+});
 
-    $(".password-toggle i").click(function() {
-        const input = $(this).prev('input[type="password"]');
-        if (input.attr('type') === 'password') {
-            input.attr('type', 'text');
-            $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+document.querySelectorAll('.toggle-icon').forEach(function(icon) {
+    icon.addEventListener('click', function() {
+        var targetId = this.getAttribute('data-target');
+        var targetInput = document.getElementById(targetId);
+        if (targetInput.type === 'password') {
+            targetInput.type = 'text';
+            this.classList.remove('fa-eye-slash');
+            this.classList.add('fa-eye');
         } else {
-            input.attr('type', 'password');
-            $(this).removeClass('fa-eye').addClass('fa-eye-slash');
+            targetInput.type = 'password';
+            this.classList.remove('fa-eye');
+            this.classList.add('fa-eye-slash');
         }
     });
 });
