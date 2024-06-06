@@ -221,4 +221,27 @@ h1.h3 {
   }
 }
 
+
+/* Toggle icon */
+.password-toggle
+{
+  position: relative;
+  .fa-solid.fa-eye
+  {
+    position: absolute;
+    font-size: 20px;
+    top: 30%;
+    right:20px
+  }
+  .fa-solid.fa-eye-slash
+  {
+    position: absolute;
+    font-size: 20px;
+    top: 30%;
+    right:20px;
+    cursor: pointer;
+  }
+}
+
+
 /* (และคุณสามารถเพิ่มหรือปรับแต่งสไตล์เพิ่มเติมได้ที่นี่) */

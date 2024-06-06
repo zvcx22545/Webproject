@@ -157,25 +157,16 @@ include "header.php";
 
 
 
-        <div
-            class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start justify-content-start ">
+        <div class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start justify-content-start ">
 
             <div class="logo text-left col-12 col-lg-auto"><a href="./main.php" class="nav-link">Travel to Knowledge</a>
             </div>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 navbars">
-                <li><a href="./main.php"
-                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'main.php' ? 'active' : ''; ?>"><i
-                            class="fa fa-home"></i></a></li>
-                <li><a href="./travel.php"
-                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i
-                            class="fa-solid fa-mountain-sun"></i></a></li>
-                <li><a href="./foodpage.php"
-                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i
-                            class="fa-solid fa-utensils"></i></a></li>
-                <li><a href="./clothing.php"
-                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i
-                            class="fa-solid fa-shirt"></i></a></li>
+                <li><a href="./main.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'main.php' ? 'active' : ''; ?>"><i class="fa fa-home"></i></a></li>
+                <li><a href="./travel.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'travel.php' ? 'active' : ''; ?>"><i class="fa-solid fa-mountain-sun"></i></a></li>
+                <li><a href="./foodpage.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i class="fa-solid fa-utensils"></i></a></li>
+                <li><a href="./clothing.php" class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i class="fa-solid fa-shirt"></i></a></li>
                 <button class="navbar-toggler" type="button">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -184,46 +175,42 @@ include "header.php";
             <div class="collapse navbar-collapse w-auto" id="navbarSupportedContent">
 
                 <form class="d-flex mt-3 mt-lg-0 ms-auto search" role="search" action="search.php" method="POST">
-                    <input class="form-control me-2 rounded-pill" type="search" placeholder="ค้นหาสถานที่"
-                        aria-label="Search" name="search" id="search" autocomplete="off" required>
-                    <button class="btn btn-outline-light me-2" type="submit" name="submit"><svg
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-search" viewBox="0 0 16 16">
-                            <path
-                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    <input class="form-control me-2 rounded-pill" type="search" placeholder="ค้นหาสถานที่" aria-label="Search" name="search" id="search" autocomplete="off" required>
+                    <button class="btn btn-outline-light me-2" type="submit" name="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                         </svg></button>
 
-                        <div class="list-groups" id="show-list">
+                    <div class="list-groups" id="show-list">
 
-                        </div>
+                    </div>
                 </form>
 
 
                 <div class="text-center">
-                    <button type="button" class="btn btn-outline-light"><a class="nav-link" href="./logout.php"
-                            id="logout">Logout</a></button>
+                    <button type="button" class="btn btn-outline-light"><a class="nav-link" href="./logout.php" id="logout">Logout</a></button>
                 </div>
                 <div class="icon text-white me-2 px-3"><i class="fa-solid fa-sun" id="theme"></i></div>
 
             </div>
 
         </div>
+        
 
     </header>
 
     <div class="container ">
         <script>
-            <?php if (isset($_SESSION['post_location']) && $_SESSION['post_location']): ?>
+            <?php if (isset($_SESSION['post_location']) && $_SESSION['post_location']) : ?>
                 var postlocationSuccess = true;
                 <?php unset($_SESSION['post_location']); ?>
-            <?php else: ?>
+            <?php else : ?>
                 var postlocationSuccess = false;
             <?php endif; ?>
 
-            <?php if (isset($_SESSION['post_success']) && $_SESSION['post_success']): ?>
+            <?php if (isset($_SESSION['post_success']) && $_SESSION['post_success']) : ?>
                 var postSuccess = true;
                 <?php unset($_SESSION['post_success']); ?>
-            <?php else: ?>
+            <?php else : ?>
                 var postSuccess = false;
             <?php endif; ?>
         </script>
@@ -248,16 +235,12 @@ include "header.php";
 
                 </li>
                 <div class="mt-3">
-                    <button class="btn location btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal"
-                        data-bs-toggle="modal" data-bs-dismiss="modal">
+                    <button class="btn location btn-outline-light w-100 mt-2" data-bs-target="#AddlocationModal" data-bs-toggle="modal" data-bs-dismiss="modal">
                         <div class="icons h-25 w-100 d-flex align-items-center justify-content-center">
                             <div class="text-center" style="font-size:16px;">เพิ่มสถานที่</div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="icon">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
                         </div>
 
@@ -280,8 +263,7 @@ include "header.php";
                         <img src="<?php echo $corner_image ?>" type="images" alt="">
                     </div>
 
-                    <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal"
-                        data-bs-target="#postModal" readonly style="cursor: pointer;" />
+                    <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal" data-bs-target="#postModal" readonly style="cursor: pointer;" />
 
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
@@ -289,33 +271,21 @@ include "header.php";
                             height: 150px !important;
                         }
                     </style>
-                    <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
+                    <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title me-3">คุณอยากโพสต์อะไร</h5>
 
 
-                                    <button type="button" class="btn-close mr-lg-2" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close mr-lg-2" data-bs-dismiss="modal" aria-label="Close"></button>
 
                                 </div>
                                 <form method="post" enctype="multipart/form-data" class="p-4">
                                     <div class="d-flex gap-2">
-                                        <!-- <select id="categoryDropdown" required
-                                            class="form-select option-container text-center rounded-pill mt-1 w-50 "
-                                            name="category">
-                                            <option value="" disabled selected>หมวดหมู่</option>
-                                            <option value="clothing">Clothing</option>
-                                            <option value="travel">Travel</option>
-                                            <option value="food">Food</option>
-                                        </select> -->
-                                        <select id="locationDropdown"
-                                            class="form-select option-container text-center rounded-pill mt-1 w-50"
-                                            name="location" required>
+                                        <select id="locationDropdown" class="form-select option-container text-center rounded-pill mt-1 w-50" name="location" required>
                                             <option value="" disabled selected>กรุณาเลือกสถานที่</option>
-                                            <?php foreach ($locations as $location): ?>
+                                            <?php foreach ($locations as $location) : ?>
                                                 <option value="<?php echo $location; ?>"><?php echo $location; ?></option>
                                             <?php endforeach; ?>
                                         </select>
@@ -326,23 +296,19 @@ include "header.php";
 
                                         <div class="my-3">
 
-                                            <input class="form-control" name="file" type="file" id="select_post_img"
-                                                style="display: none;">
+                                            <input class="form-control" name="file" type="file" id="select_post_img" style="display: none;">
                                             <label for="select_post_img" class="d-flex justify-content-center">
                                                 <i class="fa fa-image photo"></i>
                                             </label>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleFormControlTextarea1" class="form-label"></label>
-                                            <textarea name="post" class="form-control h-50"
-                                                id="exampleFormControlTextarea1" rows="1"
-                                                placeholder="คุณกำลังคิดอะไรอยู่" required></textarea>
+                                            <textarea name="post" class="form-control h-50" id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่" required></textarea>
                                         </div>
 
 
                                         <div class="w-100 mx-auto mt-2 d-flex">
-                                            <button name="post_button" type="submit" class="btn btn-primary mx-auto"
-                                                id="post_button" value="Post">
+                                            <button name="post_button" type="submit" class="btn btn-primary mx-auto" id="post_button" value="Post">
                                                 <div class="text-center">ยืนยัน</div>
                                             </button>
                                         </div>
@@ -393,25 +359,22 @@ include "header.php";
         }
 
         # code...
-        
+
         ?>
-        <div class="modal fade" id="AddlocationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="AddlocationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header ">
                         <h5 class="modal-title text-center mx-auto w-100">กรุณาเพิ่มสถานที่</h5>
 
 
-                        <button type="button" class="btn-close mr-lg-2" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <button type="button" class="btn-close mr-lg-2" data-bs-dismiss="modal" aria-label="Close"></button>
 
                     </div>
                     <form method="post" enctype="multipart/form-data" class="p-4" id="locationForm2">
                         <div class="my-3">
                             <label for="locationname" class="col-form-label">ชื่อสถานที่</label>
-                            <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="locationname"
-                                name="location_name" placeholder="กรุณาใส่ชื่อสถานที่" required>
+                            <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="locationname" name="location_name" placeholder="กรุณาใส่ชื่อสถานที่" required>
                         </div>
 
                         <div class="modal-body">
@@ -419,28 +382,22 @@ include "header.php";
 
                             <div class="my-3">
 
-                                <input class="form-control" name="file" type="file" id="select_location_img"
-                                    style="display: none;" required>
+                                <input class="form-control" name="file" type="file" id="select_location_img" style="display: none;" required>
                                 <label for="select_location_img" class="d-flex justify-content-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-                                        class="bi bi-cloud-arrow-up text-center mx-auto" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2z" />
-                                        <path
-                                            d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cloud-arrow-up text-center mx-auto" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2z" />
+                                        <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z" />
                                     </svg>
                                 </label>
                             </div>
                             <div class="my-3">
                                 <label for="Map-link" class="col-form-label">Link GoogleMap</label>
-                                <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="Map-link"
-                                    name="Maplink" placeholder="กรุณาใส่ลิงค์ GoogleMap" required>
+                                <input type="text" class="form-control ps-3 mx-auto" style="width: 95%;" id="Map-link" name="Maplink" placeholder="กรุณาใส่ลิงค์ GoogleMap" required>
                             </div>
                         </div>
 
                         <div class="w-100 mx-auto mt-2 d-flex">
-                            <button type="submit" name="addlocation" class="btn btn-primary mx-auto"
-                                id="location_submit">ยืนยัน</button>
+                            <button type="submit" name="addlocation" class="btn btn-primary mx-auto" id="location_submit">ยืนยัน</button>
 
                         </div>
 
@@ -450,8 +407,7 @@ include "header.php";
             </div>
         </div>
 
-        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-            aria-hidden="true">
+        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <form action="backend/comment.php" method="post" id="form-comment">
@@ -484,20 +440,17 @@ include "header.php";
 
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
-    </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
+</script>
 <script src="./javascript/main.js"></script>
 <script src="./javascript/hamburger.js"></script>
 <script src="./javascript//search.js"></script>
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
-
-    document.addEventListener('DOMContentLoaded', async function () {
+    document.addEventListener('DOMContentLoaded', async function() {
         let location_submit = document.getElementById('location_submit');
         if (location_submit) {
             location_submit.addEventListener('click', () => {
@@ -508,17 +461,17 @@ include "header.php";
         console.log("DOM fully loaded and parsed");
 
         document.querySelectorAll('.report-button').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function() {
                 const postId = this.getAttribute('data-postid');
                 const userSessionId = '<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'not set'; ?>';
 
                 fetch('report_post.php', { // Ensure this is the correct path to your PHP script
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `post_id=${postId}&user_id=${userSessionId}`
-                })
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `post_id=${postId}&user_id=${userSessionId}`
+                    })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -557,6 +510,8 @@ include "header.php";
 
     });
 
+
+
     function validateAndSubmit() {
         var locationName = document.getElementById('locationname').value.trim();
         var mapLink = document.getElementById('Map-link').value.trim();
@@ -587,6 +542,24 @@ include "header.php";
         }
     }
 
+    const postsubmit = document.getElementById('post_button');
+    const locationSelect = document.getElementById('locationDropdown');
+    if (postsubmit) {
+        postsubmit.addEventListener('click', function(event) {
+            if (!locationSelect.value) {
+                event.preventDefault(); // Prevent form submission
+                Swal.fire({
+                    icon: 'error',
+                    title: 'โพสต์ไม่สำเร็จกรุณาลองใหม่อีกครั้ง',
+                    html: 'กรุณาเลือกสถานที่ที่ต้องการโพสต์หากไม่มีสถานที่<br>ที่คุณต้องการกรุณาทำการเพิ่มสถานที่ได้ที่หน้าหลัก',
+                });
+            }
+        });
+
+    }
+
+
+
     console.log(postSuccess);
     console.log(postlocationSuccess);
     if (postSuccess) {
@@ -607,7 +580,7 @@ include "header.php";
     const showDropdowns = document.querySelectorAll('.content-button');
 
     toggleDropdowns.forEach((toggleDropdown, index) => {
-        toggleDropdown.addEventListener('click', function () {
+        toggleDropdown.addEventListener('click', function() {
             if (showDropdowns[index].style.display === 'block') {
                 showDropdowns[index].style.display = 'none';
             } else {
@@ -616,18 +589,18 @@ include "header.php";
         });
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
-        $('.btn-like').click(function () {
+        $('.btn-like').click(function() {
             let $this = $(this);
             let post_id = $(this).data('id')
             let like_id = $(this).data('likeid')
 
             fetch('./backend/post.php?post_id=' + post_id + '&like_id=' + like_id)
                 .then(
-                    function (response) {
+                    function(response) {
                         // Examine the text in the response
-                        response.json().then(function (data) {
+                        response.json().then(function(data) {
                             const likes = data.likes
                             const like_id = data.like_id
 
@@ -655,12 +628,12 @@ include "header.php";
                         });
                     }
                 )
-                .catch(function (err) {
+                .catch(function(err) {
                     console.log('Fetch Error :-S', err);
                 });
         })
 
-        $('.btn-comment').click(function () {
+        $('.btn-comment').click(function() {
             let post_id = $(this).data('id')
             $('input[name="post_id"]', $('#form-comment')).val(post_id)
             $('#commentModal').modal('show')

@@ -14,6 +14,7 @@ session_start();
   <link rel="stylesheet" href="./style/login.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
@@ -55,11 +56,11 @@ session_start();
         </div>
 
 
-        <div class="form-floating confirm--password my-4">
-          <input type="password" id="password" class="form-control " name="password" id="floatingPassword" placeholder="Password" required>
+        <div class="form-floating confirm--password my-4 password-toggle">
+          <input type="password" id="floatingPassword" class="form-control " name="password" id="floatingPassword" placeholder="Password" required>
           <label for="floatingPassword">Password</label>
+          <i class="fa-solid fa-eye-slash toggle-icon" data-target="floatingPassword"></i>
         </div>
-        
         <button name="signin" class="btn-s w-100 py-2" type="submit">Sign in</button>
         <p class="mt-5 mb-3 text-body-secondary">Don't have an account Please? <a href="./register.php">sing
             up</a></p>

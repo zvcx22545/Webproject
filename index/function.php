@@ -57,10 +57,10 @@ if (isset($_SESSION['user_login'])) {
 <div class="post">
   <?php
   $image = "images/istockphoto-1337144146-612x612.jpg";
-  if (file_exists($row['profile_image'])) {
-    $image_class = new Image();
-    $image = $image_class->get_thumb_profile($row['profile_image']);
-  }
+  // if (file_exists($row['profile_image'])) {
+  //   $image_class = new Image();
+  //   $image = $image_class->get_thumb_profile($row['profile_image']);
+  // }
   if (file_exists($ROW_USER['profile_image'])) {
     $image = $image_class->get_thumb_profile($ROW_USER['profile_image']);
   }
@@ -73,9 +73,11 @@ if (isset($_SESSION['user_login'])) {
     </div>
     <div class="post-info">
       <p class="name font-weight-bolder mt-3">
-        <a href="./Profilepage.php" class="nav-link">
-          <?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?>
-        </a>
+      <a href='ProfilepagePerson.php?user_id=<?php echo $ROW['user_id']; ?>' class='nav-link'>
+        <?php echo $ROW_USER['first_name'] . ' ' . $ROW_USER['last_name']; ?>
+    </a>
+
+
       </p>
 
 
@@ -124,6 +126,26 @@ if (isset($_SESSION['user_login'])) {
 
 
       </span>
+      <br>
+
+      <div>
+    <?php
+    if (!empty($ROW['location_name'])) {
+        $location = new Location();
+        $locationInfo = $location->getLocationInfoByName($ROW['location_name']);
+        if ($locationInfo && isset($locationInfo['map_link'])) {
+            $mapLink = $locationInfo['map_link'];
+            echo "<a href=\"$mapLink\">" . '#'. $ROW['location_name'] . "</a>";
+        } else {
+            echo $ROW['location_name'];
+        }
+    } else {
+        echo "No location provided";
+    }
+    ?>
+</div>
+
+      
 
       <?php
       if ($ROW['is_profile_image']) {
@@ -150,8 +172,20 @@ if (isset($_SESSION['user_login'])) {
       </ul>
     </div>
   </div>
+  <?php 
+// Check if the function is not already defined
+if (!function_exists('makeClickableLinks')) {
+  // Function to convert URLs in text to clickable links
+  function makeClickableLinks($text) {
+      $pattern = "/((http|https|ftp):\/\/)?([a-z0-9-]+\.)+[a-z]{2,4}(\.[a-z]{2})?(\:[0-9]+)?(\/([^\s]+)?)/i";
+      $replacement = "<a href='$0' target='_blank'>$0</a>";
+      return preg_replace($pattern, $replacement, $text);
+  }
+}
+
+  ?>
   <div class="post-content">
-    <?php echo $ROW['post'] ?>
+  <?php echo makeClickableLinks($ROW['post']); ?>
     <br><br>
     <?php
     if (file_exists($ROW['image'])) {

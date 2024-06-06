@@ -1,27 +1,15 @@
-// $(document).ready(function () {
-//     $("#loginForm").submit(function (e) {
-//         e.preventDefault();
-
-//         let formUrl = $(this).attr("action");
-//         let reqMethod = $(this).attr("method");
-//         let formData = $(this).serialize();
-
-//         $.ajax({
-//             url: formUrl,
-//             type: reqMethod,
-//             data: formData,
-//             success: function (data) {
-//                 let result = JSON.parse(data);
-//                 if (result.status == "success") {
-//                     console.log("Success", result)
-//                     Swal.fire("สำเร็จ!", "เข้าสู่ระบบสำเร็จ", result.status).then(function () {
-//                         window.location.href = result.redirect;
-//                     });
-//                 } else {
-//                     console.log("Error", result)
-//                     Swal.fire("ล้มเหลว!", result.msg, "error");
-//                 }
-//             }
-//         })
-//     })
-// })
+document.querySelectorAll('.toggle-icon').forEach(function(icon) {
+    icon.addEventListener('click', function() {
+        var targetId = this.getAttribute('data-target');
+        var targetInput = document.getElementById(targetId);
+        if (targetInput.type === 'password') {
+            targetInput.type = 'text';
+            this.classList.remove('fa-eye-slash');
+            this.classList.add('fa-eye');
+        } else {
+            targetInput.type = 'password';
+            this.classList.remove('fa-eye');
+            this.classList.add('fa-eye-slash');
+        }
+    });
+});

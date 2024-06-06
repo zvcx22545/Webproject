@@ -23,7 +23,6 @@ if (empty($first_name)) {
     $response['status'] = "error";
     $response['msg'] = "กรุณากรอกชื่อเป็นตัวอักษรไทยหรืออังกฤษเท่านั้น";
 } 
-
 // Check last name
 else if (empty($last_name)) {
     $response['status'] = "error";

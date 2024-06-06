@@ -54,8 +54,20 @@ require_once("autoload.php");
 
 
     </div>
+
+    <?php 
+if (!function_exists('makeClickableLinks')) {
+  function makeClickableLinks($text) {
+      $pattern = "/((http|https|ftp):\/\/)?([a-z0-9-]+\.)+[a-z]{2,4}(\.[a-z]{2})?(\:[0-9]+)?(\/([^\s]+)?)/i";
+      $replacement = "<a href='$0' target='_blank'>$0</a>";
+      return preg_replace($pattern, $replacement, $text);
+  }
+}
+
+  ?>
     <div class="post-content">
-        <?php echo $ROW['post'] ?>
+    <?php echo makeClickableLinks($ROW['post']); ?>
+
         <br><br>
         <?php
         if (file_exists($ROW['image'])) {

@@ -144,7 +144,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     <?php
    
     ?>
-    <div class="container">
+    <div class="container" id="delete-con">
 
         <div class="uploadprofile w-100 mt-lg-5 d-flex justify-content-center">
             

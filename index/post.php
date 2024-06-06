@@ -46,7 +46,7 @@ class Post
                     $image_class = new Image();
                     $myimage = $folder . $image_class->generate_filename(15) . ".jpg";
                     move_uploaded_file($_FILES["file"]["tmp_name"], $myimage);
-                    $image_class->resize_image($myimage, $myimage, 1500, 1500);
+                    $image_class->resize_image($myimage, $myimage, 2000, 2000);
                     $has_image = 1;
                 }
             }
@@ -223,6 +223,17 @@ class Post
         }
     
         $postid = $data['post_id'];
+
+        // Check if the user is the owner of the post
+        $checkOwnerQuery = $conn->prepare("SELECT user_id FROM posts WHERE postid = :post_id");
+        $checkOwnerQuery->bindParam(':post_id', $postid);
+        $checkOwnerQuery->execute();
+        $postOwner = $checkOwnerQuery->fetch(PDO::FETCH_ASSOC);
+    
+        if ($postOwner['user_id'] == $userid) {
+            return ['status' => 'error', 'message' => 'เจ้าของโพสต์ไม่สามารถรายงานโพสต์ของตัวเองได้'];
+        }
+    
     
         // Check if the user has already reported this post
         $checkQuery = $conn->prepare("SELECT COUNT(*) as count FROM reports WHERE post_id = :post_id AND user_id = :user_id");

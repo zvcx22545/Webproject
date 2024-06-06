@@ -176,16 +176,14 @@ include "header.php";
                 <li><a href="./clothing.php"
                         class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i
                             class="fa-solid fa-shirt"></i></a></li>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </ul>
 
-            <div class="collapse navbar-collapse w-auto " id="navbarSupportedContent">
+            <div class="collapse navbar-collapse w-auto" id="navbarSupportedContent">
 
-                <form class="d-flex mt-3 mt-lg-0 ms-auto" role="search" action="search.php" method="POST">
+                <form class="d-flex mt-3 mt-lg-0 ms-auto search" role="search" action="search.php" method="POST">
                     <input class="form-control me-2 rounded-pill" type="search" placeholder="ค้นหาสถานที่"
                         aria-label="Search" name="search" id="search" autocomplete="off" required>
                     <button class="btn btn-outline-light me-2" type="submit" name="submit"><svg
@@ -194,7 +192,13 @@ include "header.php";
                             <path
                                 d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                         </svg></button>
+
+                    <div class="list-groups" id="show-list">
+
+                    </div>
                 </form>
+
+
                 <div class="text-center">
                     <button type="button" class="btn btn-outline-light"><a class="nav-link" href="./logout.php"
                             id="logout">Logout</a></button>
@@ -204,6 +208,7 @@ include "header.php";
             </div>
 
         </div>
+
 
     </header>
 
@@ -299,17 +304,9 @@ include "header.php";
                                 </div>
                                 <form method="post" enctype="multipart/form-data" class="p-4">
                                     <div class="d-flex gap-2">
-                                        <!-- <select id="categoryDropdown" required
-                                            class="form-select option-container text-center rounded-pill mt-1 w-50 "
-                                            name="category">
-                                            <option value="" disabled selected>หมวดหมู่</option>
-                                            <option value="clothing">Clothing</option>
-                                            <option value="travel">Travel</option>
-                                            <option value="food">Food</option>
-                                        </select> -->
                                         <select id="locationDropdown"
                                             class="form-select option-container text-center rounded-pill mt-1 w-50"
-                                            name="location">
+                                            name="location" required>
                                             <option value="" disabled selected>กรุณาเลือกสถานที่</option>
                                             <?php foreach ($locations as $location): ?>
                                                 <option value="<?php echo $location; ?>"><?php echo $location; ?></option>
@@ -371,7 +368,6 @@ include "header.php";
         <!-- post area -->
         <?php
 
-
         if ($posts) {
             $stmt = $conn->prepare("SELECT * FROM posts WHERE category = :category ORDER BY date DESC");
             $stmt->bindParam(':category', $category);
@@ -395,6 +391,7 @@ include "header.php";
 
             }
         }
+
 
         # code...
         
@@ -454,6 +451,31 @@ include "header.php";
             </div>
         </div>
 
+        <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form action="backend/comment.php" method="post" id="form-comment">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="commentModalLongTitle">แสดงความคิดเห็น</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="content">ความคิดเห็น</label>
+                                <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                            </div>
+                            <input type="hidden" name="post_id" value="">
+                            <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
     </div>
 
@@ -470,10 +492,11 @@ include "header.php";
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
     </script>
 <script src="./javascript/main.js"></script>
+<script src="./javascript/hamburger.js"></script>
+<script src="./javascript//search.js"></script>
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
-
     document.addEventListener('DOMContentLoaded', async function () {
         let location_submit = document.getElementById('location_submit');
         if (location_submit) {
@@ -534,6 +557,8 @@ include "header.php";
 
     });
 
+
+
     function validateAndSubmit() {
         var locationName = document.getElementById('locationname').value.trim();
         var mapLink = document.getElementById('Map-link').value.trim();
@@ -564,6 +589,24 @@ include "header.php";
         }
     }
 
+    const postsubmit = document.getElementById('post_button');
+    const locationSelect = document.getElementById('locationDropdown');
+    if (postsubmit) {
+        postsubmit.addEventListener('click', function (event) {
+            if (!locationSelect.value) {
+                event.preventDefault(); // Prevent form submission
+                Swal.fire({
+                    icon: 'error',
+                    title: 'โพสต์ไม่สำเร็จกรุณาลองใหม่อีกครั้ง',
+                    html: 'กรุณาเลือกสถานที่ที่ต้องการโพสต์หากไม่มีสถานที่<br>ที่คุณต้องการกรุณาทำการเพิ่มสถานที่ได้ที่หน้าหลัก',
+                });
+            }
+        });
+
+    }
+
+
+
     console.log(postSuccess);
     console.log(postlocationSuccess);
     if (postSuccess) {
@@ -593,6 +636,56 @@ include "header.php";
         });
     });
 
+    $(document).ready(function () {
+
+        $('.btn-like').click(function () {
+            let $this = $(this);
+            let post_id = $(this).data('id')
+            let like_id = $(this).data('likeid')
+
+            fetch('./backend/post.php?post_id=' + post_id + '&like_id=' + like_id)
+                .then(
+                    function (response) {
+                        // Examine the text in the response
+                        response.json().then(function (data) {
+                            const likes = data.likes
+                            const like_id = data.like_id
+
+                            $($this).data('likeid', like_id)
+
+                            if (like_id == '0') {
+                                $($this).find('.bi-star-fill').removeClass('bi-star-fill').addClass('bi-star')
+
+                            } else {
+                                $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
+
+                            }
+
+                            if (likes == '0') {
+                                $('#ele-' + post_id).html('')
+
+                            } else if (likes == '1') {
+                                let ele = "<span class='badge badge-dark like-count' id='post-" + post_id + "'>" + likes + "</span>"
+                                $('#ele-' + post_id).html(ele)
+
+                            } else {
+                                $('#post-' + post_id).html(likes)
+                            }
+
+                        });
+                    }
+                )
+                .catch(function (err) {
+                    console.log('Fetch Error :-S', err);
+                });
+        })
+
+        $('.btn-comment').click(function () {
+            let post_id = $(this).data('id')
+            $('input[name="post_id"]', $('#form-comment')).val(post_id)
+            $('#commentModal').modal('show')
+        })
+    })
 </script>
 
 </html>

@@ -226,6 +226,15 @@
     justify-content: center;
     gap: 2px;
 }
+
+
+/* delete.php style */
+.container#delete-con
+{
+    display: block !important;
+}
+
+
 /* สำหรับหน้าจอที่มีความกว้างไม่เกิน 600px */
 @media only screen and (max-width: 600px) {
     .post {
