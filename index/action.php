@@ -6,12 +6,11 @@ if (isset($_POST['query'])) {
     global $conn;
     $inputText = $_POST['query'];
 
-    // Query to fetch posts and location names from the posts table
+    // Query to fetch posts from the posts table
     $sqlPosts = "
-        SELECT p.post, p.location_name 
+        SELECT p.post, NULL AS location_name 
         FROM posts p
-        LEFT JOIN locations l ON p.location_name = l.location_name
-        WHERE p.post LIKE :query OR p.location_name LIKE :query
+        WHERE p.post LIKE :query
     ";
 
     // Query to fetch location names from the locations table
@@ -30,14 +29,11 @@ if (isset($_POST['query'])) {
 
     if ($result) {
         foreach ($result as $row) {
-            if ($row['location_name']) {
-                if (!empty($row['post'])) {
-                    echo '<a class="search-content border-1">' . htmlspecialchars($row['post']) . '</a>';
-                } else if (!empty($row['location_name'])) {
-                    echo '<a class="search-content border-1">' . htmlspecialchars($row['location_name']) . '</a>';
-                }
+            if (!empty($row['post'])) {
+                echo '<a class="search-content border-1">' . htmlspecialchars($row['post']) . '</a>';
+            } else if (!empty($row['location_name'])) {
+                echo '<a class="search-content border-1">' . htmlspecialchars($row['location_name']) . '</a>';
             }
-
         }
     } else {
         echo '<p class="list-group-item border-1 text-center d-flex check-search justify-content-center">No record found.</p>';
