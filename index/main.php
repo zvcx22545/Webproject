@@ -341,7 +341,7 @@ include "header.php";
 
 
                                         <div class="w-100 mx-auto mt-2 d-flex">
-                                            <button name="post_button" type="submit" class="btn btn-primary mx-auto" onclick="ValidationPost()"
+                                            <button name="post_button" type="submit" class="btn btn-primary mx-auto"
                                                 id="post_button" value="Post">
                                                 <div class="text-center">ยืนยัน</div>
                                             </button>
@@ -589,11 +589,11 @@ include "header.php";
         }
     }
 
-    const ValidationPost = () => {
     const postsubmit = document.getElementById('post_button');
     const locationSelect = document.getElementById('locationDropdown');
-    
-    postsubmit.addEventListener('click', function(event) {
+    if(postsubmit)
+    {
+         postsubmit.addEventListener('click', function(event) {
         if (!locationSelect.value) {
             event.preventDefault(); // Prevent form submission
             Swal.fire({
@@ -603,7 +603,9 @@ include "header.php";
             });
         }
     });
-}
+
+    }
+   
 
 
     console.log(postSuccess);
