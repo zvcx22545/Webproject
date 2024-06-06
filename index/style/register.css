@@ -77,4 +77,11 @@ body {
     right:20px;
     cursor: pointer;
   }
+
+ 
 }
+ .advice
+  {
+    color: red;
+    font-size: 12px;
+  }

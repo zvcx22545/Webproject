@@ -63,17 +63,19 @@ session_start();
                 <div class="form-floating my-2">
                     <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" aria-describedby="email">
                     <label for="floatingInput">Email address</label>
+                    <span class="advice">* ผู้ใช้ต้องกรอกอีเมล @ku.th เท่านั้น</span>
                 </div>
                 <div class="form-floating my-2 password-toggle">
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
                     <label for="floatingPassword">Password</label>
                     <i class="fa-solid fa-eye-slash toggle-icon" data-target="floatingPassword"></i>
+                    <span class="advice">* รหัสผ่านต้องมีความยาวระหว่าง 5 ถึง 20 ตัวอักษร</span>
                 </div>
                 <div class="form-floating my-2 password-toggle">
                     <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm Password" name="c_password">
                     <label for="ConfirmPassword">Confirm Password</label>
                     <i class="fa-solid fa-eye-slash toggle-icon" data-target="ConfirmPassword"></i>
-
+                    
                 </div>
 
 

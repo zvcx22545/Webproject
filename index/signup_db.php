@@ -23,11 +23,6 @@ if (empty($first_name)) {
     $response['status'] = "error";
     $response['msg'] = "กรุณากรอกชื่อเป็นตัวอักษรไทยหรืออังกฤษเท่านั้น";
 } 
-else if (strlen($first_name) > 2) {
-    $response['status'] = "error";
-    $response['msg'] = "กรอกชื่อขั้นต่ำ 2 ตัวอักษรขึ้นไป";
-}
-
 // Check last name
 else if (empty($last_name)) {
     $response['status'] = "error";
