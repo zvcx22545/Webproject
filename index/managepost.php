@@ -121,9 +121,9 @@ foreach ($posts as $post) {
                             
                             if (!empty($posts)): ?>
                                 <?php foreach ($posts as $index => $post): 
-                                    if (!empty($post['location_name'])) {
-                                        continue; // ข้ามโพสต์ที่มี location_name
-                                    }
+                                    // if (!empty($post['location_name'])) {
+                                    //     continue; // ข้ามโพสต์ที่มี location_name
+                                    // }
                                     $count++;
                                     $user = new User();
                                     $ROW_USER = $user->getUsers($post['user_id']);?>
