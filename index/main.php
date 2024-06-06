@@ -303,14 +303,6 @@ include "header.php";
                                 </div>
                                 <form method="post" enctype="multipart/form-data" class="p-4">
                                     <div class="d-flex gap-2">
-                                        <!-- <select id="categoryDropdown" required
-                                            class="form-select option-container text-center rounded-pill mt-1 w-50 "
-                                            name="category">
-                                            <option value="" disabled selected>หมวดหมู่</option>
-                                            <option value="clothing">Clothing</option>
-                                            <option value="travel">Travel</option>
-                                            <option value="food">Food</option>
-                                        </select> -->
                                         <select id="locationDropdown"
                                             class="form-select option-container text-center rounded-pill mt-1 w-50"
                                             name="location" required>

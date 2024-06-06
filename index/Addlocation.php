@@ -107,6 +107,20 @@ class Location
         return $locations;
     }
 
+    public function getLocationInfoByName($locationName) {
+        global $conn;
+
+        // Prepare and execute the query to fetch location information based on location_name
+        $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
+        $query->bindParam(':location_name', $locationName);
+        $query->execute();
+
+        // Fetch the result as associative array
+        $locationInfo = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $locationInfo; // Return the location information
+    }
+
 
     private function create_location_id()
     {
