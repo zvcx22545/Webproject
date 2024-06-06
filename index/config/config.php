@@ -4,7 +4,7 @@ class Database
     private $host = "localhost";
     private $username = "root";
     private $password = "";
-    private $db = "web_project_test";
+    private $db = "web_project";
     private $conn;
 
     function connect()
