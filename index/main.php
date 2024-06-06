@@ -341,7 +341,7 @@ include "header.php";
 
 
                                         <div class="w-100 mx-auto mt-2 d-flex">
-                                            <button name="post_button" type="submit" class="btn btn-primary mx-auto"
+                                            <button name="post_button" type="submit" class="btn btn-primary mx-auto" onclick="ValidationPost()"
                                                 id="post_button" value="Post">
                                                 <div class="text-center">ยืนยัน</div>
                                             </button>
@@ -557,6 +557,8 @@ include "header.php";
 
     });
 
+    
+
     function validateAndSubmit() {
         var locationName = document.getElementById('locationname').value.trim();
         var mapLink = document.getElementById('Map-link').value.trim();
@@ -586,6 +588,23 @@ include "header.php";
             locationForm.submit();
         }
     }
+
+    const ValidationPost = () => {
+    const postsubmit = document.getElementById('post_button');
+    const locationSelect = document.getElementById('locationDropdown');
+    
+    postsubmit.addEventListener('click', function(event) {
+        if (!locationSelect.value) {
+            event.preventDefault(); // Prevent form submission
+            Swal.fire({
+                icon: 'error',
+                title: 'โพสต์ไม่สำเร็จกรุณาลองใหม่อีกครั้ง',
+                html: 'กรุณาเลือกสถานที่ที่ต้องการโพสต์หากไม่มีสถานที่<br>ที่คุณต้องการกรุณาทำการเพิ่มสถานที่ได้ที่หน้าหลัก',
+            });
+        }
+    });
+}
+
 
     console.log(postSuccess);
     console.log(postlocationSuccess);
