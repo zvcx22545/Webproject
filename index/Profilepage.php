@@ -29,7 +29,11 @@ $image_class = new Image();
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> -->
   <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.0.18/sweetalert2.min.css">
+  <script src=https://code.jquery.com/jquery-3.7.1.min.js></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 
 <body class="backgrounds">
   <header class="pt-1 px-4 w-100 navbar-expand-xxl bg-dark shadows fixed-top">
@@ -168,3 +172,179 @@ $image_class = new Image();
 </body>
 
 </html>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        let location_submit = document.getElementById('location_submit');
+        if (location_submit) {
+            location_submit.addEventListener('click', () => {
+                validateAndSubmit();
+            })
+        }
+
+        console.log("DOM fully loaded and parsed");
+
+        document.querySelectorAll('.report-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.getAttribute('data-postid');
+                const userSessionId = '<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'not set'; ?>';
+
+                fetch('report_post.php', { // Ensure this is the correct path to your PHP script
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `post_id=${postId}&user_id=${userSessionId}`
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'รายงานสำเร็จ!',
+                                text: 'รายงานโพสต์สำเร็จแล้วกรุณารอแอดมินตรวจสอบ!',
+                                timer: 2000, // Auto close after 2 seconds
+                                showConfirmButton: false // Hide the confirm button
+                            });
+                            const dropdown = button.closest('.posts').querySelector('.content-button');
+                            dropdown.style.display = 'none';
+
+                            console.log('Report submitted successfully', data);
+                        } else {
+                            Swal.fire('รายงานไม่สำเร็จ!', data.message, 'warning');
+                            console.log('Error:', data.message);
+                            const dropdown = button.closest('.posts').querySelector('.content-button');
+                            dropdown.style.display = 'none';
+
+                            // Handle error - you can display a message or update the UI
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'An error occurred. Please try again.', 'error');
+                        // Handle fetch error - you can display a message or update the UI
+                    });
+            });
+        });
+
+    });
+
+
+
+    function validateAndSubmit() {
+        var locationName = document.getElementById('locationname').value.trim();
+        var mapLink = document.getElementById('Map-link').value.trim();
+        var image = document.getElementById('select_location_img').files.length;
+
+        console.log("Validation started");
+        console.log("Location Name: " + locationName);
+        console.log("Map Link: " + mapLink);
+        console.log("Image Files Count: " + image);
+
+        if (!locationName || !mapLink) {
+            console.log("Validation failed: Name or Map link missing.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'แจ้งเตือน',
+                text: 'กรุณากรอกชื่อสถานที่และลิงค์ Google Map!'
+            });
+        } else if (image === 0) {
+            console.log("Validation failed: No image selected.");
+            Swal.fire({
+                icon: 'warning',
+                title: 'แจ้งเตือน',
+                text: 'กรุณาอัพโหลดรูปภาพ!'
+            });
+        } else {
+            console.log("Validation passed, form will be submitted.");
+            locationForm.submit();
+        }
+    }
+
+    const postsubmit = document.getElementById('post_button');
+    const locationSelect = document.getElementById('locationDropdown');
+    if (postsubmit) {
+        postsubmit.addEventListener('click', function(event) {
+            if (!locationSelect.value) {
+                event.preventDefault(); // Prevent form submission
+                Swal.fire({
+                    icon: 'error',
+                    title: 'โพสต์ไม่สำเร็จกรุณาลองใหม่อีกครั้ง',
+                    html: 'กรุณาเลือกสถานที่ที่ต้องการโพสต์หากไม่มีสถานที่<br>ที่คุณต้องการกรุณาทำการเพิ่มสถานที่ได้ที่หน้าหลัก',
+                });
+            }
+        });
+
+    }
+
+
+    const toggleDropdowns = document.querySelectorAll('.fa-ellipsis');
+    const showDropdowns = document.querySelectorAll('.content-button');
+
+    toggleDropdowns.forEach((toggleDropdown, index) => {
+        toggleDropdown.addEventListener('click', function() {
+            if (showDropdowns[index].style.display === 'block') {
+                showDropdowns[index].style.display = 'none';
+            } else {
+                showDropdowns[index].style.display = 'block';
+            }
+        });
+    });
+
+    $(document).ready(function() {
+
+        $('.btn-like').click(function() {
+            let $this = $(this);
+            let post_id = $(this).data('id')
+            let like_id = $(this).data('likeid')
+
+            fetch('./backend/post.php?post_id=' + post_id + '&like_id=' + like_id)
+                .then(
+                    function(response) {
+                        // Examine the text in the response
+                        response.json().then(function(data) {
+                            const likes = data.likes
+                            const like_id = data.like_id
+
+                            $($this).data('likeid', like_id)
+
+                            if (like_id == '0') {
+                                $($this).find('.bi-star-fill').removeClass('bi-star-fill').addClass('bi-star')
+
+                            } else {
+                                $($this).find('.bi-star').removeClass('bi-star').addClass('bi-star-fill')
+
+                            }
+
+                            if (likes == '0') {
+                                $('#ele-' + post_id).html('')
+
+                            } else if (likes == '1') {
+                                let ele = "<span class='badge badge-dark like-count' id='post-" + post_id + "'>" + likes + "</span>"
+                                $('#ele-' + post_id).html(ele)
+
+                            } else {
+                                $('#post-' + post_id).html(likes)
+                            }
+
+                        });
+                    }
+                )
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+        })
+
+        $('.btn-comment').click(function() {
+            let post_id = $(this).data('id')
+            $('input[name="post_id"]', $('#form-comment')).val(post_id)
+            $('#commentModal').modal('show')
+        })
+    })
+</script>

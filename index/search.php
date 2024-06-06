@@ -48,8 +48,6 @@ include "header.php";
             exit();
         }
 
-
-
         //posting start here
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             if (isset($_POST['post_button'])) {
@@ -195,9 +193,9 @@ include "header.php";
                                 d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                         </svg></button>
 
-                        <div class="list-groups" id="show-list">
+                    <div class="list-groups" id="show-list">
 
-                        </div>
+                    </div>
                 </form>
 
 
@@ -210,6 +208,7 @@ include "header.php";
             </div>
 
         </div>
+
 
     </header>
 
@@ -305,17 +304,9 @@ include "header.php";
                                 </div>
                                 <form method="post" enctype="multipart/form-data" class="p-4">
                                     <div class="d-flex gap-2">
-                                        <!-- <select id="categoryDropdown" required
-                                            class="form-select option-container text-center rounded-pill mt-1 w-50 "
-                                            name="category">
-                                            <option value="" disabled selected>หมวดหมู่</option>
-                                            <option value="clothing">Clothing</option>
-                                            <option value="travel">Travel</option>
-                                            <option value="food">Food</option>
-                                        </select> -->
                                         <select id="locationDropdown"
                                             class="form-select option-container text-center rounded-pill mt-1 w-50"
-                                            name="location">
+                                            name="location" required>
                                             <option value="" disabled selected>กรุณาเลือกสถานที่</option>
                                             <?php foreach ($locations as $location): ?>
                                                 <option value="<?php echo $location; ?>"><?php echo $location; ?></option>
@@ -376,33 +367,34 @@ include "header.php";
         </div>
         <!-- post area -->
         <?php
-      $PostResult = [];
 
-if (isset($_POST['search'])) {
-    global $conn;
-    $inputText = $_POST['search'];
-    
-    // Check if the input is a location name in the locations table
-    $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
-    $query->bindParam(":location_name", $inputText);
-    $query->execute();
-    $locationResult = $query->fetch(PDO::FETCH_ASSOC);
+        $PostResult = [];
 
-    if ($locationResult) {
-        // If the input is a location name, fetch all posts with that location name, sorted by likes
-        $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name ORDER BY likes DESC");
-        $query->bindParam(":location_name", $inputText);
-        $query->execute();
-        $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-    } else {
-        // If the input is not a location name, fetch posts matching the post content, sorted by likes
-        $inputTextWithWildcards = '%' . $inputText . '%';
-        $query = $conn->prepare("SELECT * FROM posts WHERE post LIKE :inputText ORDER BY likes DESC");
-        $query->bindParam(":inputText", $inputTextWithWildcards);
-        $query->execute();
-        $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-    }
-}
+        if (isset($_POST['search'])) {
+            global $conn;
+            $inputText = $_POST['search'];
+
+            // Check if the input is a location name in the locations table
+            $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
+            $query->bindParam(":location_name", $inputText);
+            $query->execute();
+            $locationResult = $query->fetch(PDO::FETCH_ASSOC);
+
+            if ($locationResult) {
+                // If the input is a location name, fetch all posts with that location name, sorted by likes
+                $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name ORDER BY likes DESC");
+                $query->bindParam(":location_name", $inputText);
+                $query->execute();
+                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                // If the input is not a location name, fetch posts matching the post content, sorted by likes
+                $inputTextWithWildcards = '%' . $inputText . '%';
+                $query = $conn->prepare("SELECT * FROM posts WHERE post LIKE :inputText ORDER BY likes DESC");
+                $query->bindParam(":inputText", $inputTextWithWildcards);
+                $query->execute();
+                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
+            }
+        }
 
         if ($PostResult) {
 
@@ -525,7 +517,6 @@ if (isset($_POST['search'])) {
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <script>
-
     document.addEventListener('DOMContentLoaded', async function () {
         let location_submit = document.getElementById('location_submit');
         if (location_submit) {
@@ -586,6 +577,8 @@ if (isset($_POST['search'])) {
 
     });
 
+
+
     function validateAndSubmit() {
         var locationName = document.getElementById('locationname').value.trim();
         var mapLink = document.getElementById('Map-link').value.trim();
@@ -615,6 +608,24 @@ if (isset($_POST['search'])) {
             locationForm.submit();
         }
     }
+
+    const postsubmit = document.getElementById('post_button');
+    const locationSelect = document.getElementById('locationDropdown');
+    if (postsubmit) {
+        postsubmit.addEventListener('click', function (event) {
+            if (!locationSelect.value) {
+                event.preventDefault(); // Prevent form submission
+                Swal.fire({
+                    icon: 'error',
+                    title: 'โพสต์ไม่สำเร็จกรุณาลองใหม่อีกครั้ง',
+                    html: 'กรุณาเลือกสถานที่ที่ต้องการโพสต์หากไม่มีสถานที่<br>ที่คุณต้องการกรุณาทำการเพิ่มสถานที่ได้ที่หน้าหลัก',
+                });
+            }
+        });
+
+    }
+
+
 
     console.log(postSuccess);
     console.log(postlocationSuccess);
