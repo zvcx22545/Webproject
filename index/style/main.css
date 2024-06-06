@@ -280,56 +280,52 @@ p.check-search {
 
 /* responsive Navbar */
 
-
 .navbar-toggler {
-            border: none;
-            background: transparent;
-        }
+  border: none;
+  background: transparent;
+}
 
-        @media (max-width: 1275px) {
-            .container-fluid.d-flex {
-                position: relative;
-            }
-            .collapse.navbar-collapse {
-              position: absolute;
-              background-color: #000;
-              top: 54px;
-              left: -24px;
-              width: 32% !important;
-              transition: all 0.3s ease;
-              opacity: 0;
-              visibility: hidden;
-              transform: translateY(-20px);
-              padding: 10px;
-              height: calc(100vh - 50px);
-              .text-center
-              {
-                margin-top: 1rem !important;
-                .btn.btn-outline-light
-                {
-                  width: 100% !important;
-                }
-              }
-              .icon.text-white
-              {
-                display: flex;
-                justify-content: center;
-                margin-top: 1rem !important;
-              }
-          }
-          .collapse.navbar-collapse.show {
-              opacity: 1;
-              visibility: visible;
-              transform: translateY(0);
-          }
-          .search {
-              width: 50%;
-              transition: width 0.3s ease;
-              margin-left: 0 !important;
-              margin-right: auto !important;
-              margin-top: 1rem !important;
-          }
-          .search:hover {
-              width: 100%;
-          }
-        }
+@media (max-width: 1275px) {
+  .container-fluid.d-flex {
+    position: relative;
+  }
+  .collapse.navbar-collapse {
+    position: absolute;
+    background-color: #000;
+    top: 54px;
+    left: -24px;
+    width: 32% !important;
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    padding: 10px;
+    height: calc(100vh - 50px);
+    .text-center {
+      margin-top: 1rem !important;
+      .btn.btn-outline-light {
+        width: 100% !important;
+      }
+    }
+    .icon.text-white {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem !important;
+    }
+  }
+  .collapse.navbar-collapse.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .search {
+    width: 50%;
+    transition: width 0.3s ease;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+    margin-top: 1rem !important;
+  }
+  .search:hover {
+    width: 100%;
+  }
+}
