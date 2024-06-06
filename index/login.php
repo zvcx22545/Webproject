@@ -61,7 +61,6 @@ session_start();
           <label for="floatingPassword">Password</label>
           <i class="fa-solid fa-eye-slash toggle-icon" data-target="floatingPassword"></i>
         </div>
-
         <button name="signin" class="btn-s w-100 py-2" type="submit">Sign in</button>
         <p class="mt-5 mb-3 text-body-secondary">Don't have an account Please? <a href="./register.php">sing
             up</a></p>
