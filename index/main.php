@@ -261,7 +261,7 @@ include "header.php";
                 <div class="post-top">
                    
                 <div class="tag">
-                        <a href="">สถานที่ท่องเที่ยว</a>
+                        <a href="./travel.php">สถานที่ท่องเที่ยว</a>
                     </div>
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>

@@ -101,7 +101,7 @@ class Location
     {
         global $conn;
         // สร้างคำสั่ง SQL เพื่อดึงข้อมูล location name ที่มี status เป็น "approved"
-        $query = $conn->prepare("SELECT location_name FROM locations WHERE status = 'approved'");
+        $query = $conn->prepare("SELECT location_name FROM locations WHERE status = 'approved' ORDER BY create_at DESC");
         $query->execute();
         $locations = $query->fetchAll(PDO::FETCH_COLUMN);
         return $locations;
