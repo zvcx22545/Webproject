@@ -33,6 +33,31 @@ foreach ($posts as $post) {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if (isset($_POST['post_button'])) {
+        // ประมวลผลของ Modal แรก
+        $post = new Post();
+        $result = $post->create_post($user_id, $_POST, $_FILES);
+        if ($result['status'] == 'success') {
+            if (!empty($result['location_name'])) {
+                $_SESSION['post_location'] = true;
+            } else {
+                $_SESSION['post_success'] = true;
+            }
+            header("location: main.php");
+            exit();
+        } else {
+            echo "have error posting";
+            echo $result['message'];
+        }
+    }
+
+}
+
+// GetLocation
+$location = new Location;
+$locations = $location->GetApprovedLocation();
+
 ?>
 
 
@@ -45,6 +70,7 @@ foreach ($posts as $post) {
     <title>Admin page</title>
     <link rel="stylesheet" href="./style/admin.css">
     <link rel="stylesheet" href="./style/sidebar.css">
+    <link rel="stylesheet" href="./style/post.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
@@ -65,6 +91,22 @@ foreach ($posts as $post) {
         }
         ?>
 
+        <script>
+            <?php if (isset($_SESSION['post_location']) && $_SESSION['post_location']): ?>
+                var postlocationSuccess = true;
+                <?php unset($_SESSION['post_location']); ?>
+            <?php else: ?>
+                var postlocationSuccess = false;
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['post_success']) && $_SESSION['post_success']): ?>
+                var postSuccess = true;
+                <?php unset($_SESSION['post_success']); ?>
+            <?php else: ?>
+                var postSuccess = false;
+            <?php endif; ?>
+        </script>
+
         <div class="container">
             <div class="left bg-white">
                 <!-- ส่วนทางซ้าย -->
@@ -76,12 +118,12 @@ foreach ($posts as $post) {
                                     class="bi bi-people"></i>อนุมัติสถานที่</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href="./managepost.php"><button class="active p-2" id="competitionButton"
-                               ><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
+                        <a href="./managepost.php"><button class="active p-2" id="competitionButton"><i
+                                    class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href="./ReportPost.php"><button class="none-active" id="competitionButton"
-                               ><i class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
+                        <a href="./ReportPost.php"><button class="none-active" id="competitionButton"><i
+                                    class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
                     </ul>
@@ -93,15 +135,19 @@ foreach ($posts as $post) {
             </div>
             <div class="right">
                 <!-- ส่วนทางขวา -->
-                <nav>
-                    <h1 id="pageTitle" class="text-2xl">จัดการโพสต์</h1>
-                    <h1></h1>
+                <nav class="flex">
+                    <h1 id="pageTitle" class="text-2xl w-1/2">จัดการโพสต์</h1>
+                    <div class="container-btn w-1/2 flex">
+                        <button class="custom-btn btn-12 ms-auto" id="OpenModal">
+                            <span>โพสต์!</span><span>โพสต์สถานที่</span>
+                        </button>
+                    </div>
                 </nav>
 
                 <div class="admin-data">
                     <div class="top-data">
                         <div class="listMenu">
-                        <h4>ทั้งหมด : <?php echo $count; ?> โพสต์</h4>
+                            <h4>ทั้งหมด : <?php echo $count; ?> โพสต์</h4>
                         </div>
                     </div>
                     <div class="tableMember">
@@ -120,14 +166,14 @@ foreach ($posts as $post) {
                             // $posts = $post->getAllPosts();
                             
                             if (!empty($posts)): ?>
-                                <?php foreach ($posts as $index => $post): 
+                                <?php foreach ($posts as $index => $post):
                                     // if (!empty($post['location_name'])) {
                                     //     continue; // ข้ามโพสต์ที่มี location_name
                                     // }
                                     $count++;
                                     $user = new User();
-                                    $ROW_USER = $user->getUsers($post['user_id']);?>
-                                    
+                                    $ROW_USER = $user->getUsers($post['user_id']); ?>
+
                                     <tr>
                                         <td><?php echo $index + 1; ?></td>
                                         <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
@@ -137,7 +183,7 @@ foreach ($posts as $post) {
                                             <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>"
                                                 alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
                                         </td>
-                            
+
                                         <td>
                                             <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
                                                 <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
@@ -159,8 +205,67 @@ foreach ($posts as $post) {
                 </div>
             </div>
 
-
         </div>
+
+        <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="postModal" style="display: none;">
+            <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+                <div class="bg-white p-6">
+                    <div class="flex items-start justify-between w-full">
+                        <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">คุณอยากโพสต์อะไร</h5>
+                        <button type="button" class="text-gray-400 hover:text-gray-500 w-full" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <span class="sr-only">Close</span>
+                            <svg class="h-6 w-6 ml-auto" id="close" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" class="mt-4">
+                        <div class="">
+                            <select id="locationDropdown" class="form-select w-1/2 rounded-[4px] p-1 m-4"
+                                name="location" required>
+                                <option value="" disabled selected>กรุณาเลือกสถานที่</option>
+                                <?php foreach ($locations as $location): ?>
+                                    <option value="<?php echo $location; ?>"><?php echo $location; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mt-4">
+                            <img src="" style="display: none;" id="post_img" class="w-full rounded border">
+                            <div class="my-3 flex justify-center items-center">
+                                <input class="hidden" name="file" type="file" id="select_post_img">
+                                <label for="select_post_img" class="flex justify-center cursor-pointer w-[10%]">
+                                    <i class="fa fa-image photo text-2xl"></i>
+                                </label>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="w-full h-[200px] mt-2" name="post" class="form-control h-50"
+                                    id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่"
+                                    required></textarea>
+                            </div>
+                            <div class="w-full flex justify-center mt-2">
+                                <button name="post_button" type="submit"
+                                    class="text-white w-1/3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                    id="post_button" value="Post">
+                                    <div class="text-center text-[18px]">ยืนยัน</div>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+    </div>
 </body>
 <!-- SCRIPTS -->
 <script src="./javascript/no-table.js"></script>
@@ -174,3 +279,43 @@ foreach ($posts as $post) {
 
 
 </html>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // modal
+        const close = document.getElementById('close');
+        const modal = document.getElementById('postModal');
+        const Openmodal = document.getElementById('OpenModal');
+        if(modal)
+        {
+            close.addEventListener('click',function()
+        {
+            modal.style.display = "none";
+        });
+       
+        }
+
+        if(Openmodal)
+        Openmodal.addEventListener('click',function()
+        {
+            modal.style.display = "flex";
+        });
+
+        console.log(postSuccess);
+        console.log(postlocationSuccess);
+        if (postSuccess) {
+            Swal.fire({
+                icon: 'success',
+                title: 'โพสต์สำเร็จ',
+                text: 'โพสต์สำเร็จแล้วกรุณารอทางAdmin อนุมัติ!!'
+            });
+        } else if (postlocationSuccess) {
+            Swal.fire({
+                icon: 'success',
+                title: 'โพสต์สำเร็จ',
+                text: 'โพสต์สำเร็จแล้ว!!'
+            });
+        }
+    });
+</script>

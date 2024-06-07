@@ -30,6 +30,7 @@ ul li {
   --secondary-color: #fff; /* Text สว่าง */
   --three-color: #352f44;
   --four-color: #817f7f;
+  --tag-color: #7B88CC;
 }
 
 .light-theme {
@@ -37,6 +38,7 @@ ul li {
   --secondary-color: #000106; /* Text สีเข้ม */
   --three-color: #fffffff8;
   --four-color: #817f7f;
+  --tag-color: #BEC3E7;
 }
 
 .navbars li a {
@@ -285,6 +287,24 @@ p.check-search {
   background: transparent;
 }
 
+.container-post
+{
+  .post.create
+  {
+    .tag
+    {
+      border-radius: 500px;
+      padding: 4px 12px 4px 12px;
+      background-color: var(--tag-color);
+      a{
+        text-decoration: none;
+        color: var(--secondary-color);
+        display: inline-block;
+      }
+    }
+  }
+}
+
 @media (max-width: 1275px) {
   .container-fluid.d-flex {
     position: relative;
@@ -329,3 +349,4 @@ p.check-search {
     width: 100%;
   }
 }
+
