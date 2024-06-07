@@ -68,14 +68,25 @@ if (isset($_SESSION['user_login'])) {
   ?>
 
   <div class="post-top">
-    <div class="mt-2 dp">
+    <!-- <div class="mt-2 dp">
       <img class="img-fluid col-sm-12 col-md col-lg col-xl" src="<?php echo $image ?>" type="images" alt="">
-    </div>
+    </div> -->
     <div class="post-info">
       <p class="name font-weight-bolder mt-3">
-      <a href='ProfilepagePerson.php?user_id=<?php echo $ROW['user_id']; ?>' class='nav-link'>
-        <?php echo $ROW_USER['first_name'] . ' ' . $ROW_USER['last_name']; ?>
-    </a>
+      <?php
+    if (!empty($ROW['location_name'])) {
+        $location = new Location();
+        $locationInfo = $location->getLocationInfoByName($ROW['location_name']);
+        if ($locationInfo && isset($locationInfo['map_link'])) {
+            $mapLink = $locationInfo['map_link'];
+            echo "<a href=\"$mapLink\">" . $ROW['location_name'] . "</a>";
+        } else {
+            echo $ROW['location_name'];
+        }
+    } else {
+        echo "No location provided";
+    }
+    ?>
 
 
       </p>
@@ -129,20 +140,7 @@ if (isset($_SESSION['user_login'])) {
       <br>
 
       <div>
-    <?php
-    if (!empty($ROW['location_name'])) {
-        $location = new Location();
-        $locationInfo = $location->getLocationInfoByName($ROW['location_name']);
-        if ($locationInfo && isset($locationInfo['map_link'])) {
-            $mapLink = $locationInfo['map_link'];
-            echo "<a href=\"$mapLink\">" . '#'. $ROW['location_name'] . "</a>";
-        } else {
-            echo $ROW['location_name'];
-        }
-    } else {
-        echo "No location provided";
-    }
-    ?>
+  
 </div>
 
       
@@ -221,26 +219,26 @@ if (!function_exists('makeClickableLinks')) {
       ?>
       </span>
     </button>
-    <button class="btn btn btn-light btn-comment" data-id="<?php echo $ROW['postid'] ?>">
+    <button class="btn btn btn-light btn-comment ms-auto" data-id="<?php echo $ROW['postid'] ?>">
       <i class="far fa-comment"></i>
       <span>Comment</span>
     </button>
     <div class="containericon d-flex align-content-center">
       <?php
-      $post = new Post();
-      if ($post->i_own_post($ROW['postid'], $user_id)) {
-        echo "
-        <a href='delete.php?id=$ROW[postid]'class='btn-post btn btn-outline-danger mx-2 d-flex edit-btn'>
-        <div  style='font-size: 16px;'>Delete</div>
-        <i class='bi bi-trash-fill  '></i>
-        </a>
-        <a href='edit.php?id=$ROW[postid]'class='btn-post d-flex btn btn-outline-info mx-2 edit-btn' style='text-decoration: none;'>
-        <i class='fa-solid fa-pen-to-square '></i>
-        <div  style='font-size: 16px;'>Edit</div>
-        </a> 
-        ";
+      // $post = new Post();
+      // if ($post->i_own_post($ROW['postid'], $user_id)) {
+      //   echo "
+      //   <a href='delete.php?id=$ROW[postid]'class='btn-post btn btn-outline-danger mx-2 d-flex edit-btn'>
+      //   <div  style='font-size: 16px;'>Delete</div>
+      //   <i class='bi bi-trash-fill  '></i>
+      //   </a>
+      //   <a href='edit.php?id=$ROW[postid]'class='btn-post d-flex btn btn-outline-info mx-2 edit-btn' style='text-decoration: none;'>
+      //   <i class='fa-solid fa-pen-to-square '></i>
+      //   <div  style='font-size: 16px;'>Edit</div>
+      //   </a> 
+      //   ";
 
-      }
+      // }
       ?>
     </div>
   </div>

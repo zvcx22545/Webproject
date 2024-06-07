@@ -9,6 +9,30 @@ if (!isset($_SESSION['admin_login'])) {
 
 // Handle both status and category updates
 // Handle status updates
+
+if (isset($_SESSION['admin_login'])) {
+    // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
+    $user_session_id = $_SESSION['admin_login'];
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
+    $stmt->bindParam(':user_session_id', $user_session_id);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // ตรวจสอบว่ามีผู้ใช้หรือไม่
+    if ($row) {
+        $user_id = $row['userid']; // ตอนนี้เราได้รับ userid ของผู้ใช้จากตาราง users
+        $_SESSION['user_id'] = $user_id;
+    } else if ($row) {
+        $first_name = $row['first_name'];
+    } else {
+        // ถ้าไม่พบข้อมูลผู้ใช้ในฐานข้อมูล ให้ทำการล็อกเอาท์และเปลี่ยนเส้นทาง
+        $_SESSION['error'] = 'ผู้ใช้ไม่ถูกต้อง';
+        header('location: logout.php'); // หรือให้เปลี่ยนเส้นทางไปที่หน้าอื่นที่เหมาะสม
+        exit();
+    }
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isset($_POST['status'])) {
     global $conn;
 
@@ -23,15 +47,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
         echo 'Status update failed: ' . implode(";", $query->errorInfo());
     }
 }
+
+
 $post = new Post();
 $posts = $post->getAllPosts();
 $count = 0;
 
+$count = 0;
+
 foreach ($posts as $post) {
-    if (empty($post['location_name'])) {
-        $count++;
+    if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
+        continue; // Skip this iteration and move to the next post
     }
+
+    $count++;
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_POST['post_button'])) {
@@ -44,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             } else {
                 $_SESSION['post_success'] = true;
             }
-            header("location: main.php");
+            header("location: managepost.php");
             exit();
         } else {
             echo "have error posting";
@@ -156,6 +187,8 @@ $locations = $location->GetApprovedLocation();
                                 <th class="col0">No.</th>
                                 <th class="col1">ชื่อ-นามสกุล</th>
                                 <th class="col4">User_ID</th>
+                                <th class="col4">Post_ID</th>
+                                <th class="col4">ชื่อสถานที่</th>
                                 <th class="col4">ข้อความโพสต์</th>
                                 <th class="col2">รูปภาพ</th>
                                 <th class="col2">สถานะ</th>
@@ -164,20 +197,26 @@ $locations = $location->GetApprovedLocation();
                             <?php
                             // $post = new Post();
                             // $posts = $post->getAllPosts();
+                            $displayedIndex = 0;
+
                             
                             if (!empty($posts)): ?>
-                                <?php foreach ($posts as $index => $post):
-                                    // if (!empty($post['location_name'])) {
-                                    //     continue; // ข้ามโพสต์ที่มี location_name
-                                    // }
-                                    $count++;
+                                <?php foreach ($posts as $post):
+                                   if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
+                                    continue; // Skip this iteration and move to the next post
+                                }
+                                    // Increment the displayed index only when a post is displayed
+                                    $displayedIndex++;
+                                    
                                     $user = new User();
                                     $ROW_USER = $user->getUsers($post['user_id']); ?>
 
                                     <tr>
-                                        <td><?php echo $index + 1; ?></td>
+                                        <td><?php echo $displayedIndex;; ?></td>
                                         <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
                                         <td><?php echo $post['user_id']; ?></td>
+                                        <td><?php echo $post['postid']; ?></td>
+                                        <td><?php echo $post['location_name']; ?></td>
                                         <td><?php echo $post['post']; ?></td>
                                         <td class='w-[10%]'>
                                             <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>"
@@ -233,7 +272,7 @@ $locations = $location->GetApprovedLocation();
                             </select>
                         </div>
                         <div class="mt-4">
-                            <img src="" style="display: none;" id="post_img" class="w-full rounded border">
+                            <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
                             <div class="my-3 flex justify-center items-center">
                                 <input class="hidden" name="file" type="file" id="select_post_img">
                                 <label for="select_post_img" class="flex justify-center cursor-pointer w-[10%]">
@@ -241,7 +280,7 @@ $locations = $location->GetApprovedLocation();
                                 </label>
                             </div>
                             <div class="mb-3">
-                                <textarea class="w-full h-[200px] mt-2" name="post" class="form-control h-50"
+                                <textarea class="w-full h-[150px] mt-2" name="post" class="form-control h-50"
                                     id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่"
                                     required></textarea>
                             </div>
@@ -273,6 +312,7 @@ $locations = $location->GetApprovedLocation();
 <script src="./javascript/search.js"></script>
 <script src="./javascript/preview.js"></script>
 <script src="./javascript/Approvepost.js"></script>
+<script src="./javascript/custom.js?v=<?= time() ?>"></script>
 
 <!-- <script src="./javascript/admin-page.js"></script> -->
 
