@@ -106,7 +106,9 @@ $locations = $location->GetApprovedLocation();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -158,6 +160,7 @@ $locations = $location->GetApprovedLocation();
                         <a href="./ReportPost.php"><button class="none-active" id="competitionButton"><i
                                     class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
                     </ul>
+
                     <ul class="menu">
                     </ul>
                     <button class="logout" type="button"><a href="./logout.php">
@@ -170,10 +173,15 @@ $locations = $location->GetApprovedLocation();
                 <!-- ส่วนทางขวา -->
                 <nav class="flex">
                     <h1 id="pageTitle" class="text-2xl w-1/2">จัดการโพสต์</h1>
-                    <div class="container-btn w-1/2 flex">
-                        <button class="custom-btn btn-12 ms-auto" id="OpenModal">
+                    <div class="container-btn w-1/2 flex gap-10 justify-end items-center">
+                        <button class="custom-btn btn-12" id="OpenModal">
                             <span>โพสต์!</span><span>โพสต์สถานที่</span>
                         </button>
+
+                        <div class="search-box">
+                            <button class="btn-search"><i class="fas fa-search"></i></button>
+                            <input type="text" class="input-search" placeholder="ค้นหาสถานที่ ..." id="searchInput">
+                        </div>
                     </div>
                 </nav>
 
@@ -195,50 +203,54 @@ $locations = $location->GetApprovedLocation();
                                 <th class="col2">รูปภาพ</th>
                                 <th class="col2">สถานะ</th>
                             </tr>
+                            <tbody id="locationTable">
+
 
                             <?php
                             // $post = new Post();
                             // $posts = $post->getAllPosts();
                             $displayedIndex = 0;
 
-                            
+
                             if (!empty($posts)): ?>
                                 <?php foreach ($posts as $post):
-                                   if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
-                                    continue; // Skip this iteration and move to the next post
-                                }
+                                    if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
+                                        continue; // Skip this iteration and move to the next post
+                                    }
                                     // Increment the displayed index only when a post is displayed
                                     $displayedIndex++;
-                                    
+
                                     $user = new User();
                                     $ROW_USER = $user->getUsers($post['user_id']); ?>
 
-                                    <tr>
-                                        <td><?php echo $displayedIndex;; ?></td>
-                                        <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
-                                        <td><?php echo $post['user_id']; ?></td>
-                                        <td><?php echo $post['postid']; ?></td>
-                                        <td><?php echo $post['location_name']; ?></td>
-                                        <td><?php echo $post['post']; ?></td>
-                                        <td class='w-[10%]'>
-                                            <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>"
-                                                alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
-                                        </td>
+                                        <tr>
+                                            <td><?php echo $displayedIndex;
+                                            ; ?></td>
+                                            <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
+                                            <td><?php echo $post['user_id']; ?></td>
+                                            <td><?php echo $post['postid']; ?></td>
+                                            <td><?php echo $post['location_name']; ?></td>
+                                            <td><?php echo $post['post']; ?></td>
+                                            <td class='w-[10%]'>
+                                                <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>"
+                                                    alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
+                                            </td>
 
-                                        <td>
-                                            <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
-                                                <!-- <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option> -->
-                                                <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
-                                                <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
-                                            </select>
-                                        </td>
+                                            <td>
+                                                <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
+                                                    <!-- <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option> -->
+                                                    <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
+                                                    <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7">No posts found.</td>
                                     </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="7">No posts found.</td>
-                                </tr>
-                            <?php endif; ?>
+                                <?php endif; ?>
+                            </tbody>
 
                         </table>
 
@@ -248,7 +260,8 @@ $locations = $location->GetApprovedLocation();
 
         </div>
 
-        <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="postModal" style="display: none;">
+        <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="postModal"
+            style="display: none;">
             <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
                 <div class="bg-white p-6">
                     <div class="flex items-start justify-between w-full">
@@ -265,8 +278,8 @@ $locations = $location->GetApprovedLocation();
                     </div>
                     <form method="post" enctype="multipart/form-data" class="mt-4">
                         <div class="">
-                        <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
-                        name="location" placeholder="กรุณากรอกสถานที่" required>
+                            <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
+                                name="location" placeholder="กรุณากรอกสถานที่" required>
                         </div>
                         <div class="mt-4">
                             <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
@@ -321,16 +334,25 @@ $locations = $location->GetApprovedLocation();
 </html>
 
 <script>
-     $(document).ready(function() {
+    $(document).ready(function () {
         var locations = <?php echo json_encode($locations); ?>;
         $("#locationInput").autocomplete({
             source: locations,
-            select: function(event, ui) {
+            select: function (event, ui) {
                 // Set the value of the input to the selected item
                 $("#locationInput").val(ui.item.value);
                 return false;
             }
         });
+
+        $("#searchInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#locationTable tr").filter(function () {
+            var postId = $(this).find("td:nth-child(4)").text().toLowerCase();
+            var locationName = $(this).find("td:nth-child(5)").text().toLowerCase();
+            $(this).toggle(postId.indexOf(value) > -1 || locationName.indexOf(value) > -1);
+        });
+    });
     });
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -338,20 +360,17 @@ $locations = $location->GetApprovedLocation();
         const close = document.getElementById('close');
         const modal = document.getElementById('postModal');
         const Openmodal = document.getElementById('OpenModal');
-        if(modal)
-        {
-            close.addEventListener('click',function()
-        {
-            modal.style.display = "none";
-        });
-       
+        if (modal) {
+            close.addEventListener('click', function () {
+                modal.style.display = "none";
+            });
+
         }
 
-        if(Openmodal)
-        Openmodal.addEventListener('click',function()
-        {
-            modal.style.display = "flex";
-        });
+        if (Openmodal)
+            Openmodal.addEventListener('click', function () {
+                modal.style.display = "flex";
+            });
 
         console.log(postSuccess);
         console.log(postlocationSuccess);
