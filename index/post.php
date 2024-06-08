@@ -32,7 +32,7 @@ class Post
             $existing_post_query->execute();
             $existing_post_result = $existing_post_query->fetch(PDO::FETCH_ASSOC);
             if ($existing_post_result['count'] > 0) {
-                return ['status' => 'error', 'message' => 'A post with the same location already exists.'];
+                return ['status' => 'error', 'message' => 'สถานที่นี้ได้โพสต์ไปแล้วกรุณาโพสต์สถานที่อื่น.'];
             }
 
             if (isset($data['is_profile_image']) || isset($data['is_cover_image'])) {

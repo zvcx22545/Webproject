@@ -393,5 +393,18 @@ $locations = $location->GetApprovedLocation();
                 text: 'โพสต์สำเร็จแล้ว!!'
             });
         }
+
+        <?php if (isset($result) && $result['status'] === 'error' && isset($result['message'])): ?>
+        Swal.fire({
+            icon: 'error',
+            title: 'โพสต์ไม่สำเร็จ',
+            text: '<?php echo $result['message']; ?>',
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'managepost.php';
+            }
+        });
+    <?php endif; ?>
     });
 </script>
