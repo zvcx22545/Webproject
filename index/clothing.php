@@ -276,7 +276,7 @@ include "header.php";
         <div class="container-post">
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
-                <div class="post-top">
+                <div class="post-tops">
 
                     <div class="tag">
                         <a href="./travel.php">สถานที่ท่องเที่ยว</a>
