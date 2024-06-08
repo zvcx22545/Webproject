@@ -102,6 +102,7 @@ $locations = $location->GetApprovedLocation();
     <link rel="stylesheet" href="./style/admin.css">
     <link rel="stylesheet" href="./style/sidebar.css">
     <link rel="stylesheet" href="./style/post.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
@@ -225,7 +226,7 @@ $locations = $location->GetApprovedLocation();
 
                                         <td>
                                             <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
-                                                <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option>
+                                                <!-- <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option> -->
                                                 <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
                                                 <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
                                             </select>
@@ -263,13 +264,8 @@ $locations = $location->GetApprovedLocation();
                     </div>
                     <form method="post" enctype="multipart/form-data" class="mt-4">
                         <div class="">
-                            <select id="locationDropdown" class="form-select w-1/2 rounded-[4px] p-1 m-4"
-                                name="location" required>
-                                <option value="" disabled selected>กรุณาเลือกสถานที่</option>
-                                <?php foreach ($locations as $location): ?>
-                                    <option value="<?php echo $location; ?>"><?php echo $location; ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                        <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
+                        name="location" placeholder="กรุณากรอกสถานที่" required>
                         </div>
                         <div class="mt-4">
                             <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
@@ -306,6 +302,9 @@ $locations = $location->GetApprovedLocation();
 
     </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <!-- SCRIPTS -->
 <script src="./javascript/no-table.js"></script>
 <script src="./javascript/details.js"></script>
@@ -321,6 +320,17 @@ $locations = $location->GetApprovedLocation();
 </html>
 
 <script>
+     $(document).ready(function() {
+        var locations = <?php echo json_encode($locations); ?>;
+        $("#locationInput").autocomplete({
+            source: locations,
+            select: function(event, ui) {
+                // Set the value of the input to the selected item
+                $("#locationInput").val(ui.item.value);
+                return false;
+            }
+        });
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         // modal

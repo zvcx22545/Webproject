@@ -337,6 +337,11 @@
       border-radius: 10px;
       border: 2px #034694 solid;
   }
+
+  input#locationInput
+  {
+    border: none !important;
+  }
 .excel:hover
   {
       color: #fff;
