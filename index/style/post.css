@@ -36,9 +36,12 @@
 }
 
 .post .post-top{
-    display:flex;
-    align-items: center;
+    display:grid;
+    align-content: center;
     padding:10px;
+    gap: 10px;
+    grid-template-columns: repeat(4,auto);
+    text-align: center;
 }
 
 .post .post-top .posts

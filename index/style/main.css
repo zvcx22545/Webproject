@@ -291,11 +291,14 @@ p.check-search {
 {
   .post.create
   {
+    width: 600px;
+    margin: 0 auto;
     .tag
     {
       border-radius: 500px;
-      padding: 4px 12px 4px 12px;
+      padding: 4px 6px 4px 6px;
       background-color: var(--tag-color);
+      width: 130px;
       a{
         text-decoration: none;
         color: var(--secondary-color);
