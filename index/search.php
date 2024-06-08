@@ -276,10 +276,20 @@ include "header.php";
         <div class="container-post">
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
-                <div class="post-top">
-                    
+                <div class="post-topm">
 
-                    
+                    <div class="tag">
+                        <a href="./travel.php">สถานที่ท่องเที่ยว</a>
+                    </div>
+
+                    <div class="tag">
+                        <a href="./foodpage.php">ร้านอาหาร</a>
+                    </div>
+
+                    <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
+
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
                         #exampleFormControlTextarea1 {
@@ -351,7 +361,7 @@ include "header.php";
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-                
+
                 <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
@@ -359,6 +369,7 @@ include "header.php";
             </div>
         </div>
         <!-- post area -->
+
         <?php
 
         $PostResult = [];
@@ -387,8 +398,7 @@ include "header.php";
                 $query->execute();
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
             }
-        }
-        else if (isset($_GET['location_name'])) {
+        } else if (isset($_GET['location_name'])) {
             global $conn;
             $inputText = $_GET['location_name'];
 
@@ -404,7 +414,7 @@ include "header.php";
                 $query->bindParam(":location_name", $inputText);
                 $query->execute();
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-            } 
+            }
         }
 
         if ($PostResult) {
@@ -585,6 +595,30 @@ include "header.php";
                     });
             });
         });
+
+        const textContainers = document.querySelectorAll('.text-container');
+
+        textContainers.forEach(container => {
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+
+            if (scrollHeight > clientHeight) {
+                const showMoreBtn = document.createElement('button');
+                showMoreBtn.classList.add('show-more-btn');
+                showMoreBtn.innerText = 'ดูเพิ่มเติม...';
+
+                showMoreBtn.addEventListener('click', function () {
+                    container.style.height = scrollHeight + 'px';
+                    container.classList.add('expanded');
+                    showMoreBtn.style.display = 'none'; // Hide the button after clicking
+                });
+
+                container.appendChild(showMoreBtn);
+            } else {
+                container.style.height = 'auto'; // Set height to auto if content is less than 10vh
+            }
+        });
+
 
     });
 
