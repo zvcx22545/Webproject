@@ -287,7 +287,7 @@ include "header.php";
                 foreach( $location_name as $location)
                 {
                    echo "<div class='tag'>
-                        <a href='#'>$location[location_name]</a>
+                        <a href='./search.php?location_name=$location[location_name]'>$location[location_name]</a>
                     </div>";
                 }
                 ?>

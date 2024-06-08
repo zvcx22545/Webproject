@@ -395,6 +395,31 @@ include "header.php";
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
             }
         }
+        if (isset($_GET['location_name'])) {
+            global $conn;
+            $inputText = $_GET['location_name'];
+
+            // Check if the input is a location name in the locations table
+            $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
+            $query->bindParam(":location_name", $inputText);
+            $query->execute();
+            $locationResult = $query->fetch(PDO::FETCH_ASSOC);
+
+            if ($locationResult) {
+                // If the input is a location name, fetch all posts with that location name, sorted by likes
+                $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name ORDER BY likes DESC");
+                $query->bindParam(":location_name", $inputText);
+                $query->execute();
+                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                // If the input is not a location name, fetch posts matching the post content, sorted by likes
+                $inputTextWithWildcards = '%' . $inputText . '%';
+                $query = $conn->prepare("SELECT * FROM posts WHERE post LIKE :inputText ORDER BY likes DESC");
+                $query->bindParam(":inputText", $inputTextWithWildcards);
+                $query->execute();
+                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
+            }
+        }
 
         if ($PostResult) {
 
