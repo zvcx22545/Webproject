@@ -1,25 +1,25 @@
 :root {
-    --primary-color: #fff;  /* Background สว่าง */
-    --secondary-color: #000106;  /* Text สีเข้ม */
-  }
-  
-  .dark-theme {
-    --primary-color: #000106;  /* Background สีเข้ม */
-    --secondary-color: #fff;  /* Text สว่าง */
-    --three-color: #352F44;
-    --four-color: #817f7f;
-    --five-color:#000106;;
-    --six-color:#fff;;
-  }
-  
-  .light-theme {
-    --primary-color: #ffffff;  /* Background สว่าง */
-    --secondary-color: #000106;  /* Text สีเข้ม */
-    --three-color: #fffffff8;
-     --four-color: #817f7f;
-     --five-color:#352F44;
-     --six-color:blue;
-  }
+  --primary-color: #fff; /* Background สว่าง */
+  --secondary-color: #000106; /* Text สีเข้ม */
+}
+
+.dark-theme {
+  --primary-color: #000106; /* Background สีเข้ม */
+  --secondary-color: #fff; /* Text สว่าง */
+  --three-color: #352f44;
+  --four-color: #817f7f;
+  --five-color: #000106;
+  --six-color: #fff;
+}
+
+.light-theme {
+  --primary-color: #ffffff; /* Background สว่าง */
+  --secondary-color: #000106; /* Text สีเข้ม */
+  --three-color: #fffffff8;
+  --four-color: #817f7f;
+  --five-color: #352f44;
+  --six-color: blue;
+}
 /* .container-post {
     flex:1;
     display:flex;
@@ -27,274 +27,260 @@
     align-items:center;
 } */
 
-.post{
-    width: 44rem;
-    background:var(--three-color);
-    border-radius:10px;
-    padding:10px;
-    margin:0.9rem;
-    box-shadow: 0px 2px 5px rgb(100, 96, 96);
-   
+.post {
+  width: 44rem;
+  background: var(--three-color);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0.9rem;
+  box-shadow: 0px 2px 5px rgb(100, 96, 96);
 }
 
-.post .post-top{
-    display:grid;
-    align-content: center;
-    padding:10px;
-    gap: 10px;
-    grid-template-columns: repeat(4,auto);
-    text-align: center;
+.post .post-tops {
+  display: grid;
+  align-content: center;
+  padding: 10px;
+  gap: 10px;
+  grid-template-columns: repeat(4, auto);
+  text-align: center;
+}
+.post .post-top {
+  display: flex;
+  padding: 10px;
+  gap: 10px;
 }
 
-.post .post-top .posts
-{
-    margin-left: auto;
-    padding:0 12px ;
-    position: relative;
-    width: 100%;
-    max-width: 200px;
+.post .post-top .posts {
+  margin-left: auto;
+  padding: 0 12px;
+  position: relative;
+  width: 100%;
+  max-width: 200px;
 }
-.post .post-top .posts .fa-ellipsis
-{
-    display: flex;
-    width: 10%;
-    margin-left: auto;
+.post .post-top .posts .fa-ellipsis {
+  display: flex;
+  width: 10%;
+  margin-left: auto;
 }
-.post .post-top .posts ul li
-{
-    padding-left: 0;
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.post .post-top .posts ul li {
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.post .post-top .posts ul li button
-{
-    margin: 0 auto;
-    padding: 8px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    border-radius: 8px;
-     & .fa-flag
-     {
-        color: white;
-     }
-}
-.post .post-top .posts ul li button:hover
-{
-    background-color: #eee;
-    color: #000;
-    & .fa-flag
-    {
-        color: #000;
-    }
-}
-
-.post .post-top .posts ul .divider
-{
-    background-color: #eee;
-}
-.post .post-top .posts ul
-{
-    padding: 1rem;
-    list-style: none;
-    margin-right: 2rem;
-    background-color: var(--five-color);
+.post .post-top .posts ul li button {
+  margin: 0 auto;
+  padding: 8px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 8px;
+  & .fa-flag {
     color: white;
-    border-radius: 8px;
-    min-width: 50px;
-    width: 100%;
-    min-height: 100px;
-    height: 100%;
-    position: absolute;
-    left: -30px;
-    z-index: 10;
-    display: none;
+  }
 }
-.post .post-top .dp{
-    width:60px;
-    height:60px;
-    border-radius: 50%;
-    overflow:hidden;
-}
-
-.post .post-top .dp > img{
-    width:100%;
-    cursor:pointer;
-}
-
-.post .post-top .post-info{
-    font-weight: bold;
-    .location-name
-    {
-        text-decoration: none;
-        color: var(--secondary-color);
-    }
-    .location-name:hover
-    {
-        text-decoration: underline;
-    }
-}
-
-.post .post-top .post-info .name{
-    cursor:pointer;
-    font-size:16px;
-}
-.post .post-top .post-info .name:hover{
-    text-decoration:underline;
-}
-
-.post .post-top .post-info .time{
-    font-size:12px;
-    cursor:pointer;
-}
-
-.post .post-top i{
-    cursor: pointer;
+.post .post-top .posts ul li button:hover {
+  background-color: #eee;
+  color: #000;
+  & .fa-flag {
     color: #000;
+  }
 }
 
-.post .post-top .posts i.fa-solid{
-    cursor: poiner;
-    color: var(--secondary-color);
-    margin-left: auto;
+.post .post-top .posts ul .divider {
+  background-color: #eee;
+}
+.post .post-top .posts ul {
+  padding: 1rem;
+  list-style: none;
+  margin-right: 2rem;
+  background-color: var(--five-color);
+  color: white;
+  border-radius: 8px;
+  min-width: 50px;
+  width: 100%;
+  min-height: 100px;
+  height: 100%;
+  position: absolute;
+  left: -30px;
+  z-index: 10;
+  display: none;
+}
+.post .post-top .dp {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
-.post .post-top > input{
-    height:40px;
-    padding:5px 10px;
-    border-radius:25px;
-    outline:none;
-    border:none;
-    flex:1;
-    background:#eee;
-    margin-left:10px;
+.post .post-top .dp > img {
+  width: 100%;
+  cursor: pointer;
 }
 
-.post .post-content{
-    font-size:16px;
-    font-weight:normal;
-    padding:10px;
-    
-    .text-container
-    {
-        height: 10vh;
-        overflow: hidden;
-        position: relative;
-        transition: height 0.5s ease-in-out;
-        button
-        {
-            position: absolute;
-            bottom: 0;
-            right: 5px;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            color: var(--six-color);
-            font-size: 14px;
-        }
+.post .post-info {
+  font-weight: bold;
+  .name {
+    margin-bottom: 0;
+    .location-name {
+      text-decoration: none;
+      color: var(--secondary-color);
     }
+    .location-name:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
+.post .post-top .post-info .name {
+  cursor: pointer;
+  font-size: 16px;
+}
+.post .post-top .post-info .name:hover {
+  text-decoration: underline;
+}
+
+.post .post-top .post-info .time {
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.post .post-top i {
+  cursor: pointer;
+  color: #000;
+}
+
+.post .post-top .posts i.fa-solid {
+  cursor: poiner;
+  color: var(--secondary-color);
+  margin-left: auto;
+}
+
+.post .post-top > input {
+  height: 40px;
+  padding: 5px 10px;
+  border-radius: 25px;
+  outline: none;
+  border: none;
+  flex: 1;
+  background: #eee;
+  margin-left: 10px;
+}
+
+.post .post-content {
+  font-size: 16px;
+  font-weight: normal;
+  padding: 10px;
+
+  .text-container {
+    height: 10vh;
+    overflow: hidden;
+    position: relative;
+    transition: height 0.5s ease-in-out;
+    button {
+      position: absolute;
+      bottom: 0;
+      right: 5px;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      color: var(--six-color);
+      font-size: 14px;
+    }
+  }
+}
 
 .text-container.expanded {
-    height: auto;
+  height: auto;
 }
 .text-container button:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
-.post .post-content > img{
-    width:100%;
-    margin:5px 0px;
+.post .post-content > img {
+  width: 100%;
+  margin: 5px 0px;
 }
 
-.post .post-bottom{
-    box-shadow: 1px solid #ddd;
-    display:flex;
-    justify-content: space-between;
-    padding:5px 5px 0px 5px;
-    color: var(--secondary-color);
+.post .post-bottom {
+  box-shadow: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 5px 0px 5px;
+  color: var(--secondary-color);
 }
 
-.post .post-bottom .action{
-    padding:10px;
-    border-radius:10px;
-    transition: .3s ease-in;
-    cursor: pointer;
+.post .post-bottom .action {
+  padding: 10px;
+  border-radius: 10px;
+  transition: 0.3s ease-in;
+  cursor: pointer;
 }
 
-.post .post-bottom .action:hover{
-    background:#a09f9fd7;
-    /* color: #000106; */
+.post .post-bottom .action:hover {
+  background: #a09f9fd7;
+  /* color: #000106; */
 }
 
-.post.create .post-bottom > .action{
-    color:var(--secondary-color);
+.post.create .post-bottom > .action {
+  color: var(--secondary-color);
 }
-.post-btn{
-    cursor: pointer;
-
+.post-btn {
+  cursor: pointer;
 }
-.post-info{
-    color: var(--secondary-color);
-}
-
-.post-content{
-    color: var(--secondary-color);
+.post-info {
+  color: var(--secondary-color);
 }
 
-.edit-btn
-{
-    height: 38px;
-    justify-content: center;
-    display: flex;
-    align-items: center;
+.post-content {
+  color: var(--secondary-color);
 }
 
-.btn-post>i
-{
-    font-size: 16px;
+.edit-btn {
+  height: 38px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
 }
 
-.btn-post
-{
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
+.btn-post > i {
+  font-size: 16px;
 }
 
+.btn-post {
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
 
 /* delete.php style */
-.container#delete-con
-{
-    display: block !important;
+.container#delete-con {
+  display: block !important;
 }
-
 
 /* สำหรับหน้าจอที่มีความกว้างไม่เกิน 600px */
 @media only screen and (max-width: 600px) {
-    .post {
-        width: 100%;
-        padding: 5px;
-    }
+  .post {
+    width: 100%;
+    padding: 5px;
+  }
 }
 
 /* สำหรับหน้าจอที่มีความกว้างระหว่าง 601px ถึง 900px */
 @media only screen and (min-width: 601px) and (max-width: 900px) {
-    .post {
-        width: 80%;
-        padding: 8px;
-    }
+  .post {
+    width: 80%;
+    padding: 8px;
+  }
 }
 
 /* สำหรับหน้าจอที่มีความกว้างเกิน 900px (ค่าเดิม) */
 @media only screen and (max-width: 990px) {
-    .post {
-        width: auto;
-        padding: 10px;
-    }
+  .post {
+    width: auto;
+    padding: 10px;
+  }
 }
