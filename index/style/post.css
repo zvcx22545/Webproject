@@ -32,8 +32,9 @@
   background: var(--three-color);
   border-radius: 10px;
   padding: 10px;
-  margin: 0.9rem;
+  margin: 0.9rem auto;
   box-shadow: 0px 2px 5px rgb(100, 96, 96);
+
 }
 
 .post .post-tops {
@@ -43,6 +44,16 @@
   gap: 10px;
   grid-template-columns: repeat(4, auto);
   text-align: center;
+  justify-items: center;
+}
+.post .post-topm {
+  display: grid;
+  align-content: center;
+  padding: 10px;
+  gap: 10px;
+  grid-template-columns: repeat(3, auto);
+  text-align: center;
+  justify-items: center;
 }
 .post .post-top {
   display: flex;
