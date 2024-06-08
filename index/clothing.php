@@ -174,7 +174,7 @@ include "header.php";
                         class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i
                             class="fa-solid fa-utensils"></i></a></li>
                 <li><a href="./clothing.php"
-                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i
+                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'clothing.php' ? 'active' : ''; ?>"><i
                             class="fa-solid fa-shirt"></i></a></li>
                 <button class="navbar-toggler" type="button">
                     <i class="fa-solid fa-bars"></i>
@@ -277,8 +277,10 @@ include "header.php";
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
                 <div class="post-top">
-                    
-                   
+
+                    <div class="tag">
+                        <a href="./travel.php">สถานที่ท่องเที่ยว</a>
+                    </div>
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
                         #exampleFormControlTextarea1 {
@@ -350,7 +352,7 @@ include "header.php";
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-               
+
                 <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
@@ -359,7 +361,6 @@ include "header.php";
         </div>
         <!-- post area -->
         <?php
-
 
         if ($posts) {
             $stmt = $conn->prepare("SELECT * FROM posts WHERE category = :category ORDER BY date DESC");

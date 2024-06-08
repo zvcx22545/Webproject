@@ -279,12 +279,13 @@ $locations = $location->GetApprovedLocation();
                     <form method="post" enctype="multipart/form-data" class="mt-4">
                         <div class="">
                             <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
-                                name="location" placeholder="กรุณากรอกสถานที่" required>
+                                name="location" placeholder="กรุณากรอกชื่อสถานที่" required>
+                                <span class="advice text-red-900 text-xs inline-block mt-2 items-center">* กรอกชื่อสถานที่ที่ทำการอนุมัติให้ผู้ใช้แล้ว</span>
                         </div>
                         <div class="mt-4">
                             <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
                             <div class="my-3 flex justify-center items-center">
-                                <input class="hidden" name="file" type="file" id="select_post_img">
+                                <input class="hidden" name="file" type="file" id="select_post_img" required>
                                 <label for="select_post_img" class="flex justify-center cursor-pointer w-[10%]">
                                     <i class="fa fa-image photo text-2xl"></i>
                                 </label>
