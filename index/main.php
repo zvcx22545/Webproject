@@ -512,6 +512,30 @@ include "header.php";
             });
         });
 
+        const textContainers = document.querySelectorAll('.text-container');
+
+            textContainers.forEach(container => {
+                const scrollHeight = container.scrollHeight;
+                const clientHeight = container.clientHeight;
+
+                if (scrollHeight > clientHeight) {
+                    const showMoreBtn = document.createElement('button');
+                    showMoreBtn.classList.add('show-more-btn');
+                    showMoreBtn.innerText = 'ดูเพิ่มเติม...';
+
+                    showMoreBtn.addEventListener('click', function () {
+                        container.style.height = scrollHeight + 'px';
+                        container.classList.add('expanded');
+                        showMoreBtn.style.display = 'none'; // Hide the button after clicking
+                    });
+
+                    container.appendChild(showMoreBtn);
+                } else {
+                    container.style.height = 'auto'; // Set height to auto if content is less than 10vh
+                }
+            });
+
+       
     });
 
 
