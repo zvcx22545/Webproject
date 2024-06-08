@@ -277,13 +277,9 @@ include "header.php";
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
                 <div class="post-top">
-                    <div class="dp">
-                        <img src="<?php echo $corner_image ?>" type="images" alt="">
-                    </div>
+                    
 
-                    <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal"
-                        data-bs-target="#postModal" readonly style="cursor: pointer;" />
-
+                   
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
                         #exampleFormControlTextarea1 {
@@ -355,10 +351,7 @@ include "header.php";
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-                <div class="action mx-auto">
-                    <i class="fa fa-image"></i>
-                    <span>Photo</span>
-                </div>
+                
                 <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>

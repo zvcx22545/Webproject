@@ -263,6 +263,15 @@ include "header.php";
                 <div class="tag">
                         <a href="./travel.php">สถานที่ท่องเที่ยว</a>
                     </div>
+                
+                <div class="tag">
+                        <a href="./foodpage.php">ร้านอาหาร</a>
+                    </div>
+                
+                <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
+
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
                         #exampleFormControlTextarea1 {
