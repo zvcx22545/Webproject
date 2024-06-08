@@ -278,7 +278,29 @@ include "header.php";
             <div class="post create" style="margin-top:70px;">
                 <div class="post-tops">
                     
+                <div class="tag">
+                        <a href="./travel.php">สถานที่ท่องเที่ยว</a>
+                    </div>
+                    
+                    <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
 
+                    <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
+
+                    <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
+
+                    <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
+
+                    <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
                     
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
