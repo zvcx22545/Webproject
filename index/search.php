@@ -370,7 +370,7 @@ include "header.php";
         </div>
         <!-- post area -->
 
-        <?php
+        <?php 
 
         $PostResult = [];
 
