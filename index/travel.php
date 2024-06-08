@@ -277,30 +277,20 @@ include "header.php";
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
                 <div class="post-tops">
-                    
-                <div class="tag">
-                        <a href="./travel.php">สถานที่ท่องเที่ยว</a>
-                    </div>
-                    
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
 
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
+                <?php            
+                $stmt = $conn->prepare("SELECT location_name FROM locations WHERE category_name = :category_name ORDER BY create_at DESC");
+                $stmt->bindParam(':category_name', $category); // Corrected parameter name
+                $category = 'travel'; // Set the value for the parameter
+                $stmt->execute();
+                $location_name = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach( $location_name as $location)
+                {
+                   echo "<div class='tag'>
+                        <a href='#'>$location[location_name]</a>
+                    </div>";
+                }
+                ?>
                     
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>

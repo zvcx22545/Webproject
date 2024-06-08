@@ -278,30 +278,28 @@ include "header.php";
             <div class="post create" style="margin-top:70px;">
                 <div class="post-tops">
 
-                    <div class="tag">
-                        <a href="./travel.php">สถานที่ท่องเที่ยว</a>
-                    </div>
-                    
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-                    
+                <?php            
+                $stmt = $conn->prepare("SELECT location_name FROM locations WHERE category_name = :category_name ORDER BY create_at DESC");
+                $stmt->bindParam(':category_name', $category); // Corrected parameter name
+                $category = 'clothing'; // Set the value for the parameter
+                $stmt->execute();
+                $location_name = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach( $location_name as $location)
+                {
+                    if($location)
+                    {
+                        echo "<div class='tag'>
+                        <a href='#'>$location[location_name]</a>
+                    </div>";
+                    }
+                    else{
+                        echo "<div class='tag text-2xl'>
+                        กรุณาเพิ่มสถานที่
+                    </div>";
+                    }
+                   
+                }
+                ?>
                     
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
@@ -374,7 +372,7 @@ include "header.php";
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-
+                
                 <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
@@ -407,7 +405,6 @@ include "header.php";
 
             }
         }
-
 
         # code...
         

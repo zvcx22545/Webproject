@@ -174,7 +174,7 @@ include "header.php";
                         class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i
                             class="fa-solid fa-utensils"></i></a></li>
                 <li><a href="./clothing.php"
-                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i
+                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'clothing.php' ? 'active' : ''; ?>"><i
                             class="fa-solid fa-shirt"></i></a></li>
                 <button class="navbar-toggler" type="button">
                     <i class="fa-solid fa-bars"></i>
@@ -277,27 +277,21 @@ include "header.php";
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
                 <div class="post-tops">
+
+                <?php            
+                $stmt = $conn->prepare("SELECT location_name FROM locations WHERE category_name = :category_name ORDER BY create_at DESC");
+                $stmt->bindParam(':category_name', $category); // Corrected parameter name
+                $category = 'food'; // Set the value for the parameter
+                $stmt->execute();
+                $location_name = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach( $location_name as $location)
+                {
+                   echo "<div class='tag'>
+                        <a href='#'>$location[location_name]</a>
+                    </div>";
+                }
+                ?>
                     
-                <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-
-                    <div class="tag">
-                        <a href="./clothing.php">ร้านบริการ</a>
-                    </div>
-                   
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
                         #exampleFormControlTextarea1 {
@@ -402,7 +396,6 @@ include "header.php";
 
             }
         }
-
 
         # code...
         

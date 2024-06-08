@@ -153,7 +153,7 @@ $image_class = new Image();
           foreach ($posts as $ROW) {
             $user = new User();
             $ROW_USER = $user->getUsers($ROW['user_id']);
-            include 'function.php';
+            include 'UserProfile.php';
           }
         }
 
