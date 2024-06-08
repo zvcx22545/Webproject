@@ -388,7 +388,7 @@ include "header.php";
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
             }
         }
-        if (isset($_GET['location_name'])) {
+        else if (isset($_GET['location_name'])) {
             global $conn;
             $inputText = $_GET['location_name'];
 
@@ -404,14 +404,7 @@ include "header.php";
                 $query->bindParam(":location_name", $inputText);
                 $query->execute();
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                // If the input is not a location name, fetch posts matching the post content, sorted by likes
-                $inputTextWithWildcards = '%' . $inputText . '%';
-                $query = $conn->prepare("SELECT * FROM posts WHERE post LIKE :inputText ORDER BY likes DESC");
-                $query->bindParam(":inputText", $inputTextWithWildcards);
-                $query->execute();
-                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-            }
+            } 
         }
 
         if ($PostResult) {
