@@ -25,6 +25,15 @@ class Post
                     $category = $result_location['category_name'];
                 }
             }
+            
+            $existing_post_query = $conn->prepare("SELECT COUNT(*) AS count FROM posts WHERE user_id = :user_id AND location_name = :location_name");
+            $existing_post_query->bindParam(":user_id", $user_id);
+            $existing_post_query->bindParam(":location_name", $location_name);
+            $existing_post_query->execute();
+            $existing_post_result = $existing_post_query->fetch(PDO::FETCH_ASSOC);
+            if ($existing_post_result['count'] > 0) {
+                return ['status' => 'error', 'message' => 'A post with the same location already exists.'];
+            }
 
             if (isset($data['is_profile_image']) || isset($data['is_cover_image'])) {
                 $myimage = $files;

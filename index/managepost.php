@@ -63,10 +63,9 @@ foreach ($posts as $post) {
     $count++;
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (isset($_POST['post_button'])) {
-        // ประมวลผลของ Modal แรก
+        // Process the first Modal
         $post = new Post();
         $result = $post->create_post($user_id, $_POST, $_FILES);
         if ($result['status'] == 'success') {
@@ -78,12 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             header("location: managepost.php");
             exit();
         } else {
-            echo "have error posting";
+            // Error handling
+            echo "have error posting"; // This line may not be necessary
             echo $result['message'];
         }
     }
-
 }
+
 
 // GetLocation
 $location = new Location;
@@ -111,6 +111,8 @@ $locations = $location->GetApprovedLocation();
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
@@ -206,22 +208,22 @@ $locations = $location->GetApprovedLocation();
                             <tbody id="locationTable">
 
 
-                            <?php
-                            // $post = new Post();
-                            // $posts = $post->getAllPosts();
-                            $displayedIndex = 0;
+                                <?php
+                                // $post = new Post();
+                                // $posts = $post->getAllPosts();
+                                $displayedIndex = 0;
 
 
-                            if (!empty($posts)): ?>
-                                <?php foreach ($posts as $post):
-                                    if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
-                                        continue; // Skip this iteration and move to the next post
-                                    }
-                                    // Increment the displayed index only when a post is displayed
-                                    $displayedIndex++;
+                                if (!empty($posts)): ?>
+                                    <?php foreach ($posts as $post):
+                                        if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
+                                            continue; // Skip this iteration and move to the next post
+                                        }
+                                        // Increment the displayed index only when a post is displayed
+                                        $displayedIndex++;
 
-                                    $user = new User();
-                                    $ROW_USER = $user->getUsers($post['user_id']); ?>
+                                        $user = new User();
+                                        $ROW_USER = $user->getUsers($post['user_id']); ?>
 
                                         <tr>
                                             <td><?php echo $displayedIndex;
@@ -230,7 +232,9 @@ $locations = $location->GetApprovedLocation();
                                             <td><?php echo $post['user_id']; ?></td>
                                             <td><?php echo $post['postid']; ?></td>
                                             <td><?php echo $post['location_name']; ?></td>
-                                            <td><?php echo $post['post']; ?></td>
+                                            <td class="w-[20%]">
+                                                <div class=" w-[200px] truncate"><?php echo $post['post']; ?></div>
+                                            </td>
                                             <td class='w-[10%]'>
                                                 <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>"
                                                     alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
@@ -280,7 +284,8 @@ $locations = $location->GetApprovedLocation();
                         <div class="">
                             <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
                                 name="location" placeholder="กรุณากรอกชื่อสถานที่" required>
-                                <span class="advice text-red-900 text-xs inline-block mt-2 items-center">* กรอกชื่อสถานที่ที่ทำการอนุมัติให้ผู้ใช้แล้ว</span>
+                            <span class="advice text-red-900 text-xs inline-block mt-2 items-center">*
+                                กรอกชื่อสถานที่ที่ทำการอนุมัติให้ผู้ใช้แล้ว</span>
                         </div>
                         <div class="mt-4">
                             <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
@@ -347,13 +352,13 @@ $locations = $location->GetApprovedLocation();
         });
 
         $("#searchInput").on("keyup", function () {
-        var value = $(this).val().toLowerCase();
-        $("#locationTable tr").filter(function () {
-            var postId = $(this).find("td:nth-child(4)").text().toLowerCase();
-            var locationName = $(this).find("td:nth-child(5)").text().toLowerCase();
-            $(this).toggle(postId.indexOf(value) > -1 || locationName.indexOf(value) > -1);
+            var value = $(this).val().toLowerCase();
+            $("#locationTable tr").filter(function () {
+                var postId = $(this).find("td:nth-child(4)").text().toLowerCase();
+                var locationName = $(this).find("td:nth-child(5)").text().toLowerCase();
+                $(this).toggle(postId.indexOf(value) > -1 || locationName.indexOf(value) > -1);
+            });
         });
-    });
     });
 
     document.addEventListener('DOMContentLoaded', function () {

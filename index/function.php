@@ -79,7 +79,7 @@ if (isset($_SESSION['user_login'])) {
         $locationInfo = $location->getLocationInfoByName($ROW['location_name']);
         if ($locationInfo && isset($locationInfo['map_link'])) {
             $mapLink = $locationInfo['map_link'];
-            echo "<a href=\"$mapLink\">" . $ROW['location_name'] . "</a>";
+            echo "<a class='location-name' href=\"$mapLink\">" . $ROW['location_name'] . "</a>";
         } else {
             echo $ROW['location_name'];
         }
@@ -173,18 +173,23 @@ if (isset($_SESSION['user_login'])) {
   <?php 
 // Check if the function is not already defined
 if (!function_exists('makeClickableLinks')) {
-  // Function to convert URLs in text to clickable links
+  // Function to convert URLs in text to clickable links and convert newlines to <br>
   function makeClickableLinks($text) {
-      $pattern = "/((http|https|ftp):\/\/)?([a-z0-9-]+\.)+[a-z]{2,4}(\.[a-z]{2})?(\:[0-9]+)?(\/([^\s]+)?)/i";
+      $text = nl2br(htmlspecialchars($text)); // Convert newlines to <br> tags and escape HTML
+      // Improved URL matching pattern
+      $pattern = "/((http|https|ftp):\/\/[a-zA-Z0-9\-\._~:\/\?#\[\]@!$&'\(\)*\+,;=]+)/i";
       $replacement = "<a href='$0' target='_blank'>$0</a>";
       return preg_replace($pattern, $replacement, $text);
   }
 }
-
   ?>
   <div class="post-content">
-  <?php echo makeClickableLinks($ROW['post']); ?>
-    <br><br>
+    <div class="text-container" id="textContainer">
+       <?php echo makeClickableLinks(htmlspecialchars($ROW['post'])); ?>
+       <!-- <button id="showMoreBtn">ดูเพิ่มเติม...</button> -->
+    </div>
+
+    <br>
     <?php
     if (file_exists($ROW['image'])) {
       $image_class = new Image();
