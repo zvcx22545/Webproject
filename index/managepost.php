@@ -204,6 +204,7 @@ $locations = $location->GetApprovedLocation();
                                 <th class="col4">ข้อความโพสต์</th>
                                 <th class="col2">รูปภาพ</th>
                                 <th class="col2">สถานะ</th>
+                                <th class="col2"></th>
                             </tr>
                             <tbody id="locationTable">
 
@@ -246,6 +247,13 @@ $locations = $location->GetApprovedLocation();
                                                     <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
                                                     <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
                                                 </select>
+                                            </td>
+                                            <td class="w-[5%]">
+                                                <div class="edit-icon ">
+                                                    <?php echo
+                                               "<a  href='edit.php?id=$post[postid]'><i class='fa-solid fa-pen-to-square'></i></a>";
+                                                ?>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

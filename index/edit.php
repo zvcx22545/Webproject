@@ -1,13 +1,13 @@
 <?php
 require_once "autoload.php";
-if (!isset($_SESSION['user_login'])) {
+if (!isset($_SESSION['admin_login'])) {
     $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
-
     header('location:login.php');
 }
-if (isset($_SESSION['user_login'])) {
+
+if (isset($_SESSION['admin_login'])) {
     // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
-    $user_session_id = $_SESSION['user_login'];
+    $user_session_id = $_SESSION['admin_login'];
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
     $stmt->bindParam(':user_session_id', $user_session_id);
     $stmt->execute();
@@ -83,9 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <body class="backgrounds">
     <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top">
         <?php
-        if (isset($_SESSION['user_login'])) {
+        if (isset($_SESSION['admin_login'])) {
             // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
-            $user_session_id = $_SESSION['user_login'];
+            $user_session_id = $_SESSION['admin_login'];
             $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
             $stmt->bindParam(':user_session_id', $user_session_id);
             $stmt->execute();

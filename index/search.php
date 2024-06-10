@@ -372,7 +372,7 @@ include "header.php";
 
         <?php 
 
-        $PostResult = [];
+        $PostResult = [];                                                                     
 
         if (isset($_POST['search'])) {
             global $conn;
