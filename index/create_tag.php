@@ -39,24 +39,58 @@ if (isset($_SESSION['admin_login'])) {
 $location = new Location();
 $locations = $location->GetAllLocation();
 
+$Gettag = new Tag();
+$gettag = $Gettag->GetTag();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category']) && isset($_POST['nametag'])) {
-    $category = $_POST['category'];
-    $nameTag = $_POST['nametag'];
 
-    $query = $conn->prepare("INSERT INTO subtag (tagname, category) VALUES (:tagname, :category)");
-    $query->bindParam(":tagname", $nameTag);
-    $query->bindParam(":category", $category);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['category']) && isset($_POST['nametag'])) {
+        $category = $_POST['category'];
+        $nameTag = $_POST['nametag'];
 
-    if ($query->execute()) {
-        echo json_encode(['success' => true, 'message' => 'สร้างTagสำเร็จ.']);
-        header('location:create_tag.php');
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Category addition failed: ' . implode(";", $query->errorInfo())]);
+        $checkQuery = $conn->prepare("SELECT COUNT(*) FROM subtag WHERE tagname = :tagname");
+        $checkQuery->bindParam(":tagname", $nameTag);
+        $checkQuery->execute();
+        $tagExists = $checkQuery->fetchColumn();
+
+        if ($tagExists) {
+            echo json_encode(['success' => false, 'message' => 'มี tag นี้แล้ว กรุณาเพิ่ม tag อื่น']);
+        } else {
+            $query = $conn->prepare("INSERT INTO subtag (tagname, category, user_id) VALUES (:tagname, :category, :user_id)");
+            $query->bindParam(":tagname", $nameTag);
+            $query->bindParam(":category", $category);
+            $query->bindParam(":user_id", $user_id);
+
+            if ($query->execute()) {
+                echo json_encode(['success' => true, 'message' => 'สร้างTagสำเร็จแล้วสามารถนำTag<br>ไปเพิ่มให้กับหมวดหมู่ย่อยได้!!']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Category addition failed: ' . implode(";", $query->errorInfo())]);
+            }
+        }
+        exit();
+    } elseif (isset($_POST['EditTag']) && isset($_POST['EditCategory']) && isset($_POST['tagId'])) {
+        $editTag = $_POST['EditTag'];
+        $editCategory = $_POST['EditCategory'];
+        $tagId = $_POST['tagId'];
+
+        $query = $conn->prepare("UPDATE subtag SET tagname = :tagname, category = :category WHERE id = :id");
+        $query->bindParam(":tagname", $editTag);
+        $query->bindParam(":category", $editCategory);
+        $query->bindParam(":id", $tagId);
+
+        if ($query->execute()) {
+            echo json_encode(['success' => true, 'message' => 'แก้ไช Tag สำเร็จแล้ว!']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Tag update failed: ' . implode(";", $query->errorInfo())]);
+        }
+        exit();
     }
-    exit();
 }
 $count = 0;
+if ($gettag) {
+    $count++;
+}
+
 
 
 ?>
@@ -159,7 +193,7 @@ $count = 0;
                 <div class="admin-data">
                     <div class="top-data">
                         <div class="listMenu">
-                            <h4>ทั้งหมด :  โพสต์</h4><?php echo $count; ?>
+                            <h4>ทั้งหมด : โพสต์</h4><?php echo $count; ?>
                         </div>
                     </div>
                     <div class="tableMember">
@@ -167,12 +201,11 @@ $count = 0;
                             <tr>
                                 <th class="col0">No.</th>
                                 <th class="col1">ชื่อ-นามสกุล</th>
+                                <th class="col1">ชื่อ Tag</th>
+                                <th class="col1">Tag_ID</th>
                                 <th class="col4">User_ID</th>
-                                <th class="col4">Post_ID</th>
-                                <th class="col4">ชื่อสถานที่</th>
-                                <th class="col4">ข้อความโพสต์</th>
-                                <th class="col2">รูปภาพ</th>
-                                <th class="col2">สถานะ</th>
+                                <th class="col4">หมวดหมู่</th>
+                                <th class="col4">วันที่สร้าง Tag</th>
                                 <th class="col2">แก้ไข</th>
                             </tr>
                             <tbody id="locationTable">
@@ -184,51 +217,48 @@ $count = 0;
                                 $displayedIndex = 0;
 
 
-                                if (!empty($posts)): ?>
-                                    <?php foreach ($posts as $post):
-                                        if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
-                                            continue; // Skip this iteration and move to the next post
-                                        }
+                                if (!empty($gettag)): ?>
+                                    <?php foreach ($gettag as $Tag):
+
                                         // Increment the displayed index only when a post is displayed
                                         $displayedIndex++;
-
+                                        $util = new Util();
+                                        $create_date = $util->coverdate($Tag['create_at']);
                                         $user = new User();
-                                        $ROW_USER = $user->getUsers($post['user_id']); ?>
+                                        $ROW_USER = $user->getUsers($Tag['user_id']); ?>
 
                                         <tr>
                                             <td><?php echo $displayedIndex;
                                             ; ?></td>
                                             <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
-                                            <td><?php echo $post['user_id']; ?></td>
-                                            <td><?php echo $post['postid']; ?></td>
-                                            <td><?php echo $post['location_name']; ?></td>
-                                            <td class="w-[20%]">
-                                                <div class=" w-[200px] truncate"><?php echo $post['post']; ?></div>
-                                            </td>
-                                            <td class='w-[10%]'>
-                                                <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>"
-                                                    alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
+                                            <td><?php echo $Tag['tagname']; ?></td>
+                                            <td><?php echo $Tag['id']; ?></td>
+                                            <td><?php echo $Tag['user_id']; ?></td>
+                                            <td>
+                                                <?php
+                                                if ($Tag['category'] === 'food') {
+                                                    echo 'อาหาร';
+                                                } elseif ($Tag['category'] === 'travel') {
+                                                    echo 'สถานที่ท่องเที่ยว';
+                                                } elseif ($Tag['category'] === 'clothing') {
+                                                    echo 'บริการ';
+                                                } else {
+                                                    echo $Tag['category']; // default to showing the raw category if it doesn't match any of the expected values
+                                                }
+                                                ?>
                                             </td>
 
-                                            <td>
-                                                <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
-                                                    <!-- <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option> -->
-                                                    <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
-                                                    <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
-                                                </select>
-                                            </td>
+                                            <td><?php echo $create_date; ?></td>
                                             <td class="w-[5%]">
                                                 <div class="edit-icon ">
-                                                    <?php echo
-                                                        "<a  href='edit.php?id=$post[postid]'><i class='fa-solid fa-pen-to-square'></i></a>";
-                                                    ?>
+                                                    <i id='EditTag' class='fa-solid fa-pen-to-square cursor-pointer'></i>";
                                                 </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="7">No posts found.</td>
+                                        <td colspan="7">No Tag found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -260,8 +290,8 @@ $count = 0;
                             </div>
                             <form method="post" enctype="multipart/form-data" id="tagForm" class="mt-4">
                                 <div class="">
-                                    <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
-                                        name="d" placeholder="กรุณากรอกชื่อ Tags" required>
+                                    <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full" name="d"
+                                        placeholder="กรุณากรอกชื่อ Tags" required>
                                     <span class="advice text-red-900 text-xs inline-block mt-2 items-center">*
                                         กรุณากรอกชื่อ Tag ให้สอดคล้องกับสถานที่</span>
                                 </div>
@@ -291,6 +321,58 @@ $count = 0;
         <?php else: ?>
 
             <div class="text2xl font-semibold text-red-900">No categoryy found.</div>
+        <?php endif; ?>
+
+
+        <?php if (!empty($gettag)): ?>
+            <?php foreach ($gettag as $index => $Tag): ?>
+                <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="EditModal"
+                    style="display: none;">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+                        <div class="bg-white p-6">
+                            <div class="flex items-start justify-between w-full">
+                                <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">แก้ไข Tag</h5>
+                                <button type="button" class="text-gray-400 hover:text-gray-500 w-full" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-6 w-6 ml-auto" id="close1" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <form method="post" enctype="multipart/form-data" id="EdittagForm" class="mt-4">
+                                <input type="hidden" name="tagId" value="<?php echo $Tag['id']; ?>">
+                                <div class="">
+                                    <input id="EditTagInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
+                                        name="EditTag" placeholder="กรุณากรอกชื่อ Tags" value="<?php echo $Tag['tagname'] ?>">
+                                </div>
+                                <div class="mt-4">
+                                    <select class="category-dropdowns flex w-1/2 py-2 px-3 rounded-lg" name="EditCategory">
+                                        <option disabled selected>หมวดหมู่</option>
+                                        <option value="food" <?php echo $Tag['category'] === 'food' ? 'selected' : ''; ?>>อาหาร
+                                        </option>
+                                        <option value="clothing" <?php echo $Tag['category'] === 'clothing' ? 'selected' : ''; ?>>
+                                            บริการ</option>
+                                        <option value="travel" <?php echo $Tag['category'] === 'travel' ? 'selected' : ''; ?>>
+                                            สถานที่ท่องเที่ยว</option>
+                                    </select>
+                                    <div class="w-full flex justify-center mt-2">
+                                        <button name="Edit_button" type="submit"
+                                            class="text-white w-1/3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                            id="Edit_button" value="Post">
+                                            <div class="text-center text-[18px]">ยืนยัน</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="text2xl font-semibold text-red-900">No tags found.</div>
         <?php endif; ?>
 
 
@@ -324,7 +406,7 @@ $count = 0;
     document.addEventListener('DOMContentLoaded', function () {
         // modal
         const close = document.getElementById('close');
-        const modal = document.getElementById('postModal');
+        let modal = document.getElementById('postModal');
         const Openmodal = document.getElementById('OpenModal');
         if (modal) {
             close.addEventListener('click', function () {
@@ -338,58 +420,132 @@ $count = 0;
                 modal.style.display = "flex";
             });
 
+        let modal1 = document.getElementById('EditModal');
+        const Openmodal1 = document.getElementById('EditTag');
+        const close1 = document.getElementById('close1');
+        if (modal1) {
+            close1.addEventListener('click', function () {
+                modal1.style.display = "none";
+            });
+
+        }
+
+        if (Openmodal1)
+            Openmodal1.addEventListener('click', function () {
+                modal1.style.display = "flex";
+            });
+
 
     });
 
-    
-    if (createTagsuccess) {
-            Swal.fire({
-                icon: 'success',
-                title: 'สร้างTagสำเร็จ',
-                text: 'สร้างTagสำเร็จแล้วสามารถนำTagไปเพิ่มให้กับหมวดหมู่ย่อยได้!!'
-            });
-        }
-    
+    $(document).ready(function () {
+        $('#tagForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
 
-        $(document).ready(function() {
-    $('#tagForm').on('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
+            var category = $('.category-dropdown').val();
+            var nameTag = $('#locationInput').val(); // Get the tagname from the input field
 
-        var category = $('.category-dropdown').val();
-        var nameTag = $('#locationInput').val(); // Get the tagname from the input field
-
-        $.ajax({
-            url: 'create_tag.php', // This script will handle the request
-            type: 'POST',
-            data: {
-                category: category,
-                nametag: nameTag
-            },
-            success: function(response) {
-                var result = JSON.parse(response);
-                if (result.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'สร้างTagสำเร็จ',
-                        text: result.message
-                    });
-                } else {
+            $.ajax({
+                url: 'create_tag.php', // This script will handle the request
+                type: 'POST',
+                data: {
+                    category: category,
+                    nametag: nameTag
+                },
+                success: function (response) {
+                    var result = JSON.parse(response);
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'สร้างTagสำเร็จ',
+                            html: result.message
+                        }).then(() => {
+                            // Reload the website after the alert is closed
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: result.message
+                        text: 'Category addition failed: ' + xhr.responseText
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Category addition failed: ' + xhr.responseText
-                });
-            }
+            });
+        });
+
+
+        $('#EdittagForm').on('submit', function (event) {
+            event.preventDefault();
+            var editTag = $('#EditTagInput').val();
+            var editCategory = $('.category-dropdowns').val();
+            var tagId = $('input[name="tagId"]').val();
+            $.ajax({
+                url: 'create_tag.php',
+                type: 'POST',
+                data: {
+                    EditTag: editTag,
+                    EditCategory: editCategory,
+                    tagId: tagId
+                },
+                success: function (response) {
+                    var result = JSON.parse(response);
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'แก้ไข Tag สำเร็จ!',
+                            html: result.message
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Tag update failed: ' + xhr.responseText
+                    });
+                }
+            });
         });
     });
-});
+
+
+    $(document).ready(function () {
+        var locations = <?php echo json_encode($locations); ?>;
+        $("#locationInput").autocomplete({
+            source: locations,
+            select: function (event, ui) {
+                // Set the value of the input to the selected item
+                $("#locationInput").val(ui.item.value);
+                return false;
+            }
+        });
+
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#locationTable tr").filter(function () {
+                var Nametag = $(this).find("td:nth-child(3)").text().toLowerCase();
+                var TagId = $(this).find("td:nth-child(4)").text().toLowerCase();
+                var Category = $(this).find("td:nth-child(6)").text().toLowerCase();
+                $(this).toggle(Nametag.indexOf(value) > -1 || TagId.indexOf(value) > -1 || Category.indexOf(value) > -1);
+            });
+        });
+    });
+
 
 </script>
