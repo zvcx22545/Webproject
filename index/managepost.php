@@ -246,8 +246,8 @@ $locations = $location->GetApprovedLocation();
                                             <td>
                                                 <select class="status-dropdown" data-post-id="<?php echo $post['postid']; ?>">
                                                     <!-- <option value="pending" <?php echo $post['status'] === 'pending' ? 'selected' : ''; ?>>รอดำเนินการ</option> -->
-                                                    <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>อนุมัติ</option>
-                                                    <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่อนุมัติ</option>
+                                                    <option value="approved" <?php echo $post['status'] === 'approved' ? 'selected' : ''; ?>>แสดงโพสต์</option>
+                                                    <option value="rejected" <?php echo $post['status'] === 'rejected' ? 'selected' : ''; ?>>ไม่แสดงโพสต์</option>
                                                 </select>
                                             </td>
                                             <td class="w-[5%]">
