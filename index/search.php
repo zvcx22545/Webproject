@@ -372,67 +372,85 @@ include "header.php";
 
         <?php 
 
-        $PostResult = [];                                                                     
+$PostResult = [];
 
-        if (isset($_POST['search'])) {
-            global $conn;
-            $inputText = $_POST['search'];
+if (isset($_POST['search'])) {
+    global $conn;
+    $inputText = $_POST['search'];
 
-            // Check if the input is a location name in the locations table
-            $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
-            $query->bindParam(":location_name", $inputText);
-            $query->execute();
-            $locationResult = $query->fetch(PDO::FETCH_ASSOC);
+    // Debugging: Check the input text
+    // echo '<pre>Search Input: ';
+    // var_dump($inputText);
+    // echo '</pre>';
 
-            if ($locationResult) {
-                // If the input is a location name, fetch all posts with that location name, sorted by likes
-                $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name ORDER BY likes DESC");
-                $query->bindParam(":location_name", $inputText);
-                $query->execute();
-                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                // If the input is not a location name, fetch posts matching the post content, sorted by likes
-                $inputTextWithWildcards = '%' . $inputText . '%';
-                $query = $conn->prepare("SELECT * FROM posts WHERE post LIKE :inputText ORDER BY likes DESC");
-                $query->bindParam(":inputText", $inputTextWithWildcards);
-                $query->execute();
-                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-            }
-        } else if (isset($_GET['location_name'])) {
-            global $conn;
-            $inputText = $_GET['location_name'];
+    // Split input text into words
+    $inputWords = explode(' ', $inputText);
+    $likeClauses = [];
+    $params = [];
 
-            // Check if the input is a location name in the locations table
-            $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
-            $query->bindParam(":location_name", $inputText);
-            $query->execute();
-            $locationResult = $query->fetch(PDO::FETCH_ASSOC);
+    // Build LIKE clauses for each word
+    foreach ($inputWords as $index => $word) {
+        $likeClauses[] = "location_name LIKE :word$index";
+        $params[":word$index"] = '%' . $word . '%';
+    }
 
-            if ($locationResult) {
-                // If the input is a location name, fetch all posts with that location name, sorted by likes
-                $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name ORDER BY likes DESC");
-                $query->bindParam(":location_name", $inputText);
-                $query->execute();
-                $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
-            }
+    $likeQuery = implode(' OR ', $likeClauses);
+
+    // Check if the input matches any location name in the locations table
+    $query = $conn->prepare("SELECT * FROM locations WHERE $likeQuery");
+    $query->execute($params);
+    $locationResult = $query->fetch(PDO::FETCH_ASSOC);
+
+    // Debugging: Check the result of the location query
+    // echo '<pre>Location Result: ';
+    // var_dump($locationResult);
+    // echo '</pre>';
+
+    if ($locationResult) {
+        // If the input matches a location name, fetch all posts with that location name, sorted by likes
+        $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name AND status = 'approved' ORDER BY likes DESC");
+        $query->bindParam(":location_name", $locationResult['location_name']);
+        $query->execute();
+        $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Debugging: Check the result of the posts query
+        // echo '<pre>Post Result (Location): ';
+        // var_dump($PostResult);
+        // echo '</pre>';
+    } else {
+        // Build LIKE clauses for each word for posts
+        $likeClauses = [];
+        $params = [];
+        foreach ($inputWords as $index => $word) {
+            $likeClauses[] = "post LIKE :word$index OR location_name LIKE :word$index";
+            $params[":word$index"] = '%' . $word . '%';
         }
+        $likeQuery = implode(' OR ', $likeClauses);
 
-        if ($PostResult) {
+        // If the input does not match a location name, fetch posts matching the post content or location name, sorted by likes
+        $query = $conn->prepare("SELECT * FROM posts WHERE ($likeQuery) AND status = 'approved' ORDER BY likes DESC");
+        $query->execute($params);
+        $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
 
+        // Debugging: Check the result of the posts query
+        // echo '<pre>Post Result (Post Content): ';
+        // var_dump($PostResult);
+        // echo '</pre>';
+    }
+}
 
+// Debugging: Final check if $PostResult is populated
+// echo '<pre>Post Result: ';
+// var_dump($PostResult);
+// echo '</pre>';
 
-            foreach ($PostResult as $ROW) {
-                if (!empty($ROW['location_name']) && $ROW['status'] !== 'rejected') {
-                    $user = new User();
-                    $ROW_USER = $user->getUsers($ROW['user_id']);
-                    include 'function.php';
-                } elseif (empty($ROW['location_name']) && $ROW['status'] === 'approved') {
-                    $user = new User();
-                    $ROW_USER = $user->getUsers($ROW['user_id']);
-                    include 'function.php';
-                }
-            }
-        }
+if ($PostResult) {
+    foreach ($PostResult as $ROW) {
+        $user = new User();
+        $ROW_USER = $user->getUsers($ROW['user_id']);
+        include 'function.php';
+    }
+}
 
         # code...
         

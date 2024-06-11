@@ -1,24 +1,27 @@
-document.querySelectorAll('.status-dropdown, .category-dropdown').forEach(item => {
+document.querySelectorAll('.status-dropdown').forEach(item => {
     item.addEventListener('change', event => {
-        var locationId = item.getAttribute('data-location-id');
-        var value = item.value;
-        var field = item.classList.contains('category-dropdown') ? 'category' : 'status';
+        var locationId = item.getAttribute('data-post-id'); // Assuming 'data-post-id' attribute is used
+        var value = 'approved'; // Automatically set to approved
 
         var xhr = new XMLHttpRequest();
-        var url = 'admin.php';
+        var url = 'managepost.php';
         xhr.open('POST', url, true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function () {
             if (xhr.status === 200) {
-                console.log(`${field} update successful:`, xhr.responseText);
+                console.log(`Status update successful:`, xhr.responseText);
             } else {
-                console.error(`${field} update failed. Returned status of ` + xhr.status);
+                console.error(`Status update failed. Returned status of ` + xhr.status);
             }
         };
-        var params = `${field}=${encodeURIComponent(value)}&locationId=${locationId}`;
+        var params = `status=${encodeURIComponent(value)}&locationId=${locationId}`;
         xhr.send(params);
+
+        // Update the dropdown visually
+        item.value = value;
     });
 });
+
 
 
 // JavaScript function to display a zoomed image

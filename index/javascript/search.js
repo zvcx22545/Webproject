@@ -11,14 +11,15 @@ $(document).ready(function() {
                 success: function(response) {
                     $("#show-list").html(response);
                 }
-            })
+            });
         } else {
             $("#show-list").html("");
         }
-    })
+    });
 
-    $(document).on('click', 'a', function() {
-        $("#search").val($(this).text())
+    $(document).on('click', 'a.search-content', function() {
+        $("#search").val($(this).text());
         $("#show-list").html("");
-    })
-})
+        $("form.search").submit(); // Automatically submit the form
+    });
+});
