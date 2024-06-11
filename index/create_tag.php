@@ -7,6 +7,8 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 
+
+
 // Handle both status and category updates
 // Handle status updates
 
@@ -33,61 +35,29 @@ if (isset($_SESSION['admin_login'])) {
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isset($_POST['status'])) {
-    global $conn;
-
-    $status = $_POST['status'];
-    $locationId = $_POST['locationId'];
-    $query = $conn->prepare("UPDATE posts SET status = :status WHERE postid = :locationId");
-    $query->bindParam(":status", $status);
-    $query->bindParam(":locationId", $locationId);
-    if ($query->execute()) {
-        echo 'Status update successful.';
-    } else {
-        echo 'Status update failed: ' . implode(";", $query->errorInfo());
-    }
-}
-
-
-$post = new Post();
-$posts = $post->getAllPosts();
-$count = 0;
-
-$count = 0;
-
-foreach ($posts as $post) {
-    if ((!empty($post['is_profile_image']) && $post['is_profile_image'] == 1) || (!empty($post['is_cover_image']) && $post['is_cover_image'] == 1)) {
-        continue; // Skip this iteration and move to the next post
-    }
-
-    $count++;
-}
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    if (isset($_POST['post_button'])) {
-        // Process the first Modal
-        $post = new Post();
-        $result = $post->create_post($user_id, $_POST, $_FILES);
-        if ($result['status'] == 'success') {
-            if (!empty($result['location_name'])) {
-                $_SESSION['post_location'] = true;
-            } else {
-                $_SESSION['post_success'] = true;
-            }
-            header("location: managepost.php");
-            exit();
-        } else {
-            // Error handling
-            echo "have error posting"; // This line may not be necessary
-            echo $result['message'];
-        }
-    }
-}
-
-
 // GetLocation
-$location = new Location;
-$locations = $location->GetApprovedLocation();
+$location = new Location();
+$locations = $location->GetAllLocation();
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category']) && isset($_POST['nametag'])) {
+    $category = $_POST['category'];
+    $nameTag = $_POST['nametag'];
+
+    $query = $conn->prepare("INSERT INTO subtag (tagname, category) VALUES (:tagname, :category)");
+    $query->bindParam(":tagname", $nameTag);
+    $query->bindParam(":category", $category);
+
+    if ($query->execute()) {
+        echo json_encode(['success' => true, 'message' => 'สร้างTagสำเร็จ.']);
+        header('location:create_tag.php');
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Category addition failed: ' . implode(";", $query->errorInfo())]);
+    }
+    exit();
+}
+$count = 0;
+
 
 ?>
 
@@ -126,22 +96,17 @@ $locations = $location->GetApprovedLocation();
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+
         ?>
 
         <script>
-            <?php if (isset($_SESSION['post_location']) && $_SESSION['post_location']): ?>
-                var postlocationSuccess = true;
-                <?php unset($_SESSION['post_location']); ?>
+            <?php if (isset($_SESSION['tagcreate_success'])): ?>
+                var createTagsuccess = true;
+                <?php unset($_SESSION['tagcreate_success']); ?>
             <?php else: ?>
-                var postlocationSuccess = false;
+                var createTagsuccess = false;
             <?php endif; ?>
 
-            <?php if (isset($_SESSION['post_success']) && $_SESSION['post_success']): ?>
-                var postSuccess = true;
-                <?php unset($_SESSION['post_success']); ?>
-            <?php else: ?>
-                var postSuccess = false;
-            <?php endif; ?>
         </script>
 
         <div class="container">
@@ -151,10 +116,11 @@ $locations = $location->GetApprovedLocation();
                 <div class="main">
                     <br>
                     <ul class="menu">
-                        <a href="./admin.php"><button class="none-active " id="teamButton"><i class="fa-solid fa-map-location-dot"></i>จัดการสถานที่</button></a>
+                        <a href="./admin.php"><button class="none-active " id="teamButton"><i
+                                    class="fa-solid fa-map-location-dot"></i></i>จัดการสถานที่</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href="./managepost.php"><button class="active p-2" id="competitionButton"><i
+                        <a href="./managepost.php"><button class="none-active" id="competitionButton"><i
                                     class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
@@ -162,7 +128,8 @@ $locations = $location->GetApprovedLocation();
                                     class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href="./create_tag.php"><button class="none-active" id="competitionButton"><i class="fa-solid fa-tags"></i>จัดการ Tags</button></a>
+                        <a href="./create_tag.php"><button class="active p-2" id="competitionButton"><i
+                                    class="fa-solid fa-tags"></i>จัดการ Tags</button></a>
                     </ul>
 
                     <ul class="menu">
@@ -176,10 +143,10 @@ $locations = $location->GetApprovedLocation();
             <div class="right">
                 <!-- ส่วนทางขวา -->
                 <nav class="flex">
-                    <h1 id="pageTitle" class="text-2xl w-1/2">จัดการโพสต์</h1>
+                    <h1 id="pageTitle" class="text-2xl w-1/2">จัดการ Tags</h1>
                     <div class="container-btn w-1/2 flex gap-10 justify-end items-center">
                         <button class="custom-btn btn-12" id="OpenModal">
-                            <span>โพสต์!</span><span>โพสต์สถานที่</span>
+                            <span>สร้าง!</span><span>สร้าง Tags</span>
                         </button>
 
                         <div class="search-box">
@@ -192,7 +159,7 @@ $locations = $location->GetApprovedLocation();
                 <div class="admin-data">
                     <div class="top-data">
                         <div class="listMenu">
-                            <h4>ทั้งหมด : <?php echo $count; ?> โพสต์</h4>
+                            <h4>ทั้งหมด :  โพสต์</h4><?php echo $count; ?>
                         </div>
                     </div>
                     <div class="tableMember">
@@ -253,8 +220,8 @@ $locations = $location->GetApprovedLocation();
                                             <td class="w-[5%]">
                                                 <div class="edit-icon ">
                                                     <?php echo
-                                               "<a  href='edit.php?id=$post[postid]'><i class='fa-solid fa-pen-to-square'></i></a>";
-                                                ?>
+                                                        "<a  href='edit.php?id=$post[postid]'><i class='fa-solid fa-pen-to-square'></i></a>";
+                                                    ?>
                                                 </div>
                                             </td>
                                         </tr>
@@ -273,55 +240,58 @@ $locations = $location->GetApprovedLocation();
             </div>
 
         </div>
-
-        <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="postModal"
-            style="display: none;">
-            <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-                <div class="bg-white p-6">
-                    <div class="flex items-start justify-between w-full">
-                        <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">คุณอยากโพสต์อะไร</h5>
-                        <button type="button" class="text-gray-400 hover:text-gray-500 w-full" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <span class="sr-only">Close</span>
-                            <svg class="h-6 w-6 ml-auto" id="close" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-                    <form method="post" enctype="multipart/form-data" class="mt-4">
-                        <div class="">
-                            <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
-                                name="location" placeholder="กรุณากรอกชื่อสถานที่" required>
-                            <span class="advice text-red-900 text-xs inline-block mt-2 items-center">*
-                                ค้นหาและเลือกชื่อสถานที่</span>
-                        </div>
-                        <div class="mt-4">
-                            <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
-                            <div class="my-3 flex justify-center items-center">
-                                <input class="hidden" name="file" type="file" id="select_post_img" required>
-                                <label for="select_post_img" class="flex justify-center cursor-pointer w-[10%]">
-                                    <i class="fa fa-image photo text-2xl"></i>
-                                </label>
-                            </div>
-                            <div class="mb-3">
-                                <textarea class="w-full h-[150px] mt-2" name="post" class="form-control h-50"
-                                    id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่"
-                                    required></textarea>
-                            </div>
-                            <div class="w-full flex justify-center mt-2">
-                                <button name="post_button" type="submit"
-                                    class="text-white w-1/3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                                    id="post_button" value="Post">
-                                    <div class="text-center text-[18px]">ยืนยัน</div>
+        <?php if (!empty($locations)): ?>
+            <?php foreach ($locations as $index => $location): ?>
+                <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="postModal"
+                    style="display: none;">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+                        <div class="bg-white p-6">
+                            <div class="flex items-start justify-between w-full">
+                                <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">สร้าง Tags ให้กับสถานที่</h5>
+                                <button type="button" class="text-gray-400 hover:text-gray-500 w-full" data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-6 w-6 ml-auto" id="close" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                 </button>
                             </div>
+                            <form method="post" enctype="multipart/form-data" id="tagForm" class="mt-4">
+                                <div class="">
+                                    <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
+                                        name="d" placeholder="กรุณากรอกชื่อ Tags" required>
+                                    <span class="advice text-red-900 text-xs inline-block mt-2 items-center">*
+                                        กรุณากรอกชื่อ Tag ให้สอดคล้องกับสถานที่</span>
+                                </div>
+                                <div class="mt-4">
+
+                                    <div class="mb-3">
+                                        <select class="category-dropdown flex w-1/2 py-2 px-3 rounded-lg">
+                                            <option disabled selected>หมวดหมู่</option>
+                                            <option value="food" <?php echo $location['category_name'] === 'food' ? 'selected' : ''; ?>>อาหาร</option>
+                                            <option value="clothing" <?php echo $location['category_name'] === 'clothing' ? 'selected' : ''; ?>>บริการ</option>
+                                            <option value="travel" <?php echo $location['category_name'] === 'travel' ? 'selected' : ''; ?>>สถานที่ท่องเที่ยว</option>
+                                        </select>
+                                    </div>
+                                    <div class="w-full flex justify-center mt-2">
+                                        <button name="post_button" type="submit"
+                                            class="text-white w-1/3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                            id="post_button" value="Post">
+                                            <div class="text-center text-[18px]">ยืนยัน</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+
+            <div class="text2xl font-semibold text-red-900">No categoryy found.</div>
+        <?php endif; ?>
 
 
 
@@ -340,8 +310,7 @@ $locations = $location->GetApprovedLocation();
 <script src="./javascript/details.js"></script>
 <script src="./javascript/search.js"></script>
 <script src="./javascript/preview.js"></script>
-<script src="./javascript/Approvepost.js"></script>
-<script src="./javascript/custom.js?v=<?= time() ?>"></script>
+<script src="./javascript/Approval.js"></script>
 
 <!-- <script src="./javascript/admin-page.js"></script> -->
 
@@ -350,26 +319,7 @@ $locations = $location->GetApprovedLocation();
 </html>
 
 <script>
-    $(document).ready(function () {
-        var locations = <?php echo json_encode($locations); ?>;
-        $("#locationInput").autocomplete({
-            source: locations,
-            select: function (event, ui) {
-                // Set the value of the input to the selected item
-                $("#locationInput").val(ui.item.value);
-                return false;
-            }
-        });
 
-        $("#searchInput").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $("#locationTable tr").filter(function () {
-                var postId = $(this).find("td:nth-child(4)").text().toLowerCase();
-                var locationName = $(this).find("td:nth-child(5)").text().toLowerCase();
-                $(this).toggle(postId.indexOf(value) > -1 || locationName.indexOf(value) > -1);
-            });
-        });
-    });
 
     document.addEventListener('DOMContentLoaded', function () {
         // modal
@@ -388,33 +338,58 @@ $locations = $location->GetApprovedLocation();
                 modal.style.display = "flex";
             });
 
-        console.log(postSuccess);
-        console.log(postlocationSuccess);
-        if (postSuccess) {
+
+    });
+
+    
+    if (createTagsuccess) {
             Swal.fire({
                 icon: 'success',
-                title: 'โพสต์สำเร็จ',
-                text: 'โพสต์สำเร็จแล้วกรุณารอทางAdmin อนุมัติ!!'
-            });
-        } else if (postlocationSuccess) {
-            Swal.fire({
-                icon: 'success',
-                title: 'โพสต์สำเร็จ',
-                text: 'โพสต์สำเร็จแล้ว!!'
+                title: 'สร้างTagสำเร็จ',
+                text: 'สร้างTagสำเร็จแล้วสามารถนำTagไปเพิ่มให้กับหมวดหมู่ย่อยได้!!'
             });
         }
+    
 
-        <?php if (isset($result) && $result['status'] === 'error' && isset($result['message'])): ?>
-        Swal.fire({
-            icon: 'error',
-            title: 'โพสต์ไม่สำเร็จ',
-            text: '<?php echo $result['message']; ?>',
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'managepost.php';
+        $(document).ready(function() {
+    $('#tagForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        var category = $('.category-dropdown').val();
+        var nameTag = $('#locationInput').val(); // Get the tagname from the input field
+
+        $.ajax({
+            url: 'create_tag.php', // This script will handle the request
+            type: 'POST',
+            data: {
+                category: category,
+                nametag: nameTag
+            },
+            success: function(response) {
+                var result = JSON.parse(response);
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สร้างTagสำเร็จ',
+                        text: result.message
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Category addition failed: ' + xhr.responseText
+                });
             }
         });
-    <?php endif; ?>
     });
+});
+
 </script>

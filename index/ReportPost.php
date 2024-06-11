@@ -74,13 +74,16 @@ foreach ($posts as $post) {
                 <div class="main">
                     <br>
                     <ul class="menu">
-                        <a href="./admin.php"><button class="none-active " id="teamButton"><i class="bi bi-people"></i>อนุมัติสถานที่</button></a>
+                        <a href="./admin.php"><button class="none-active " id="teamButton"><i class="fa-solid fa-map-location-dot"></i>จัดการสถานที่</button></a>
                     </ul>
                     <ul class="menu">
                         <a href="./managepost.php"><button class="none-active" id="competitionButton"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
                         <a href="./ReportPost.php"><button class="active p-2" id="competitionButton"><i class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
+                    </ul>
+                    <ul class="menu">
+                        <a href="./create_tag.php"><button class="none-active" id="competitionButton"><i class="fa-solid fa-tags"></i>จัดการ Tags</button></a>
                     </ul>
                     <ul class="menu">
                     </ul>

@@ -1,24 +1,23 @@
-document.querySelectorAll('.status-dropdown').forEach(item => {
-    item.addEventListener('change', event => {
-        var locationId = item.getAttribute('data-post-id'); // Assuming 'data-post-id' attribute is used
-        var value = 'approved'; // Automatically set to approved
+$(document).ready(function() {
+    $('.status-dropdown, .category-dropdown').on('change', function() {
+        var locationId = $(this).data('location-id');
+        var value = $(this).val();
+        var field = $(this).hasClass('category-dropdown') ? 'category' : 'status';
 
-        var xhr = new XMLHttpRequest();
-        var url = 'managepost.php';
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                console.log(`Status update successful:`, xhr.responseText);
-            } else {
-                console.error(`Status update failed. Returned status of ` + xhr.status);
+        $.ajax({
+            url: 'admin.php',
+            type: 'POST',
+            data: {
+                locationId: locationId,
+                [field]: value
+            },
+            success: function(response) {
+                console.log(`${field} update successful:`, response);
+            },
+            error: function(xhr, status, error) {
+                console.error(`${field} update failed:`, xhr.responseText);
             }
-        };
-        var params = `status=${encodeURIComponent(value)}&locationId=${locationId}`;
-        xhr.send(params);
-
-        // Update the dropdown visually
-        item.value = value;
+        });
     });
 });
 
