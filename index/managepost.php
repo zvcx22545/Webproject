@@ -293,7 +293,7 @@ $locations = $location->GetApprovedLocation();
                             <input id="locationInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
                                 name="location" placeholder="กรุณากรอกชื่อสถานที่" required>
                             <span class="advice text-red-900 text-xs inline-block mt-2 items-center">*
-                                กรอกชื่อสถานที่ที่ทำการอนุมัติให้ผู้ใช้แล้ว</span>
+                                กรอกชื่อสถานที่ที่ทำการอนุมัติให้ผู้ใช้แล้วและทำการคลิกชื่อสถานที่ให้ตรงกับสถานที่ที่ต้องการเพิ่ม</span>
                         </div>
                         <div class="mt-4">
                             <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
