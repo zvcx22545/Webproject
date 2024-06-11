@@ -88,11 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $count = 0;
 if ($gettag) {
-    foreach($gettag as $tags){
-        if($tags['id'])
-     $count++;
+    foreach ($gettag as $tags) {
+        if ($tags['id'])
+            $count++;
     }
-   
+
 }
 
 
@@ -253,11 +253,14 @@ if ($gettag) {
                                             </td>
 
                                             <td><?php echo $create_date; ?></td>
-                                            <td class="w-[5%]">
-                                                <div class="edit-icon ">
-                                                    <i id='EditTag' class='fa-solid fa-pen-to-square cursor-pointer'></i>";
-                                                </div>
-                                            </td>
+                                            <div class="edit-icon ">
+                                                <td class="w-[5%]">
+                                                    <i class='fa-solid fa-pen-to-square cursor-pointer edit-icon'
+                                                        data-tag-id='<?php echo $Tag['id']; ?>'
+                                                        data-tag-name='<?php echo $Tag['tagname']; ?>'
+                                                        data-category='<?php echo $Tag['category']; ?>'></i>
+                                                </td>
+                                            </div>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -330,50 +333,40 @@ if ($gettag) {
 
         <?php if (!empty($gettag)): ?>
             <?php foreach ($gettag as $index => $Tag): ?>
-                <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="EditModal"
-                    style="display: none;">
-                    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-                        <div class="bg-white p-6">
-                            <div class="flex items-start justify-between w-full">
-                                <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">แก้ไข Tag</h5>
-                                <button type="button" class="text-gray-400 hover:text-gray-500 w-full" data-bs-dismiss="modal"
-                                    aria-label="Close">
-                                    <span class="sr-only">Close</span>
-                                    <svg class="h-6 w-6 ml-auto" id="close1" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <form method="post" enctype="multipart/form-data" id="EdittagForm" class="mt-4">
-                                <input type="hidden" name="tagId" value="<?php echo $Tag['id']; ?>">
-                                <div class="">
-                                    <input id="EditTagInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full"
-                                        name="EditTag" placeholder="กรุณากรอกชื่อ Tags" value="<?php echo $Tag['tagname'] ?>">
-                                </div>
-                                <div class="mt-4">
-                                    <select class="category-dropdowns flex w-1/2 py-2 px-3 rounded-lg" name="EditCategory">
-                                        <option disabled selected>หมวดหมู่</option>
-                                        <option value="food" <?php echo $Tag['category'] === 'food' ? 'selected' : ''; ?>>อาหาร
-                                        </option>
-                                        <option value="clothing" <?php echo $Tag['category'] === 'clothing' ? 'selected' : ''; ?>>
-                                            บริการ</option>
-                                        <option value="travel" <?php echo $Tag['category'] === 'travel' ? 'selected' : ''; ?>>
-                                            สถานที่ท่องเที่ยว</option>
-                                    </select>
-                                    <div class="w-full flex justify-center mt-2">
-                                        <button name="Edit_button" type="submit"
-                                            class="text-white w-1/3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                                            id="Edit_button" value="Post">
-                                            <div class="text-center text-[18px]">ยืนยัน</div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="EditModal" style="display: none;">
+    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+            <div class="flex items-start justify-between w-full">
+                <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">แก้ไข Tag</h5>
+                <button type="button" class="text-gray-400 hover:text-gray-500 w-full" id="close1" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="h-6 w-6 ml-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="EdittagForm" class="mt-4">
+                <input type="hidden" name="tagId" id="editTagId">
+                <div class="">
+                    <input id="EditTagInput" class="form-control w-1/2 rounded-[4px] px-2 py-1 w-full" name="EditTag" placeholder="กรุณากรอกชื่อ Tags">
+                </div>
+                <div class="mt-4">
+                    <select class="category-dropdowns flex w-1/2 py-2 px-3 rounded-lg" name="EditCategory" id="EditCategoryDropdown">
+                        <option disabled selected>หมวดหมู่</option>
+                        <option value="food">อาหาร</option>
+                        <option value="clothing">บริการ</option>
+                        <option value="travel">สถานที่ท่องเที่ยว</option>
+                    </select>
+                    <div class="w-full flex justify-center mt-2">
+                        <button name="Edit_button" type="submit" class="text-white w-1/3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" id="Edit_button" value="Post">
+                            <div class="text-center text-[18px]">ยืนยัน</div>
+                        </button>
                     </div>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
             <?php endforeach; ?>
         <?php else: ?>
             <div class="text2xl font-semibold text-red-900">No tags found.</div>
@@ -424,21 +417,30 @@ if ($gettag) {
                 modal.style.display = "flex";
             });
 
-        let modal1 = document.getElementById('EditModal');
-        const Openmodal1 = document.getElementById('EditTag');
-        const close1 = document.getElementById('close1');
-        if (modal1) {
-            close1.addEventListener('click', function () {
-                modal1.style.display = "none";
-            });
+            const editIcons = document.querySelectorAll('.edit-icon');
+    const modal1 = document.getElementById('EditModal');
+    const closeModal = document.getElementById('close1');
+    const editTagInput = document.getElementById('EditTagInput');
+    const editTagIdInput = document.getElementById('editTagId');
+    const editCategoryDropdown = document.getElementById('EditCategoryDropdown');
 
-        }
+    editIcons.forEach(icon => {
+        icon.addEventListener('click', function (event) {
+            event.preventDefault();
+            const tagId = this.getAttribute('data-tag-id');
+            const tagName = this.getAttribute('data-tag-name');
+            const category = this.getAttribute('data-category');
 
-        if (Openmodal1)
-            Openmodal1.addEventListener('click', function () {
-                modal1.style.display = "flex";
-            });
+            editTagInput.value = tagName;
+            editTagIdInput.value = tagId;
+            editCategoryDropdown.value = category;
 
+            modal1.style.display = 'flex';
+        });
+    });
+
+    closeModal.addEventListener('click', function () {
+        modal1.style.display = 'none';
 
     });
 
@@ -485,47 +487,48 @@ if ($gettag) {
             });
         });
 
-
         $('#EdittagForm').on('submit', function (event) {
-            event.preventDefault();
-            var editTag = $('#EditTagInput').val();
-            var editCategory = $('.category-dropdowns').val();
-            var tagId = $('input[name="tagId"]').val();
-            $.ajax({
-                url: 'create_tag.php',
-                type: 'POST',
-                data: {
-                    EditTag: editTag,
-                    EditCategory: editCategory,
-                    tagId: tagId
-                },
-                success: function (response) {
-                    var result = JSON.parse(response);
-                    if (result.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'แก้ไข Tag สำเร็จ!',
-                            html: result.message
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: result.message
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
+        event.preventDefault();
+        var editTag = $('#EditTagInput').val();
+        var editCategory = $('#EditCategoryDropdown').val();
+        var tagId = $('#editTagId').val();
+
+        $.ajax({
+            url: 'create_tag.php',
+            type: 'POST',
+            data: {
+                EditTag: editTag,
+                EditCategory: editCategory,
+                tagId: tagId
+            },
+            success: function (response) {
+                var result = JSON.parse(response);
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'แก้ไข Tag สำเร็จ!',
+                        html: result.message
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Tag update failed: ' + xhr.responseText
+                        text: result.message
                     });
                 }
-            });
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Tag update failed: ' + xhr.responseText
+                });
+            }
         });
+    });
+});
     });
 
 
