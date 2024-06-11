@@ -204,7 +204,7 @@ $locations = $location->GetApprovedLocation();
                                 <th class="col4">ข้อความโพสต์</th>
                                 <th class="col2">รูปภาพ</th>
                                 <th class="col2">สถานะ</th>
-                                <th class="col2"></th>
+                                <th class="col2">แก้ไข</th>
                             </tr>
                             <tbody id="locationTable">
 

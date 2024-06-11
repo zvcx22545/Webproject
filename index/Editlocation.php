@@ -34,14 +34,14 @@ if (isset($_SESSION['admin_login'])) {
 include "header.php";
 
 $ERROR ="";
-$Post = new Post();
+$Post = new Location();
 if (isset($_GET['id'])) {
-    $ROW = $Post->get_one_post($_GET['id']);
+    $ROW = $Post->get_one_location($_GET['id']);
     if (!$ROW) {
-        $ERROR = "No such post was found!!!";
+        $ERROR = "No such locations was found!!!";
     } else {
-        if ($ROW['user_id'] != $user_id) {
-            $ERROR = "Access denied! You can't delete this post.";
+        if (!$ROW['location_name']) {
+            $ERROR = "Access denied! You can't Edit this location.";
         }
     }
 } else {
@@ -52,10 +52,10 @@ if (isset($_GET['id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     // Call the edit_post function
-    $Post->edit_post($_POST, $_FILES);
+    $Post->edit_location($_POST, $_FILES);
 
     // Redirect to the stored URL or Profilepage.php
-    header("Location:managepost.php");
+    header("Location:Profilepage.php");
     // Stop the script
     exit;
 }
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="uploadprofile w-100 mx-auto">
             
             <form action="" method="Post" id="change_profile_form" class="text-center" enctype="multipart/form-data">
-            <div class=" w-100"style="font-size:40px;font-weight:700;">Edit Post</div>
+            <div class=" w-100"style="font-size:40px; font-weight:700;">Edit Location</div>
                 <div class="text-info text-center" style="font-weight:700;">
                     <br>
                     
@@ -162,11 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                          echo $ERROR;
                      }
                      else {
-                        echo "Edit my post";
+                        echo "Edit Location";
                         echo '<label for="exampleFormControlTextarea1" class="form-label"></label>';
-                        echo '<textarea name="post" class="form-control text-content" id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่">' . $ROW['post'] . '</textarea>';
+                        echo '<textarea name="location_name" class="form-control" id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่">' . $ROW['location_name'] . '</textarea>';
                         echo '<div class="container-content mb-3 mt-3">';
-                        echo "<div><input type='hidden' name='postid' value='$ROW[postid]'></div>";
+                        echo "<div><input type='hidden' name='location_id' value='$ROW[location_id]'></div>";
                         
                         $image_class = new Image();
                         if (file_exists($ROW['image'])) {
@@ -183,9 +183,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                       </svg>
                                    </label>
                               </div>";
+                              echo '<textarea name="Map_link" class="form-control" id="exampleFormControlTextarea1" rows="1">' . $ROW['map_link'] . '</textarea>';
                         }
                         echo '</div>';
-                        echo "<div class='d-flex justify-content-center align-items-center'><input type='submit' class='btn btn-outline-info mb-2 mt-2 mx-auto' id='save_button' value='Save'></div>";
+                        echo "<div class='d-flex justify-content-center align-items-center'><input type='submit' class='btn btn-outline-info mb-2 mt-2 mx-auto' id='save_button' value='ยืนยัน'></div>";
 
                     }
                     

@@ -215,7 +215,7 @@ class Post
     
             // Execute query
             $query->execute();
-            header("Location: Profilepage.php");
+            header("Location: managepost.php");
         exit; // Stop the script
         } else {
             $this->error .= 'Please enter something to post! <br>';

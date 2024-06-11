@@ -77,8 +77,7 @@ class Location
             if ($query->execute()) {
                 // Query executed successfully
                 return true;
-            }
-             else {
+            } else {
                 // Query execution failed
                 return "Error executing query: " . implode(" ", $query->errorInfo());
             }
@@ -88,7 +87,6 @@ class Location
     }
 
     public function GetAllLocation()
-
     {
         global $conn;
         $query = $conn->prepare("SELECT * FROM locations ORDER BY create_at DESC");
@@ -107,7 +105,8 @@ class Location
         return $locations;
     }
 
-    public function getLocationInfoByName($locationName) {
+    public function getLocationInfoByName($locationName)
+    {
         global $conn;
 
         // Prepare and execute the query to fetch location information based on location_name
@@ -120,6 +119,76 @@ class Location
 
         return $locationInfo; // Return the location information
     }
+
+    public function get_one_location($locationid)
+    {
+        global $conn;
+        if (!is_numeric($locationid)) {
+            return false;
+        }
+        $query = $conn->prepare("SELECT * FROM locations WHERE location_id = :location_id  LIMIT 1");
+        $query->bindParam(":location_id", $locationid);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return $result["0"];
+        } else {
+            return false;
+        }
+    }
+
+    public function edit_location($data, $files)
+{
+    global $conn;
+    if (!empty($data['location_name']) || !empty($files['file']['name'])) {
+        $myimage = "";            
+        // Check if a new image file is uploaded
+        if (!empty($files['file']['name'])) {
+            // Handle image upload
+            $folder = "uploads/"  . "/";
+            // Create folder if not exists
+            if (!file_exists($folder)) {
+                mkdir($folder, 0777, true);
+                file_put_contents($folder. "index.php", "");
+            }
+            $image_class = new Image();
+            $myimage = $folder . $image_class->generate_filename(15) . ".jpg";
+            move_uploaded_file($_FILES["file"]["tmp_name"], $myimage);
+            $image_class->resize_image($myimage, $myimage, 1500, 1500);
+            $has_image = 1;
+        }
+
+        $post = "";
+        if (isset($data['location_name'])) {
+            $location_name = addslashes($data['location_name']);
+            $location_link = addslashes($data['Map_link']);
+        }
+        $locationid = addslashes($data['location_id']);
+
+        // Update post query
+        if ($has_image) {
+            $query = $conn->prepare("UPDATE locations SET location_name = :location_name, image = :myimage WHERE location_id = :location_id LIMIT 1");
+            $query->bindParam(":myimage", $myimage);
+        } else {
+            $query = $conn->prepare("UPDATE locations SET location_name = :location_name, map_link = :map_link WHERE location_id = :location_id LIMIT 1");
+            $query->bindParam(":map_link", $location_link);
+        }
+
+        // Bind parameters
+        $query->bindParam(":location_id", $locationid);
+        $query->bindParam(":location_name", $location_name);
+
+        // Execute query
+        $query->execute();
+        header("Location: admin.php");
+        exit; // Stop the script
+    } else {
+        $this->error .= 'Please enter something to post! <br>';
+    }
+    return $this->error;
+}
+
 
 
     private function create_location_id()

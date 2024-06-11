@@ -148,9 +148,16 @@
       gap: 2rem;
   }
   
-  .edit button{
-      background-color: white ;
-      border: none;
+  .edit-icon
+  {
+    a
+    {
+        img
+    {
+        width: 40%;
+    }
+    }
+    
   }
   
   table {
