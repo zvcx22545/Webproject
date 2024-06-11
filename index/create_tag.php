@@ -526,7 +526,7 @@ if ($gettag) {
 
 
     $(document).ready(function () {
-        var locations = <?php echo json_encode($locations); ?>;
+        var locations = <?php echo json_encode($gettag); ?>;
         $("#locationInput").autocomplete({
             source: locations,
             select: function (event, ui) {
