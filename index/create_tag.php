@@ -88,7 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $count = 0;
 if ($gettag) {
-    $count++;
+    foreach($gettag as $tags){
+        if($tags['id'])
+     $count++;
+    }
+   
 }
 
 
