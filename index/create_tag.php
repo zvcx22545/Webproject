@@ -47,14 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['category']) && isset($_POST['nametag'])) {
         $category = $_POST['category'];
         $nameTag = $_POST['nametag'];
-
-        $checkQuery = $conn->prepare("SELECT COUNT(*) FROM subtag WHERE tagname = :tagname");
+        // Check if the tagname already exists in the same category
+        $checkQuery = $conn->prepare("SELECT COUNT(*) FROM subtag WHERE category = :category AND tagname = :tagname");
+        $checkQuery->bindParam(":category", $category);
         $checkQuery->bindParam(":tagname", $nameTag);
         $checkQuery->execute();
         $tagExists = $checkQuery->fetchColumn();
 
         if ($tagExists) {
-            echo json_encode(['success' => false, 'message' => 'มี tag นี้แล้ว กรุณาเพิ่ม tag อื่น']);
+            echo json_encode(['success' => false, 'message' => 'Tagname นี้มีอยู่ใน หมวดหมู่นี้แล้ว กรุณาเพิ่ม Tagname อื่น']);
         } else {
             $query = $conn->prepare("INSERT INTO subtag (tagname, category, user_id) VALUES (:tagname, :category, :user_id)");
             $query->bindParam(":tagname", $nameTag);
@@ -73,19 +74,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $editCategory = $_POST['EditCategory'];
         $tagId = $_POST['tagId'];
 
-        $query = $conn->prepare("UPDATE subtag SET tagname = :tagname, category = :category WHERE id = :id");
-        $query->bindParam(":tagname", $editTag);
-        $query->bindParam(":category", $editCategory);
-        $query->bindParam(":id", $tagId);
+        // Check if the tagname already exists in the same category, excluding the current tag ID
+        $checkQuery = $conn->prepare("SELECT COUNT(*) FROM subtag WHERE category = :category AND tagname = :tagname AND id != :id");
+        $checkQuery->bindParam(":category", $editCategory);
+        $checkQuery->bindParam(":tagname", $editTag);
+        $checkQuery->bindParam(":id", $tagId);
+        $checkQuery->execute();
+        $tagExists = $checkQuery->fetchColumn();
 
-        if ($query->execute()) {
-            echo json_encode(['success' => true, 'message' => 'แก้ไช Tag สำเร็จแล้ว!']);
+        if ($tagExists) {
+            echo json_encode(['success' => false, 'message' => 'Tagname นี้มีอยู่ใน หมวดหมู่ นี้แล้ว กรุณาเพิ่ม Tagname อื่น']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Tag update failed: ' . implode(";", $query->errorInfo())]);
+            $query = $conn->prepare("UPDATE subtag SET tagname = :tagname, category = :category WHERE id = :id");
+            $query->bindParam(":tagname", $editTag);
+            $query->bindParam(":category", $editCategory);
+            $query->bindParam(":id", $tagId);
+
+            if ($query->execute()) {
+                echo json_encode(['success' => true, 'message' => 'แก้ไช Tag สำเร็จแล้ว!']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Tag update failed: ' . implode(";", $query->errorInfo())]);
+            }
         }
         exit();
     }
 }
+
+
+
 $count = 0;
 if ($gettag) {
     foreach ($gettag as $tags) {
