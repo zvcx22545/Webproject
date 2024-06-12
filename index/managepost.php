@@ -277,6 +277,7 @@ $locations = $location->GetApprovedLocation();
 
         </div>
 
+
         <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" id="postModal"
             style="display: none;">
             <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
@@ -313,27 +314,16 @@ $locations = $location->GetApprovedLocation();
                                     id="exampleFormControlTextarea1" rows="1" placeholder="กรุณากรอกรายละเอียดสถานที่"
                                     required></textarea>
                             </div>
-                            <div class="w-full my-3 grid grid-cols-3">
+
+                            <div class="w-full my-5 grid grid-cols-3 content-center">
                                 <button class="toggle-category py-2 px-4 text-center" type="button"
-                                    data-category="">อาหาร</button>
+                                    data-category="food">อาหาร</button>
                                 <button class="toggle-category py-2 px-4 text-center" type="button"
-                                    data-category="">สถานที่ท่องเที่ยว</button>
+                                    data-category="travel">สถานที่ท่องเที่ยว</button>
                                 <button class="toggle-category py-2 px-4 text-center" type="button"
-                                    data-category="">บริการ</button>
+                                    data-category="clothing">บริการ</button>
                             </div>
-                            <div class="grid grid-cols-3 w-full my-3">
-
-                                <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer">
-
-                                    <div
-                                        class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                                    </div>
-                                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle
-                                        me</span>
-                                </label>
-
-                            </div>
+                            <div id="tagsContainer" class="grid grid-cols-3 w-full my-3"></div>
                             <div class="w-full flex justify-center mt-2">
                                 <button name="post_button" type="submit"
                                     class="text-white w-1/3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
@@ -348,12 +338,6 @@ $locations = $location->GetApprovedLocation();
         </div>
 
 
-
-
-
-
-
-
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -366,6 +350,7 @@ $locations = $location->GetApprovedLocation();
 <script src="./javascript/preview.js"></script>
 <script src="./javascript/Approvepost.js"></script>
 <script src="./javascript/custom.js?v=<?= time() ?>"></script>
+<script src="./javascript/toggleTag.js"></script>
 
 <!-- <script src="./javascript/admin-page.js"></script> -->
 
@@ -440,5 +425,50 @@ $locations = $location->GetApprovedLocation();
                 }
             });
         <?php endif; ?>
+
+
+
+        const categoryButtons = document.querySelectorAll('.toggle-category');
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const category = this.getAttribute('data-category');
+                fetchTags(category);
+            });
+        });
+
+        function fetchTags(category) {
+            fetch('fetchtags.php?category=' + category)
+                .then(response => response.json())
+                .then(data => {
+                    const tagsContainer = document.getElementById('tagsContainer');
+                    tagsContainer.innerHTML = '';
+                    data.forEach(tag => {
+                        const label = document.createElement('label');
+                        label.classList.add('inline-flex', 'items-center', 'cursor-pointer');
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.name = 'tags[]';
+                        checkbox.value = tag.tagname;
+                        checkbox.classList.add('sr-only', 'peer');
+
+                        const div = document.createElement('div');
+                        div.classList.add('relative', 'w-11', 'h-6', 'bg-gray-200', 'peer-focus:outline-none', 'peer-focus:ring-4', 'peer-focus:ring-blue-300', 'dark:peer-focus:ring-blue-800', 'rounded-full', 'peer', 'dark:bg-gray-700', 'peer-checked:after:translate-x-full', 'rtl:peer-checked:after:-translate-x-full', 'peer-checked:after:border-white', 'after:content-[""]', 'after:absolute', 'after:top-[2px]', 'after:start-[2px]', 'after:bg-white', 'after:border-gray-300', 'after:border', 'after:rounded-full', 'after:h-5', 'after:w-5', 'after:transition-all', 'dark:border-gray-600', 'peer-checked:bg-blue-600');
+
+                        const span = document.createElement('span');
+                        span.classList.add('ms-3', 'text-sm', 'font-medium', 'text-gray-900', 'dark:text-gray-300');
+                        span.textContent = tag.tagname;
+
+                        label.appendChild(checkbox);
+                        label.appendChild(div);
+                        label.appendChild(span);
+
+                        tagsContainer.appendChild(label);
+                        // tagsContainer.appendChild(document.createElement('br'));
+                    });
+                });
+        }
     });
+
 </script>

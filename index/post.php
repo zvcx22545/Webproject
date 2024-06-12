@@ -74,6 +74,17 @@ class Post
             $query->bindParam(":category", $category);
             $query->bindParam(":location_name", $location_name);
             $query->execute();
+
+            if (isset($data['tags']) && is_array($data['tags'])) {
+                $tag_count = min(count($data['tags']), 3); // Ensure no more than 3 tags are inserted
+                for ($i = 0; $i < $tag_count; $i++) {
+                    $tag_query = $conn->prepare("INSERT INTO post_tags(post_id, tag_name) VALUES(:post_id, :tag_name)");
+                    $tag_query->bindParam(":post_id", $postid);
+                    $tag_query->bindParam(":tag_name", $data['tags'][$i]);
+                    $tag_query->execute();
+                }
+            }
+            
             return ['status' => 'success', 'location_name' => $location_name];
         } else {
             $this->error .= 'Please enter something to post! <br>';
