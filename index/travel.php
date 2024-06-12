@@ -276,23 +276,24 @@ include "header.php";
         <div class="container-post">
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
-                <div class="post-tops">
-
-                <?php            
+                <?php
                 $stmt = $conn->prepare("SELECT * FROM subtag WHERE category = :category_name ORDER BY create_at DESC");
                 $stmt->bindParam(':category_name', $category); // Corrected parameter name
                 $category = 'travel'; // Set the value for the parameter
                 $stmt->execute();
                 $Tagname = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                foreach( $Tagname as $Tag)
-                {
-                   echo "<div class='tag'>
+                ?>
+                <div class="post-tops<?php echo ($numTags > 12) ? ' overflow-y-auto' : ''; ?>">
+                    <?php
+
+                    foreach ($Tagname as $Tag) {
+                        echo "<div class='tag'>
                         <a href='./search.php?Tagid=$Tag[id]'>$Tag[tagname]</a>
 
                     </div>";
-                }
-                ?>
-                    
+                    }
+                    ?>
+
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
                         #exampleFormControlTextarea1 {
@@ -364,7 +365,7 @@ include "header.php";
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-                
+
                 <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
