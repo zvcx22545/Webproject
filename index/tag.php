@@ -13,6 +13,18 @@ class Tag
 
     }
 
+    public function getTagPosts($Postid)
+    {
+        global $conn;
+        
+        $query = $conn->prepare("SELECT * FROM post_tags WHERE post_id = :post_id");
+        $query->bindParam(":post_id", $Postid);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts
+        
+        return $result; // Return the array of posts
+    }
+
 }
 
 

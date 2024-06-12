@@ -153,6 +153,18 @@ th {
   }
 }
 
+.edit-icon
+{
+    svg{
+        path:hover
+        {
+            fill: #fff;
+            stroke: #fff;
+            color: #fff;
+        }
+    }
+}
+
 table {
   border-collapse: collapse;
   width: 100%;

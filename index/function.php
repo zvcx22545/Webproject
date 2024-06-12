@@ -173,7 +173,6 @@ if (isset($_SESSION['user_login'])) {
   <?php 
 // Check if the function is not already defined
 if (!function_exists('makeClickableLinks')) {
-  // Function to convert URLs in text to clickable links and convert newlines to <br>
   function makeClickableLinks($text) {
       $text = nl2br(htmlspecialchars($text)); // Convert newlines to <br> tags and escape HTML
       // Improved URL matching pattern
@@ -182,14 +181,29 @@ if (!function_exists('makeClickableLinks')) {
       return preg_replace($pattern, $replacement, $text);
   }
 }
+
+$Tagpost = new Tag();
+$tagpost = $Tagpost->getTagPosts($ROW['postid']);
   ?>
   <div class="post-content">
     <div class="text-container" id="textContainer">
        <?php echo makeClickableLinks(htmlspecialchars($ROW['post'])); ?>
-       <!-- <button id="showMoreBtn">ดูเพิ่มเติม...</button> -->
     </div>
-
-    <br>
+    <?php
+    if($tagpost)
+    {
+     echo "<div class='tag-container'>";
+      foreach($tagpost as $Tagpost)
+      { 
+        echo"
+      <a href=''><i class='fa-solid fa-tag tag'> $Tagpost[tag_name]</i></a>";
+   
+      }
+       echo "</div>";
+    }
+    
+    ?>
+   
     <?php
     if (file_exists($ROW['image'])) {
       $image_class = new Image();

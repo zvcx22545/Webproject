@@ -278,6 +278,33 @@ textarea.text-content
   height: 100%;
 }
 
+.post-content
+{
+  .tag-container
+  {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    width: 100%;
+    a
+    {
+      text-decoration: none;
+      .tag
+      {
+        color: #fff;
+
+      }
+      .tag:hover
+      {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
 /* สำหรับหน้าจอที่มีความกว้างไม่เกิน 600px */
 @media only screen and (max-width: 600px) {
   .post {

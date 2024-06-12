@@ -84,7 +84,7 @@ class Post
                     $tag_query->execute();
                 }
             }
-            
+
             return ['status' => 'success', 'location_name' => $location_name];
         } else {
             $this->error .= 'Please enter something to post! <br>';
@@ -370,7 +370,12 @@ class Post
             return false;
         }
     }
+
+
+    
     
 }
+
+
 
    

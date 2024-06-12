@@ -445,7 +445,7 @@ $locations = $location->GetApprovedLocation();
                     tagsContainer.innerHTML = '';
                     data.forEach(tag => {
                         const label = document.createElement('label');
-                        label.classList.add('inline-flex', 'items-center', 'cursor-pointer');
+                        label.classList.add('inline-flex', 'items-center', 'cursor-pointer', 'mb-2');
 
                         const checkbox = document.createElement('input');
                         checkbox.type = 'checkbox';
