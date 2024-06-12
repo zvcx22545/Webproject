@@ -282,6 +282,7 @@ include "header.php";
                 $category = 'clothing'; // Set the value for the parameter
                 $stmt->execute();
                 $Tagname = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $numTags = count($Tagname);
                 ?>
                 <div class="post-tops<?php echo ($numTags > 12) ? ' overflow-y-auto' : ''; ?>">
 
