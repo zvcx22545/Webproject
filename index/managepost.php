@@ -302,7 +302,7 @@ $locations = $location->GetApprovedLocation();
                                 ค้นหาและเลือกชื่อสถานที่</span>
                         </div>
                         <div class="mt-4">
-                            <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[50vh]">
+                            <img src="" style="display: none;" id="post_img" class="w-full rounded border h-[400px] max-[1366px]:h-[300px]">
                             <div class="my-3 flex justify-center items-center">
                                 <input class="hidden" name="file" type="file" id="select_post_img" required>
                                 <label for="select_post_img" class="flex justify-center cursor-pointer w-[10%]">
@@ -310,7 +310,7 @@ $locations = $location->GetApprovedLocation();
                                 </label>
                             </div>
                             <div class="mb-3">
-                                <textarea class="w-full h-[150px] mt-2" name="post" class="form-control h-50"
+                                <textarea class="w-full h-[150px] mt-2" name="post" class="form-control h-50 max-[1366px]:h-40"
                                     id="exampleFormControlTextarea1" rows="1" placeholder="กรุณากรอกรายละเอียดสถานที่"
                                     required></textarea>
                             </div>

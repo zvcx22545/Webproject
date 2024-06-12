@@ -418,6 +418,7 @@ include "header.php";
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
             }
         }
+        
 
         // Process and display the posts
         if ($PostResult) {
