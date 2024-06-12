@@ -143,7 +143,9 @@ foreach ($posts as $post) {
                                         <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
                                         <td><?php echo $post['user_id']; ?></td>
                                         <td><?php echo $post['postid']; ?></td>
-                                        <td><?php echo $post['post']; ?></td>
+                                        <td class="w-[20%]">
+                                                <div class=" w-[200px] truncate"><?php echo $post['post']; ?></div>
+                                            </td>
                                         <?php if (isset($post['image'])) : ?>
                                             <td class='w-[10%]'>
                                                 <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>" alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">

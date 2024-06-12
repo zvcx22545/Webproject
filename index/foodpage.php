@@ -292,7 +292,7 @@ include "header.php";
 
                     foreach ($Tagname as $Tag) {
                         echo "<div class='tag'>
-                        <a href='./search.php?Tagid=$Tag[id]'>$Tag[tagname]</a>
+                        <a href='./search.php?Tagid=$Tag[tagname]'>$Tag[tagname]</a>
 
                     </div>";
                     }

@@ -373,8 +373,24 @@ include "header.php";
         <?php
 
         $PostResult = [];
+        if (isset($_GET['Tagid'])) {
+            // Fetch posts by tag if Tagid is provided
+            $Tagname = $_GET['Tagid'];
+            
+            // You need to get the tag name from the tag ID
+            $query = $conn->prepare("SELECT tag_name FROM post_tags WHERE tag_name = :tag_name");
+            $query->bindParam(":tag_name", $Tagname);
+            $query->execute();
+            $tagResult = $query->fetch(PDO::FETCH_ASSOC);
+        
+            if ($tagResult) {
+                $tagName = $tagResult['tagname'];
+                $Tagpost = new Tag();
+                $PostResult = $Tagpost->getPostsByTagName($tagName);
+            }
+        }
 
-        if (isset($_POST['search'])) {
+       else if (isset($_POST['search'])) {
             global $conn;
             $inputText = $_POST['search'];
 

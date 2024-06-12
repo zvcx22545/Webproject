@@ -25,6 +25,22 @@ class Tag
         return $result; // Return the array of posts
     }
 
+    public function getPostsByTagName($tagName) {
+        global $conn;
+        
+        $query = $conn->prepare("
+            SELECT p.* 
+            FROM posts p 
+            JOIN post_tags pt ON p.id = pt.post_id 
+            WHERE pt.tag_name = :tag_name AND p.status = 'approved'
+            ORDER BY p.likes DESC
+        ");
+        $query->bindParam(":tag_name", $tagName);
+        $query->execute();
+        
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 
