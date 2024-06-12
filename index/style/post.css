@@ -320,6 +320,16 @@ textarea.text-content
   box-sizing: border-box;
 }
 
+/* EditPost */
+.w-full {
+  .toggle-category
+  {
+    border: none;
+  }
+  .toggle-category:hover {
+    text-decoration: underline;
+  }
+}
 
 /* สำหรับหน้าจอที่มีความกว้างไม่เกิน 600px */
 @media only screen and (max-width: 600px) {
