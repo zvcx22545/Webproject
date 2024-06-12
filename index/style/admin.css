@@ -153,16 +153,12 @@ th {
   }
 }
 
-.edit-icon
-{
-    svg{
-        path:hover
-        {
-            fill: #fff;
-            stroke: #fff;
-            color: #fff;
-        }
-    }
+
+.edit-icon path:hover {
+    fill: #fff !important;
+    stroke: #fff !important;
+    color: #fff !important;
+    
 }
 
 table {
