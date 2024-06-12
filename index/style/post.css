@@ -18,7 +18,7 @@
   --three-color: #fffffff8;
   --four-color: #817f7f;
   --five-color: #352f44;
-  --six-color: blue;
+  --six-color: rgb(56, 85, 156);
 }
 /* .container-post {
     flex:1;

@@ -196,7 +196,7 @@ $tagpost = $Tagpost->getTagPosts($ROW['postid']);
       foreach($tagpost as $Tagpost)
       { 
         echo"
-      <a href=''><i class='fa-solid fa-tag tag'> $Tagpost[tag_name]</i></a>";
+      <a href='./search.php?Tagid=$Tagpost[tag_name]'><i class='fa-solid fa-tag tag'> $Tagpost[tag_name]</i></a>";
    
       }
        echo "</div>";
