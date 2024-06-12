@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['locationId']) && isse
     }
 }
 
-
+$Gettag = new Tag();
+$gettag = $Gettag->GetTag();
 $post = new Post();
 $posts = $post->getAllPosts();
 $count = 0;
@@ -151,7 +152,8 @@ $locations = $location->GetApprovedLocation();
                 <div class="main">
                     <br>
                     <ul class="menu">
-                        <a href="./admin.php"><button class="none-active " id="teamButton"><i class="fa-solid fa-map-location-dot"></i>จัดการสถานที่</button></a>
+                        <a href="./admin.php"><button class="none-active " id="teamButton"><i
+                                    class="fa-solid fa-map-location-dot"></i>จัดการสถานที่</button></a>
                     </ul>
                     <ul class="menu">
                         <a href="./managepost.php"><button class="active p-2" id="competitionButton"><i
@@ -162,7 +164,8 @@ $locations = $location->GetApprovedLocation();
                                     class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
-                        <a href="./create_tag.php"><button class="none-active" id="competitionButton"><i class="fa-solid fa-tags"></i>จัดการ Tags</button></a>
+                        <a href="./create_tag.php"><button class="none-active" id="competitionButton"><i
+                                    class="fa-solid fa-tags"></i>จัดการ Tags</button></a>
                     </ul>
 
                     <ul class="menu">
@@ -253,8 +256,8 @@ $locations = $location->GetApprovedLocation();
                                             <td class="w-[5%]">
                                                 <div class="edit-icon ">
                                                     <?php echo
-                                               "<a  href='edit.php?id=$post[postid]'><i class='fa-solid fa-pen-to-square'></i></a>";
-                                                ?>
+                                                        "<a  href='edit.php?id=$post[postid]'><i class='fa-solid fa-pen-to-square'></i></a>";
+                                                    ?>
                                                 </div>
                                             </td>
                                         </tr>
@@ -309,6 +312,27 @@ $locations = $location->GetApprovedLocation();
                                 <textarea class="w-full h-[150px] mt-2" name="post" class="form-control h-50"
                                     id="exampleFormControlTextarea1" rows="1" placeholder="กรุณากรอกรายละเอียดสถานที่"
                                     required></textarea>
+                            </div>
+                            <div class="w-full my-3 grid grid-cols-3">
+                                <button class="toggle-category py-2 px-4 text-center" type="button"
+                                    data-category="">อาหาร</button>
+                                <button class="toggle-category py-2 px-4 text-center" type="button"
+                                    data-category="">สถานที่ท่องเที่ยว</button>
+                                <button class="toggle-category py-2 px-4 text-center" type="button"
+                                    data-category="">บริการ</button>
+                            </div>
+                            <div class="grid grid-cols-3 w-full my-3">
+
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer">
+
+                                    <div
+                                        class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                    </div>
+                                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle
+                                        me</span>
+                                </label>
+
                             </div>
                             <div class="w-full flex justify-center mt-2">
                                 <button name="post_button" type="submit"
@@ -405,16 +429,16 @@ $locations = $location->GetApprovedLocation();
         }
 
         <?php if (isset($result) && $result['status'] === 'error' && isset($result['message'])): ?>
-        Swal.fire({
-            icon: 'error',
-            title: 'โพสต์ไม่สำเร็จ',
-            text: '<?php echo $result['message']; ?>',
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'managepost.php';
-            }
-        });
-    <?php endif; ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'โพสต์ไม่สำเร็จ',
+                text: '<?php echo $result['message']; ?>',
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'managepost.php';
+                }
+            });
+        <?php endif; ?>
     });
 </script>
