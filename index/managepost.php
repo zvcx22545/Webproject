@@ -279,7 +279,7 @@ $locations = $location->GetApprovedLocation();
             <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
                 <div class="bg-white p-6">
                     <div class="flex items-start justify-between w-full">
-                        <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">คุณอยากโพสต์อะไร</h5>
+                        <h5 class="text-lg font-medium leading-6 text-gray-900 w-full">โพสต์สถานที่</h5>
                         <button type="button" class="text-gray-400 hover:text-gray-500 w-full" data-bs-dismiss="modal"
                             aria-label="Close">
                             <span class="sr-only">Close</span>
@@ -307,7 +307,7 @@ $locations = $location->GetApprovedLocation();
                             </div>
                             <div class="mb-3">
                                 <textarea class="w-full h-[150px] mt-2" name="post" class="form-control h-50"
-                                    id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่"
+                                    id="exampleFormControlTextarea1" rows="1" placeholder="กรุณากรอกรายละเอียดสถานที่"
                                     required></textarea>
                             </div>
                             <div class="w-full flex justify-center mt-2">
