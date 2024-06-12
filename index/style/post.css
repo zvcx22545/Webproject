@@ -299,7 +299,7 @@ textarea.text-content
       text-decoration: none;
       .tag
       {
-        color: #fff;
+        color: var(--six-color);
 
       }
       .tag:hover
