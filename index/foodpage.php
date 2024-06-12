@@ -279,15 +279,16 @@ include "header.php";
                 <div class="post-tops">
 
                 <?php            
-                $stmt = $conn->prepare("SELECT location_name FROM locations WHERE category_name = :category_name ORDER BY create_at DESC");
+                $stmt = $conn->prepare("SELECT * FROM subtag WHERE category = :category_name ORDER BY create_at DESC");
                 $stmt->bindParam(':category_name', $category); // Corrected parameter name
                 $category = 'food'; // Set the value for the parameter
                 $stmt->execute();
-                $location_name = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                foreach( $location_name as $location)
+                $Tagname = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach( $Tagname as $Tag)
                 {
                    echo "<div class='tag'>
-                        <a href='./search.php?location_name=$location[location_name]'>$location[location_name]</a>
+                        <a href='./search.php?Tagid=$Tag[id]'>$Tag[tagname]</a>
+
                     </div>";
                 }
                 ?>
