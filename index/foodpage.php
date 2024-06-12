@@ -272,6 +272,14 @@ include "header.php";
 
 
         </div>
+        <?php 
+               $stmt = $conn->prepare("SELECT * FROM subtag WHERE category = :category_name ORDER BY create_at DESC");
+               $stmt->bindParam(':category_name', $category); // Corrected parameter name
+               $category = 'food'; // Set the value for the parameter
+               $stmt->execute();
+               $Tagname = $stmt->fetchAll(PDO::FETCH_ASSOC);
+               $numTags = count($Tagname);
+        ?>
 
         <div class="container-post">
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
@@ -279,11 +287,7 @@ include "header.php";
                 <div class="post-tops">
 
                 <?php            
-                $stmt = $conn->prepare("SELECT * FROM subtag WHERE category = :category_name ORDER BY create_at DESC");
-                $stmt->bindParam(':category_name', $category); // Corrected parameter name
-                $category = 'food'; // Set the value for the parameter
-                $stmt->execute();
-                $Tagname = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         
                 foreach( $Tagname as $Tag)
                 {
                    echo "<div class='tag'>

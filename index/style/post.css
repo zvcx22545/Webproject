@@ -45,6 +45,7 @@
   grid-template-columns: repeat(4, auto);
   text-align: center;
   justify-items: center;
+  overflow-y: auto;
 }
 .post .post-topm {
   display: grid;
