@@ -34,8 +34,8 @@ if (isset($_POST['query'])) {
     if ($result) {
         foreach ($result as $row) {
             if (!empty($row['post'])) {
-                echo '<a class="search-content border-1">' . htmlspecialchars($row['post']) . '</a>';
-            } else if (!empty($row['location_name'])) {
+                echo '<a class="search-content border-1 ellipsis">' . htmlspecialchars($row['post']) . '</a>';
+            }  if (!empty($row['location_name'])) {
                 echo '<a class="search-content border-1">' . htmlspecialchars($row['location_name']) . '</a>';
             }
         }
