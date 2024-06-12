@@ -384,7 +384,7 @@ include "header.php";
             $tagResult = $query->fetch(PDO::FETCH_ASSOC);
         
             if ($tagResult) {
-                $tagName = $tagResult['tagname'];
+                $tagName = $tagResult['tag_name'];
                 $Tagpost = new Tag();
                 $PostResult = $Tagpost->getPostsByTagName($tagName);
             }

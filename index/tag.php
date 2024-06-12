@@ -31,7 +31,7 @@ class Tag
         $query = $conn->prepare("
             SELECT p.* 
             FROM posts p 
-            JOIN post_tags pt ON p.id = pt.post_id 
+            JOIN post_tags pt ON p.postid = pt.post_id 
             WHERE pt.tag_name = :tag_name AND p.status = 'approved'
             ORDER BY p.likes DESC
         ");
