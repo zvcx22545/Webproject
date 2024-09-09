@@ -13,3 +13,24 @@
 <a href="https://skillicons.dev">
     <img src="https://skillicons.dev/icons?i=figma,bootstrap,tailwind,jquery" />
   </a>
+
+### :house: Mainpage : Example
+![d](https://github.com/user-attachments/assets/6c250948-0050-4be7-a794-12e48659a18f)
+
+###  Function
+ <h4>User🧑‍💻</h4>
+ 
+    - ระบบสมัครสมาชิก
+    - ระบบล็อกอิน
+    - ระบบค้นหา
+    - ระบบเพิ่มสถานที่
+    - ระบบคอมเม้น
+    - ระบบไลค์
+    - ระบบรายงาน
+    - ค้นหาผ่านแท็ก
+<h4>Admin🧑‍💻</h4>
+
+    - ระบบจัดการสถานที่
+    - ระบบจัดการโพสต์
+    - ระบบรายงานโพสต์
+    - ระบบจัดการแท็ก
