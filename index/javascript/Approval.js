@@ -1,24 +1,26 @@
-document.querySelectorAll('.status-dropdown, .category-dropdown').forEach(item => {
-    item.addEventListener('change', event => {
-        var locationId = item.getAttribute('data-location-id');
-        var value = item.value;
-        var field = item.classList.contains('category-dropdown') ? 'category' : 'status';
+$(document).ready(function() {
+    $('.status-dropdown, .category-dropdown').on('change', function() {
+        var locationId = $(this).data('location-id');
+        var value = $(this).val();
+        var field = $(this).hasClass('category-dropdown') ? 'category' : 'status';
 
-        var xhr = new XMLHttpRequest();
-        var url = 'admin.php';
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                console.log(`${field} update successful:`, xhr.responseText);
-            } else {
-                console.error(`${field} update failed. Returned status of ` + xhr.status);
+        $.ajax({
+            url: 'admin.php',
+            type: 'POST',
+            data: {
+                locationId: locationId,
+                [field]: value
+            },
+            success: function(response) {
+                console.log(`${field} update successful:`, response);
+            },
+            error: function(xhr, status, error) {
+                console.error(`${field} update failed:`, xhr.responseText);
             }
-        };
-        var params = `${field}=${encodeURIComponent(value)}&locationId=${locationId}`;
-        xhr.send(params);
+        });
     });
 });
+
 
 
 // JavaScript function to display a zoomed image

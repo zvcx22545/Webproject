@@ -1,13 +1,13 @@
 <?php
 require_once "autoload.php";
-if (!isset($_SESSION['user_login'])) {
+if (!isset($_SESSION['admin_login'])) {
     $_SESSION['error'] = 'กรุณาเข้าสู่ระบบ!!';
-
     header('location:login.php');
 }
-if (isset($_SESSION['user_login'])) {
+
+if (isset($_SESSION['admin_login'])) {
     // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
-    $user_session_id = $_SESSION['user_login'];
+    $user_session_id = $_SESSION['admin_login'];
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
     $stmt->bindParam(':user_session_id', $user_session_id);
     $stmt->execute();
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $Post->edit_post($_POST, $_FILES);
 
     // Redirect to the stored URL or Profilepage.php
-    header("Location:Profilepage.php");
+    header("Location:managepost.php");
     // Stop the script
     exit;
 }
@@ -83,9 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <body class="backgrounds">
     <header class="pt-1 px-4 w-100 navbar-expand-xl bg-dark shadows fixed-top">
         <?php
-        if (isset($_SESSION['user_login'])) {
+        if (isset($_SESSION['admin_login'])) {
             // แสดงข้อมูลของผู้ใช้ที่ล็อกอินเข้าระบบ
-            $user_session_id = $_SESSION['user_login'];
+            $user_session_id = $_SESSION['admin_login'];
             $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_session_id");
             $stmt->bindParam(':user_session_id', $user_session_id);
             $stmt->execute();
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         ?>
 
 
-
+<!-- 
         <div class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start justify-content-start ">
             <div class="logo text-left col-12 col-lg-auto"><a href="./main.php" class="nav-link">Travel to Knowledge</a></div>
 
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             </div>
 
-        </div>
+        </div> -->
 
     </header>
     <?php
@@ -148,10 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     ?>
 
 
-        <div class="uploadprofile w-100 mt-lg-5 mx-auto">
+        <div class="uploadprofile w-100 mx-auto">
             
             <form action="" method="Post" id="change_profile_form" class="text-center" enctype="multipart/form-data">
-            <div class=" w-100"style="font-size:40px;">Edit Post</div>
+            <div class=" w-100"style="font-size:40px;font-weight:700;">Edit Post</div>
                 <div class="text-info text-center" style="font-weight:700;">
                     <br>
                     
@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                      else {
                         echo "Edit my post";
                         echo '<label for="exampleFormControlTextarea1" class="form-label"></label>';
-                        echo '<textarea name="post" class="form-control h-50" id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่">' . $ROW['post'] . '</textarea>';
+                        echo '<textarea name="post" class="form-control text-content" id="exampleFormControlTextarea1" rows="1" placeholder="คุณกำลังคิดอะไรอยู่">' . $ROW['post'] . '</textarea>';
                         echo '<div class="container-content mb-3 mt-3">';
                         echo "<div><input type='hidden' name='postid' value='$ROW[postid]'></div>";
                         

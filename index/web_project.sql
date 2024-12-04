@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: May 30, 2024 at 05:38 PM
--- Server version: 5.7.39
--- PHP Version: 8.2.0
+-- Host: 127.0.0.1
+-- Generation Time: Jun 12, 2024 at 11:51 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `web_project`
+-- Database: `web_project_test`
 --
 
 -- --------------------------------------------------------
@@ -33,22 +33,7 @@ CREATE TABLE `comments` (
   `post_id` varchar(100) NOT NULL,
   `user_id` varchar(100) NOT NULL,
   `create_date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `comments`
---
-
-INSERT INTO `comments` (`id`, `content`, `post_id`, `user_id`, `create_date`) VALUES
-(1, 'น่าไปสุดๆ ต้องไปกอนสักครั้ง', '58379761', '69704620163528', '2024-05-30 01:16:41'),
-(2, 'ต้องไปโดน', '58379761', '69704620163528', '2024-05-30 01:48:57'),
-(3, 'โดนๆ', '58379761', '69704620163528', '2024-05-30 01:49:16'),
-(4, 'เม้นแรก', '58379761', '69704620163528', '2024-05-30 21:05:49'),
-(5, 'ร้านสวย', '4863084969414070', '69704620163528', '2024-05-31 00:28:53'),
-(6, 'เม้นๆ', '58379761', '69704620163528', '2024-05-31 00:30:19'),
-(7, '////', '4863084969414070', '69704620163528', '2024-05-31 00:34:09'),
-(8, 'ภภภภภ', '58379761', '69704620163528', '2024-05-31 00:34:23'),
-(9, 'ฟหกดฟหกดฟหกด', '4863084969414070', '69704620163528', '2024-05-31 00:34:29');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -60,14 +45,14 @@ CREATE TABLE `history_likes` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `post_id` varchar(100) NOT NULL,
   `user_id` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `history_likes`
 --
 
 INSERT INTO `history_likes` (`id`, `post_id`, `user_id`) VALUES
-(41, '58379761', '69704620163528');
+(3, '251661351238774', '69704620163528');
 
 -- --------------------------------------------------------
 
@@ -81,21 +66,22 @@ CREATE TABLE `locations` (
   `user_id` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
   `map_link` varchar(255) NOT NULL,
-  `location_id` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+  `location_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `has_image` int(11) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `category_name` varchar(255) NOT NULL,
-  `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `status` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `locations`
 --
 
 INSERT INTO `locations` (`id`, `location_name`, `user_id`, `image`, `map_link`, `location_id`, `has_image`, `first_name`, `category_name`, `create_at`, `status`) VALUES
-(49, 'Mixue', '69704620163528', 'uploads/69704620163528/mxhNNhTYEdHqjUe.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '644700297849385', 1, 'Mali', 'food', '2024-05-14 22:42:03', 'approved'),
-(50, 'Dilly Lazy', '69704620163528', 'uploads/69704620163528/NkARsok3e7TiHtW.png', 'https://maps.app.goo.gl/8vgzNPxNPsxWnhnG6', '5002614', 1, 'Mali', 'food', '2024-05-16 09:49:48', 'approved');
+(54, 'Mixue', '69704620163528', 'uploads/69704620163528/9TJckbKUPRWVtou.png', 'https://maps.app.goo.gl/2cbU5eioXqYMYzQf8', '94830848482458428', 1, 'Mali', 'food', '2024-06-07 19:27:31', 'approved'),
+(55, 'U Avenue', '69704620163528', 'uploads//LJ7pDYAfTla04AO.jpg', 'https://maps.app.goo.gl/tyP6mgqcU2cNfYfb6', '08739877689', 1, 'Mali', 'travel', '2024-06-11 15:37:07', 'approved'),
+(56, 'Dilly Lazy', '69704620163528', 'uploads/69704620163528/GOevvRlciRviVe3.png', 'https://maps.app.goo.gl/8vgzNPxNPsxWnhnG6', '61190996760311531', 1, 'Mali', 'food', '2024-06-11 15:36:55', 'approved');
 
 -- --------------------------------------------------------
 
@@ -107,29 +93,57 @@ CREATE TABLE `posts` (
   `id` bigint(19) NOT NULL,
   `postid` bigint(19) NOT NULL,
   `user_id` bigint(19) NOT NULL,
-  `post` text CHARACTER SET utf8mb4 NOT NULL,
-  `image` varchar(500) CHARACTER SET utf8mb4 NOT NULL,
+  `post` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `image` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `comments` int(11) NOT NULL,
   `category` varchar(255) DEFAULT NULL,
   `location_name` varchar(255) DEFAULT NULL,
-  `likes` int(11) NOT NULL DEFAULT '0',
+  `likes` int(11) NOT NULL DEFAULT 0,
   `has_image` tinyint(1) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_date` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `update_date` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `is_profile_image` tinyint(1) NOT NULL,
   `is_cover_image` tinyint(1) NOT NULL,
-  `status` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'approved',
   `countreport` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `posts`
 --
 
 INSERT INTO `posts` (`id`, `postid`, `user_id`, `post`, `image`, `comments`, `category`, `location_name`, `likes`, `has_image`, `date`, `update_date`, `is_profile_image`, `is_cover_image`, `status`, `countreport`) VALUES
-(163, 58379761, 69704620163528, 'ไอศครีมอร่อยมาก', 'uploads/69704620163528/Bn68fX6j6K3TNSL.jpg', 0, 'food', 'Mixue', 1, 1, '2024-05-30 17:29:52', '2024-05-31 00:37:42', 0, 0, '', 0),
-(166, 4863084969414070, 69704620163528, 'Cafe นี้อาหารอร่อย', 'uploads/69704620163528/O2qUK44qX9RAQa6.jpg', 0, 'food', 'Dilly Lazy', 0, 1, '2024-05-30 17:34:57', '2024-05-31 00:37:38', 0, 0, 'approved', 8),
-(169, 297129814910527822, 69704620163528, 'fd', '', 0, '', '', 0, 0, '2024-05-22 20:11:23', NULL, 0, 0, '', 0);
+(181, 870578015398269049, 69704620163528, '', 'uploads/69704620163528/ZMesB3Lyvzsh6Uf.jpg', 0, '', '', 0, 1, '2024-06-07 19:53:12', NULL, 1, 0, '', 0),
+(182, 5498153189670, 69704620163528, '', 'uploads/69704620163528/PXEmpQBbe8aNhQw.jpg', 0, '', '', 0, 1, '2024-06-07 19:53:39', NULL, 0, 1, '', 0),
+(183, 937412472881592, 2251245, 'เวลาเปิด-ปิด : 8:00–22:00\nFaceBook : https://www.facebook.com/uavenueku\nTel : 0988988325\nรายละเอียด : เป็นแหล่งรวมร้านค้า และ ของกินมากมายไม่ว่าจะเป็น\nของหวาน ของคาว หรือ มีของขวััญเช่น ดอกไม้อีกด้วย อย่าลืมแวะมาชมกันนะ\n\n\n\n', 'uploads/2251245/WWSnHgZWObOfFdx.jpg', 0, 'travel', 'U Avenue', 0, 1, '2024-06-08 17:15:54', '2024-06-11 19:37:04', 0, 0, 'approved', 0),
+(184, 957008641458169974, 2251245, 'วันอาทิตย์ :11:00–20:30\r\nวันจันทร์ : 11:00–20:30\r\nวันอังคาร : 11:00–20:30\r\nวันพุธ : ปิดทำการ\r\nวันพฤหัสบดี :11:00–20:30\r\nวันศุกร์ :11:00–20:30\r\nวันเสาร์ : 11:00–20:30\r\nเบอร์โทร : 0842357755\r\nรายละเอียด : เป็น Cafe ที่ อาหารอร่อยและถูกมากแนะนำเลย\r\nFacebook : https://www.facebook.com/dilly.lazy\r\n\r\n', 'uploads/2251245/dRPmR4t67a1lMtD.jpg', 0, 'food', 'Dilly Lazy', 0, 1, '2024-06-08 18:11:25', '2024-06-12 02:54:57', 0, 0, 'approved', 0),
+(188, 89793766743797710, 2251245, 'วันอาทิตย์ :11:00–20:30\nวันจันทร์ : 11:00–20:30\nวันอังคาร : 11:00–20:30\nวันพุธ : ปิดทำการ\nวันพฤหัสบดี :11:00–20:30\nวันศุกร์ :11:00–20:30\nวันเสาร์ : 11:00–20:30\nเบอร์โทร : 0842357755\nรายละเอียด : เป็น Cafe ที่ อาหารอร่อยและถูกมากแนะนำเลย\nFacebook : https://www.facebook.com/dilly.lazy\n\n', 'uploads/2251245/iCzucQeq8h3T35k.jpg', 0, 'food', 'Mixue', 0, 1, '2024-06-12 07:51:10', '2024-06-12 16:01:42', 0, 0, 'approved', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `post_tags`
+--
+
+CREATE TABLE `post_tags` (
+  `id` bigint(19) NOT NULL,
+  `post_id` bigint(19) NOT NULL,
+  `tag_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `post_tags`
+--
+
+INSERT INTO `post_tags` (`id`, `post_id`, `tag_name`) VALUES
+(1, 1255483, 'ร้านกาแฟ'),
+(2, 1255483, 'Cafe'),
+(3, 2381, 'ร้านกาแฟ'),
+(4, 2381, 'Cafe'),
+(5, 2381, 'จอดรถฟรี'),
+(6, 89793766743797710, 'ร้านกาแฟ'),
+(7, 89793766743797710, 'Cafe'),
+(8, 89793766743797710, 'อาหารราคาถูก');
 
 -- --------------------------------------------------------
 
@@ -142,22 +156,43 @@ CREATE TABLE `reports` (
   `post_id` varchar(255) NOT NULL,
   `user_id` varchar(255) NOT NULL,
   `report_count` int(11) NOT NULL,
-  `report_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `report_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `reports`
 --
 
 INSERT INTO `reports` (`id`, `post_id`, `user_id`, `report_count`, `report_time`) VALUES
-(3, '4863084969414070', '69704620163528', 0, '2024-05-22 18:21:17'),
-(4, '4863084969414070', '69704620163528', 0, '2024-05-22 18:31:29'),
-(5, '4863084969414070', '69704620163528', 0, '2024-05-22 19:14:59'),
-(6, '4863084969414070', '69704620163528', 0, '2024-05-22 19:32:28'),
-(7, '4863084969414070', '69704620163528', 0, '2024-05-22 19:32:31'),
-(8, '4863084969414070', '69704620163528', 0, '2024-05-22 19:41:48'),
-(9, '4863084969414070', '69704620163528', 0, '2024-05-22 19:46:49'),
-(10, '4863084969414070', '69704620163528', 0, '2024-05-22 19:54:55');
+(1, '251661351238774', '69704620163528', 0, '2024-06-11 19:26:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subtag`
+--
+
+CREATE TABLE `subtag` (
+  `id` bigint(19) NOT NULL,
+  `tagname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `category` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `user_id` int(19) NOT NULL,
+  `create_at` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `subtag`
+--
+
+INSERT INTO `subtag` (`id`, `tagname`, `category`, `user_id`, `create_at`) VALUES
+(14, 'ร้านกาแฟ', 'food', 2251245, '2024-06-12 01:31:34'),
+(15, 'WIFIฟรี', 'clothing', 2251245, '2024-06-12 02:49:13'),
+(16, 'จอดรถฟรี', 'clothing', 2251245, '2024-06-12 02:53:53'),
+(17, 'Cafe', 'food', 2251245, '2024-06-12 03:14:31'),
+(18, 'จอดรถฟรี', 'food', 2251245, '2024-06-12 14:18:35'),
+(19, 'อาหารราคาถูก', 'food', 2251245, '2024-06-12 14:19:59'),
+(23, 'จอดรถฟรี', 'travel', 2251245, '2024-06-12 15:34:20'),
+(24, 'มีน้ำดื่มให้', 'food', 2251245, '2024-06-12 16:23:40');
 
 -- --------------------------------------------------------
 
@@ -176,8 +211,8 @@ CREATE TABLE `users` (
   `urole` varchar(255) NOT NULL,
   `profile_image` varchar(1000) NOT NULL,
   `cover_image` varchar(1000) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -185,9 +220,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `userid`, `url_address`, `email`, `password`, `first_name`, `last_name`, `urole`, `profile_image`, `cover_image`, `created_at`) VALUES
 (41, 2251245, '', 'chisanupong.li@ku.th', '$2y$10$OBGm5impCgRumygXNu.wXuf.huULeFMUnc.5WGPZ9VuhBrnPKJAeK', 'Chisanupong', 'Limsakul', 'admin', '', '', '2023-11-01 10:07:33'),
-(42, 69704620163528, 'mali.konglerdruk', 'Mali@ku.th', '$2y$10$a9fJE2f6iwFcdrM.DGXwJ.9ZtoWYIcNGYiVFVlqp29m9bSTS.vPqi', 'Mali', 'Konglerdruk', 'user', 'uploads/69704620163528/5xSgNgxTZo6zp1q.jpg', 'uploads/69704620163528/pf2F2RaiBZJk3wY.jpg', '2024-05-17 19:10:13'),
+(42, 69704620163528, 'mali.konglerdruk', 'Mali@ku.th', '$2y$10$a9fJE2f6iwFcdrM.DGXwJ.9ZtoWYIcNGYiVFVlqp29m9bSTS.vPqi', 'Mali', 'Konglerdruk', 'user', 'uploads/69704620163528/ZMesB3Lyvzsh6Uf.jpg', 'uploads/69704620163528/PXEmpQBbe8aNhQw.jpg', '2024-06-07 19:53:39'),
 (43, 233577, 'arisorn.rungruk', 'Arisorn@ku.th', '$2y$10$bgVj90PuHz/qdE5/KF/aTOOXfx8D2.bLK2oaBLkDaEEOOqFW0VGlW', 'Arisorn', 'Rungruk', 'user', 'uploads/233577/zr4PQf8LkygXpZJ.jpg', 'uploads/233577/xTbI9OZ8rONfwlV.jpg', '2023-11-02 19:49:31'),
-(49, 20700969, 'testone.testerone', 'Tester@ku.th', '$2y$10$ZCVL3CxCj75g22xPQZoMiOiRRE7tmvByQ1Ur2XeSFcf3HQNL5ovZO', 'Testone', 'TesterOne', 'user', '', 'uploads/20700969/SLb3V6ell9CbapA.jpg', '2024-05-06 15:41:27');
+(49, 20700969, 'testone.testerone', 'Tester@ku.th', '$2y$10$ZCVL3CxCj75g22xPQZoMiOiRRE7tmvByQ1Ur2XeSFcf3HQNL5ovZO', 'Testone', 'TesterOne', 'user', '', 'uploads/20700969/SLb3V6ell9CbapA.jpg', '2024-05-06 15:41:27'),
+(50, 981946354296, 'chisanupongs.limsakul', 'Malis@ku.th', '$2y$10$kTYF0Qjb9qU9rj4ARYXyB.OCjFHS8b9jACeCFHM8yUprd3DHv0QPO', 'Chisanupongs', 'Limsakul', 'user', '', '', '2024-06-03 13:55:36'),
+(51, 306793976868769692, 'nantapat.rungsiri', 'Nantapat@ku.th', '$2y$10$MMwCZCw6dnwgckVUGcFrfeU9P3VywBDOn5O.dx9PQZTrn9YvrzmV2', 'Nantapat', 'RungSiri', 'user', '', '', '2024-06-06 16:50:31');
 
 --
 -- Indexes for dumped tables
@@ -236,12 +273,29 @@ ALTER TABLE `posts`
 ALTER TABLE `posts` ADD FULLTEXT KEY `post` (`post`);
 
 --
+-- Indexes for table `post_tags`
+--
+ALTER TABLE `post_tags`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `post_id` (`post_id`),
+  ADD KEY `tag_name` (`tag_name`);
+
+--
 -- Indexes for table `reports`
 --
 ALTER TABLE `reports`
   ADD PRIMARY KEY (`id`),
   ADD KEY `post_id` (`post_id`,`user_id`),
   ADD KEY `report_count` (`report_count`);
+
+--
+-- Indexes for table `subtag`
+--
+ALTER TABLE `subtag`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tagname` (`tagname`),
+  ADD KEY `category` (`category`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -263,37 +317,49 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `history_likes`
 --
 ALTER TABLE `history_likes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
+  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
+
+--
+-- AUTO_INCREMENT for table `post_tags`
+--
+ALTER TABLE `post_tags`
+  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `subtag`
+--
+ALTER TABLE `subtag`
+  MODIFY `id` bigint(19) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -276,13 +276,19 @@ include "header.php";
         <div class="container-post">
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
-                <div class="post-top">
-                    <div class="dp">
-                        <img src="<?php echo $corner_image ?>" type="images" alt="">
+                <div class="post-topm">
+
+                    <div class="tag">
+                        <a href="./travel.php">สถานที่ท่องเที่ยว</a>
                     </div>
 
-                    <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal"
-                        data-bs-target="#postModal" readonly style="cursor: pointer;" />
+                    <div class="tag">
+                        <a href="./foodpage.php">ร้านอาหาร</a>
+                    </div>
+
+                    <div class="tag">
+                        <a href="./clothing.php">ร้านบริการ</a>
+                    </div>
 
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
@@ -355,10 +361,7 @@ include "header.php";
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-                <div class="action mx-auto">
-                    <i class="fa fa-image"></i>
-                    <span>Photo</span>
-                </div>
+
                 <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
@@ -366,56 +369,83 @@ include "header.php";
             </div>
         </div>
         <!-- post area -->
+
         <?php
 
         $PostResult = [];
+        if (isset($_GET['Tagid'])) {
+            // Fetch posts by tag if Tagid is provided
+            $Tagname = $_GET['Tagid'];
+            
+            // You need to get the tag name from the tag ID
+            $query = $conn->prepare("SELECT tag_name FROM post_tags WHERE tag_name = :tag_name");
+            $query->bindParam(":tag_name", $Tagname);
+            $query->execute();
+            $tagResult = $query->fetch(PDO::FETCH_ASSOC);
+        
+            if ($tagResult) {
+                $tagName = $tagResult['tag_name'];
+                $Tagpost = new Tag();
+                $PostResult = $Tagpost->getPostsByTagName($tagName);
+            }
+        }
 
-        if (isset($_POST['search'])) {
+       else if (isset($_POST['search'])) {
             global $conn;
             $inputText = $_POST['search'];
 
-            // Check if the input is a location name in the locations table
-            $query = $conn->prepare("SELECT * FROM locations WHERE location_name = :location_name");
-            $query->bindParam(":location_name", $inputText);
-            $query->execute();
+            // Split input text into words
+            $inputWords = explode(' ', $inputText);
+            $likeClauses = [];
+            $params = [];
+
+            // Build LIKE clauses for each word
+            foreach ($inputWords as $index => $word) {
+                $likeClauses[] = "location_name LIKE :word$index";
+                $params[":word$index"] = '%' . $word . '%';
+            }
+
+            $likeQuery = implode(' OR ', $likeClauses);
+
+            // Check if the input matches any location name in the locations table
+            $query = $conn->prepare("SELECT * FROM locations WHERE $likeQuery");
+            $query->execute($params);
             $locationResult = $query->fetch(PDO::FETCH_ASSOC);
 
             if ($locationResult) {
-                // If the input is a location name, fetch all posts with that location name, sorted by likes
-                $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name ORDER BY likes DESC");
-                $query->bindParam(":location_name", $inputText);
+                // If the input matches a location name, fetch all posts with that location name, sorted by likes
+                $query = $conn->prepare("SELECT * FROM posts WHERE location_name = :location_name AND status = 'approved'");
+                $query->bindParam(":location_name", $locationResult['location_name']);
                 $query->execute();
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                // If the input is not a location name, fetch posts matching the post content, sorted by likes
-                $inputTextWithWildcards = '%' . $inputText . '%';
-                $query = $conn->prepare("SELECT * FROM posts WHERE post LIKE :inputText ORDER BY likes DESC");
-                $query->bindParam(":inputText", $inputTextWithWildcards);
-                $query->execute();
+                // Build LIKE clauses for each word for posts
+                $likeClauses = [];
+                $params = [];
+                foreach ($inputWords as $index => $word) {
+                    $likeClauses[] = "post LIKE :word$index OR location_name LIKE :word$index";
+                    $params[":word$index"] = '%' . $word . '%';
+                }
+                $likeQuery = implode(' OR ', $likeClauses);
+
+                // If the input does not match a location name, fetch posts matching the post content or location name, sorted by likes
+                $query = $conn->prepare("SELECT * FROM posts WHERE ($likeQuery) AND status = 'approved' ORDER BY likes DESC");
+                $query->execute($params);
                 $PostResult = $query->fetchAll(PDO::FETCH_ASSOC);
             }
         }
+        
 
+        // Process and display the posts
         if ($PostResult) {
-
-
-
             foreach ($PostResult as $ROW) {
-                if (!empty($ROW['location_name']) && $ROW['status'] !== 'rejected') {
-                    $user = new User();
-                    $ROW_USER = $user->getUsers($ROW['user_id']);
-                    include 'function.php';
-                } elseif (empty($ROW['location_name']) && $ROW['status'] === 'approved') {
-                    $user = new User();
-                    $ROW_USER = $user->getUsers($ROW['user_id']);
-                    include 'function.php';
-                }
+                $user = new User();
+                $ROW_USER = $user->getUsers($ROW['user_id']);
+                include 'function.php';
             }
         }
-
-        # code...
-        
         ?>
+
         <div class="modal fade" id="AddlocationModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -574,6 +604,30 @@ include "header.php";
                     });
             });
         });
+
+        const textContainers = document.querySelectorAll('.text-container');
+
+        textContainers.forEach(container => {
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+
+            if (scrollHeight > clientHeight) {
+                const showMoreBtn = document.createElement('button');
+                showMoreBtn.classList.add('show-more-btn');
+                showMoreBtn.innerText = 'ดูเพิ่มเติม...';
+
+                showMoreBtn.addEventListener('click', function () {
+                    container.style.height = scrollHeight + 'px';
+                    container.classList.add('expanded');
+                    showMoreBtn.style.display = 'none'; // Hide the button after clicking
+                });
+
+                container.appendChild(showMoreBtn);
+            } else {
+                container.style.height = 'auto'; // Set height to auto if content is less than 10vh
+            }
+        });
+
 
     });
 

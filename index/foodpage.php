@@ -174,7 +174,7 @@ include "header.php";
                         class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'foodpage.php' ? 'active' : ''; ?>"><i
                             class="fa-solid fa-utensils"></i></a></li>
                 <li><a href="./clothing.php"
-                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'shirt.php' ? 'active' : ''; ?>"><i
+                        class="nav-link px-2 <?php echo basename($_SERVER['PHP_SELF']) == 'clothing.php' ? 'active' : ''; ?>"><i
                             class="fa-solid fa-shirt"></i></a></li>
                 <button class="navbar-toggler" type="button">
                     <i class="fa-solid fa-bars"></i>
@@ -273,16 +273,30 @@ include "header.php";
 
         </div>
 
+
         <div class="container-post">
             <!-- พื่นที่สำหรับสร้างโพสต์ -->
             <div class="post create" style="margin-top:70px;">
-                <div class="post-top">
-                    <div class="dp">
-                        <img src="<?php echo $corner_image ?>" type="images" alt="">
-                    </div>
 
-                    <input type="text" placeholder="คุณอยากจะโพสต์อะไร" data-bs-toggle="modal"
-                        data-bs-target="#postModal" readonly style="cursor: pointer;" />
+                <?php
+                $stmt = $conn->prepare("SELECT * FROM subtag WHERE category = :category_name ORDER BY create_at DESC");
+                $stmt->bindParam(':category_name', $category); // Corrected parameter name
+                $category = 'food'; // Set the value for the parameter
+                $stmt->execute();
+                $Tagname = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $numTags = count($Tagname);
+                ?>
+                <div class="post-tops<?php echo ($numTags > 12) ? ' overflow-y-auto' : ''; ?>">
+
+                    <?php
+
+                    foreach ($Tagname as $Tag) {
+                        echo "<div class='tag'>
+                        <a href='./search.php?Tagid=$Tag[tagname]'>$Tag[tagname]</a>
+
+                    </div>";
+                    }
+                    ?>
 
                     <!-- พื้นที่สำหรับสร้างโพสต์ -->
                     <style>
@@ -355,10 +369,7 @@ include "header.php";
             <i class="fa fa-video"></i>
             <span>Live video</span>
           </div> -->
-                <div class="action mx-auto">
-                    <i class="fa fa-image"></i>
-                    <span>Photo</span>
-                </div>
+
                 <!-- <div class="action">
             <i class="fa fa-smile"></i>
             <span>Feeling/Activity</span>
@@ -391,7 +402,6 @@ include "header.php";
 
             }
         }
-
 
         # code...
         

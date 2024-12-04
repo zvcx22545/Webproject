@@ -26,6 +26,15 @@ class Post
                 }
             }
 
+            $existing_post_query = $conn->prepare("SELECT COUNT(*) AS count FROM posts WHERE user_id = :user_id AND location_name = :location_name");
+            $existing_post_query->bindParam(":user_id", $user_id);
+            $existing_post_query->bindParam(":location_name", $location_name);
+            $existing_post_query->execute();
+            $existing_post_result = $existing_post_query->fetch(PDO::FETCH_ASSOC);
+            if ($existing_post_result['count'] > 0) {
+                return ['status' => 'error', 'message' => 'สถานที่นี้ได้โพสต์ไปแล้วกรุณาโพสต์สถานที่อื่น.'];
+            }
+
             if (isset($data['is_profile_image']) || isset($data['is_cover_image'])) {
                 $myimage = $files;
                 $has_image = 1;
@@ -50,6 +59,13 @@ class Post
                     $has_image = 1;
                 }
             }
+            
+            if (isset($data['tags']) && is_array($data['tags'])) {
+                $tag_count = count($data['tags']);
+                if ($tag_count > 3) {
+                    return ['status' => 'error', 'message' => 'เพิ่มได้สูงสุด 3 Tags เท่านั้น'];
+                }
+            }
 
             $post = isset($data['post']) ? addslashes($data['post']) : "";
             $postid = $this->create_postid();
@@ -65,6 +81,16 @@ class Post
             $query->bindParam(":category", $category);
             $query->bindParam(":location_name", $location_name);
             $query->execute();
+
+            if (isset($data['tags']) && is_array($data['tags'])) {
+                for ($i = 0; $i < $tag_count; $i++) {
+                    $tag_query = $conn->prepare("INSERT INTO post_tags(post_id, tag_name) VALUES(:post_id, :tag_name)");
+                    $tag_query->bindParam(":post_id", $postid);
+                    $tag_query->bindParam(":tag_name", $data['tags'][$i]);
+                    $tag_query->execute();
+                }
+            }
+
             return ['status' => 'success', 'location_name' => $location_name];
         } else {
             $this->error .= 'Please enter something to post! <br>';
@@ -89,7 +115,7 @@ class Post
     public function get_one_post($postid)
     {
         global $conn;
-        if(!is_numeric($postid)) {
+        if (!is_numeric($postid)) {
             return false;
         }
         $query = $conn->prepare("SELECT * FROM posts WHERE postid = :postid  LIMIT 1");
@@ -97,56 +123,53 @@ class Post
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        if($result)
-        {
+        if ($result) {
             return $result["0"];
-        }else{
+        } else {
             return false;
         }
     }
     public function delete_post($postid)
     {
         global $conn;
-        if(!is_numeric($postid)) {
+        if (!is_numeric($postid)) {
             return false;
         }
         $query = $conn->prepare("DELETE FROM posts WHERE postid = :postid  LIMIT 1");
-        $query->bindParam(":postid", $postid,PDO::PARAM_INT);
+        $query->bindParam(":postid", $postid, PDO::PARAM_INT);
         $query->execute();
 
-            
-        
+
+
     }
-    public function i_own_post($postid,$user_login)
+    public function i_own_post($postid, $user_login)
     {
         global $conn;
-        if(!is_numeric($postid)) {
+        if (!is_numeric($postid)) {
             return false;
         }
         $query = $conn->prepare("SELECT * FROM posts WHERE postid = :postid  LIMIT 1");
-        $query->bindParam(":postid", $postid,PDO::PARAM_INT);
+        $query->bindParam(":postid", $postid, PDO::PARAM_INT);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        if(is_array($result))
-        {
-            if($result['user_id'] == $user_login)
-            {
+        if (is_array($result)) {
+            if ($result['user_id'] == $user_login) {
                 return true;
             }
         }
         return false;
 
-            
-        
+
+
     }
     public function getAllPosts()
     {
         global $conn;
-        
+
         $query = $conn->prepare("SELECT * FROM posts ORDER BY date DESC");
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts
-        
+
         return $result; // Return the array of posts
     }
 
@@ -168,7 +191,7 @@ class Post
         if (!empty($data['post']) || !empty($files['file']['name'])) {
             $myimage = "";
             $has_image = 0;
-            
+
             // Check if a new image file is uploaded
             if (!empty($files['file']['name'])) {
                 // Handle image upload
@@ -176,7 +199,7 @@ class Post
                 // Create folder if not exists
                 if (!file_exists($folder)) {
                     mkdir($folder, 0777, true);
-                    file_put_contents($folder. "index.php", "");
+                    file_put_contents($folder . "index.php", "");
                 }
                 $image_class = new Image();
                 $myimage = $folder . $image_class->generate_filename(15) . ".jpg";
@@ -184,44 +207,45 @@ class Post
                 $image_class->resize_image($myimage, $myimage, 1500, 1500);
                 $has_image = 1;
             }
-    
+
             $post = "";
             if (isset($data['post'])) {
                 $post = addslashes($data['post']);
             }
             $postid = addslashes($data['postid']);
-    
+
             // Update post query
             if ($has_image) {
                 $query = $conn->prepare("UPDATE posts SET post = :post, image = :myimage WHERE postid = :postid LIMIT 1");
                 $query->bindParam(":myimage", $myimage);
-                
+
             } else {
                 $query = $conn->prepare("UPDATE posts SET post = :post WHERE postid = :postid LIMIT 1");
             }
-    
+
             // Bind parameters
             $query->bindParam(":postid", $postid);
             $query->bindParam(":post", $post);
-    
+
             // Execute query
             $query->execute();
-            header("Location: Profilepage.php");
-        exit; // Stop the script
+            header("Location: managepost.php");
+            exit; // Stop the script
         } else {
             $this->error .= 'Please enter something to post! <br>';
         }
         return $this->error;
     }
 
-    public function ReportPost($data, $userid) {
+    public function ReportPost($data, $userid)
+    {
         global $conn;
-    
+
         // Check for required data
         if (empty($data['post_id']) || empty($userid)) {
             return ['status' => 'error', 'message' => 'Required data missing'];
         }
-    
+
         $postid = $data['post_id'];
 
         // Check if the user is the owner of the post
@@ -229,23 +253,23 @@ class Post
         $checkOwnerQuery->bindParam(':post_id', $postid);
         $checkOwnerQuery->execute();
         $postOwner = $checkOwnerQuery->fetch(PDO::FETCH_ASSOC);
-    
+
         if ($postOwner['user_id'] == $userid) {
             return ['status' => 'error', 'message' => 'เจ้าของโพสต์ไม่สามารถรายงานโพสต์ของตัวเองได้'];
         }
-    
-    
+
+
         // Check if the user has already reported this post
         $checkQuery = $conn->prepare("SELECT COUNT(*) as count FROM reports WHERE post_id = :post_id AND user_id = :user_id");
         $checkQuery->bindParam(':post_id', $postid);
         $checkQuery->bindParam(':user_id', $userid);
         $checkQuery->execute();
         $result = $checkQuery->fetch(PDO::FETCH_ASSOC);
-    
+
         if ($result['count'] > 0) {
             return ['status' => 'error', 'message' => 'สามารถรีพอร์ตได้เพียง 1 ครั้งต่อโพสต์'];
         }
-    
+
         // Insert new report
         $query = $conn->prepare("INSERT INTO reports (post_id, user_id) VALUES (:post_id, :user_id)");
         $query->bindParam(':post_id', $postid);
@@ -257,12 +281,12 @@ class Post
             $countQuery->execute();
             $result = $countQuery->fetch(PDO::FETCH_ASSOC);
             $reportCount = $result['report_count'];
-    
+
             $updateQuery = $conn->prepare("UPDATE posts SET countreport = :report_count WHERE postid = :post_id");
             $updateQuery->bindParam(':report_count', $reportCount);
             $updateQuery->bindParam(':post_id', $postid);
             $updateQuery->execute();
-    
+
             return ['status' => 'success', 'message' => 'Report submitted successfully', 'report_count' => $reportCount];
         } else {
             return ['status' => 'error', 'message' => 'Failed to submit report'];
@@ -273,12 +297,12 @@ class Post
     {
         global $conn;
 
-        if($type == 'like'){
+        if ($type == 'like') {
             $updateQuery = $conn->prepare("UPDATE posts SET likes = likes + 1 WHERE postid = :post_id");
-        }else{
+        } else {
             $updateQuery = $conn->prepare("UPDATE posts SET likes = likes - 1 WHERE postid = :post_id");
         }
-        
+
         $updateQuery->bindParam(':post_id', $postid);
         $updateQuery->execute();
 
@@ -294,10 +318,9 @@ class Post
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        if($result)
-        {
+        if ($result) {
             return $result["0"];
-        }else{
+        } else {
             return null;
         }
     }
@@ -311,9 +334,9 @@ class Post
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        if($result){
+        if ($result) {
             return $result;
-        }else{
+        } else {
             return null;
         }
     }
@@ -350,7 +373,11 @@ class Post
             return false;
         }
     }
-    
+
+
+
+
 }
 
-   
+
+

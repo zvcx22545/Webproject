@@ -8,3 +8,4 @@ require_once "category.php";
 require_once 'Addlocation.php';
 require_once 'comment.php';
 require_once 'util.php';
+require_once 'tag.php';

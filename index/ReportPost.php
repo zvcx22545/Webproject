@@ -47,11 +47,13 @@ foreach ($posts as $post) {
     <title>Admin page</title>
     <link rel="stylesheet" href="./style/admin.css">
     <link rel="stylesheet" href="./style/sidebar.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
@@ -74,13 +76,16 @@ foreach ($posts as $post) {
                 <div class="main">
                     <br>
                     <ul class="menu">
-                        <a href="./admin.php"><button class="none-active " id="teamButton"><i class="bi bi-people"></i>อนุมัติสถานที่</button></a>
+                        <a href="./admin.php"><button class="none-active " id="teamButton"><i class="fa-solid fa-map-location-dot"></i>จัดการสถานที่</button></a>
                     </ul>
                     <ul class="menu">
                         <a href="./managepost.php"><button class="none-active" id="competitionButton"><i class="bi bi-boxes"></i>จัดการโพสต์</button></a>
                     </ul>
                     <ul class="menu">
                         <a href="./ReportPost.php"><button class="active p-2" id="competitionButton"><i class="bi bi-boxes"></i>รายงานการโพสต์</button></a>
+                    </ul>
+                    <ul class="menu">
+                        <a href="./create_tag.php"><button class="none-active" id="competitionButton"><i class="fa-solid fa-tags"></i>จัดการ Tags</button></a>
                     </ul>
                     <ul class="menu">
                     </ul>
@@ -94,7 +99,10 @@ foreach ($posts as $post) {
                 <!-- ส่วนทางขวา -->
                 <nav>
                     <h1 id="pageTitle" class="text-2xl">รายงานการโพสต์</h1>
-                    <h1></h1>
+                    <div class="search-box">
+                        <button class="btn-search"><i class="fas fa-search"></i></button>
+                        <input type="text" class="input-search" placeholder="ค้นหาสถานที่ ..." id="searchInput">
+                    </div>
                 </nav>
 
                 <div class="admin-data">
@@ -109,16 +117,18 @@ foreach ($posts as $post) {
                                 <th class="col0">No.</th>
                                 <th class="col1">ชื่อ-นามสกุล</th>
                                 <th class="col4">User_ID</th>
+                                <th class="col4">Post_id</th>
                                 <th class="col4">ข้อความโพสต์</th>
                                 <th class="col2">รูปภาพ</th>
                                 <th class="col2">จำนวนการถูกรายงานโพสต์</th>
                                 <th class="col2">สถานะ</th>
                             </tr>
+                            <tbody id="locationTable">
 
                             <?php
                             // $post = new Post();
                             // $posts = $post->getAllPosts();
-
+        
                             if (!empty($posts)) : ?>
                                 <?php foreach ($posts as $index => $post) :
                                     // if (!empty($post['location_name'])) {
@@ -132,7 +142,10 @@ foreach ($posts as $post) {
                                         <td><?php echo $index + 1; ?></td>
                                         <td><?php echo $ROW_USER['first_name'] . " " . $ROW_USER['last_name'] ?></td>
                                         <td><?php echo $post['user_id']; ?></td>
-                                        <td><?php echo $post['post']; ?></td>
+                                        <td><?php echo $post['postid']; ?></td>
+                                        <td class="w-[20%]">
+                                                <div class=" w-[200px] truncate"><?php echo $post['post']; ?></div>
+                                            </td>
                                         <?php if (isset($post['image'])) : ?>
                                             <td class='w-[10%]'>
                                                 <img class='w-[30%] h-[20%] clickable-image' src="<?php echo $post['image']; ?>" alt="post Image" onclick="zoomImage('<?php echo $post['image']; ?>')">
@@ -157,6 +170,7 @@ foreach ($posts as $post) {
                                     <td colspan="7">No posts found.</td>
                                 </tr>
                             <?php endif; ?>
+                            </tbody>
 
                         </table>
 
@@ -168,6 +182,8 @@ foreach ($posts as $post) {
         </div>
 </body>
 <!-- SCRIPTS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="./javascript/no-table.js"></script>
 <script src="./javascript/details.js"></script>
 <script src="./javascript/search.js"></script>
@@ -179,3 +195,26 @@ foreach ($posts as $post) {
 
 
 </html>
+
+<script>
+     $(document).ready(function () {
+        var locations = <?php echo json_encode($posts); ?>;
+        $("#locationInput").autocomplete({
+            source: locations,
+            select: function (event, ui) {
+                // Set the value of the input to the selected item
+                $("#locationInput").val(ui.item.value);
+                return false;
+            }
+        });
+
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#locationTable tr").filter(function () {
+                var postId = $(this).find("td:nth-child(4)").text().toLowerCase();
+                var Post = $(this).find("td:nth-child(5)").text().toLowerCase();
+                $(this).toggle(postId.indexOf(value) > -1 || Post.indexOf(value) > -1);
+            });
+        });
+    });
+</script>
